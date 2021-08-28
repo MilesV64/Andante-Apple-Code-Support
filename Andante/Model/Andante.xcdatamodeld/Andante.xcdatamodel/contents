@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CDJournalEntry" representedClassName="CDJournalEntry" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="editDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="string" optional="YES" attributeType="String"/>
+        <relationship name="attributes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDStringAttributes" inverseName="entry" inverseEntity="CDStringAttributes"/>
+        <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDJournalFolder" inverseName="entries" inverseEntity="CDJournalFolder"/>
+        <relationship name="textEditorEntry" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDTextEditorEntry" inverseName="journalEntry" inverseEntity="CDTextEditorEntry"/>
+    </entity>
+    <entity name="CDJournalFolder" representedClassName="CDJournalFolder" syncable="YES">
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isDefaultFolder" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="entries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDJournalEntry" inverseName="folder" inverseEntity="CDJournalEntry"/>
+        <relationship name="profile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDProfile" inverseName="journalFolders" inverseEntity="CDProfile"/>
+    </entity>
+    <entity name="CDProfile" representedClassName="CDProfile" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" defaultDateTimeInterval="634447980" usesScalarValueType="NO"/>
+        <attribute name="dailyGoal" optional="YES" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES"/>
+        <attribute name="defaultSessionTitle" optional="YES" attributeType="String" defaultValueString="Practice"/>
+        <attribute name="iconName" optional="YES" attributeType="String" defaultValueString="Violin"/>
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString="Profile"/>
+        <attribute name="uuid" optional="YES" attributeType="String"/>
+        <relationship name="journalFolders" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDJournalFolder" inverseName="profile" inverseEntity="CDJournalFolder"/>
+        <relationship name="sessions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDSession" inverseName="profile" inverseEntity="CDSession"/>
+    </entity>
+    <entity name="CDRecording" representedClassName="CDRecording" syncable="YES">
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="recordingData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDSession" inverseName="recordings" inverseEntity="CDSession"/>
+    </entity>
+    <entity name="CDReminder" representedClassName="CDReminder" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="days" optional="YES" attributeType="String"/>
+        <attribute name="isEnabled" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="profileID" optional="YES" attributeType="String"/>
+        <attribute name="uuid" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CDSession" representedClassName=".CDSession" syncable="YES">
+        <attribute name="d_focus" optional="YES" attributeType="Integer 64" defaultValueString="3" usesScalarValueType="YES"/>
+        <attribute name="d_mood" optional="YES" attributeType="Integer 64" defaultValueString="3" usesScalarValueType="YES"/>
+        <attribute name="d_practiceTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="d_startTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="end" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="isFavorited" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="sectionName" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="totalTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="attributes" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDSessionAttributes" inverseName="session" inverseEntity="CDSessionAttributes"/>
+        <relationship name="profile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDProfile" inverseName="sessions" inverseEntity="CDProfile"/>
+        <relationship name="recordings" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDRecording" inverseName="session" inverseEntity="CDRecording"/>
+        <relationship name="textEditorEntry" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDTextEditorEntry" inverseName="session" inverseEntity="CDTextEditorEntry"/>
+    </entity>
+    <entity name="CDSessionAttributes" representedClassName="CDSessionAttributes" syncable="YES">
+        <attribute name="focus" optional="YES" attributeType="Integer 64" defaultValueString="3" usesScalarValueType="YES"/>
+        <attribute name="mood" optional="YES" attributeType="Integer 64" defaultValueString="3" usesScalarValueType="YES"/>
+        <attribute name="practiceTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDSession" inverseName="attributes" inverseEntity="CDSession"/>
+    </entity>
+    <entity name="CDStringAttributes" representedClassName="CDStringAttributes" syncable="YES">
+        <attribute name="length" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="location" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="value" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="entry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDJournalEntry" inverseName="attributes" inverseEntity="CDJournalEntry"/>
+    </entity>
+    <entity name="CDTextEditorBlock" representedClassName="CDTextEditorBlock" syncable="YES">
+        <attribute name="aspectRatio" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <attribute name="textStyle" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="videoData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <relationship name="textEditorEntry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDTextEditorEntry" inverseName="blocks" inverseEntity="CDTextEditorEntry"/>
+    </entity>
+    <entity name="CDTextEditorEntry" representedClassName="CDTextEditorEntry" syncable="YES">
+        <relationship name="blocks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDTextEditorBlock" inverseName="textEditorEntry" inverseEntity="CDTextEditorBlock"/>
+        <relationship name="journalEntry" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDJournalEntry" inverseName="textEditorEntry" inverseEntity="CDJournalEntry"/>
+        <relationship name="session" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDSession" inverseName="textEditorEntry" inverseEntity="CDSession"/>
+    </entity>
+    <configuration name="Cloud">
+        <memberEntity name="CDJournalEntry"/>
+        <memberEntity name="CDJournalFolder"/>
+        <memberEntity name="CDProfile"/>
+        <memberEntity name="CDRecording"/>
+        <memberEntity name="CDSession"/>
+        <memberEntity name="CDSessionAttributes"/>
+        <memberEntity name="CDStringAttributes"/>
+        <memberEntity name="CDTextEditorBlock"/>
+        <memberEntity name="CDTextEditorEntry"/>
+    </configuration>
+    <configuration name="Local">
+        <memberEntity name="CDReminder"/>
+    </configuration>
+    <elements>
+        <element name="CDJournalEntry" positionX="-36" positionY="9" width="128" height="134"/>
+        <element name="CDJournalFolder" positionX="-63" positionY="-18" width="128" height="104"/>
+        <element name="CDProfile" positionX="18" positionY="63" width="128" height="149"/>
+        <element name="CDRecording" positionX="36" positionY="81" width="128" height="74"/>
+        <element name="CDReminder" positionX="-9" positionY="108" width="128" height="104"/>
+        <element name="CDSession" positionX="-18" positionY="27" width="128" height="239"/>
+        <element name="CDSessionAttributes" positionX="0" positionY="108" width="128" height="104"/>
+        <element name="CDStringAttributes" positionX="-54" positionY="-9" width="128" height="89"/>
+        <element name="CDTextEditorBlock" positionX="-9" positionY="108" width="128" height="134"/>
+        <element name="CDTextEditorEntry" positionX="0" positionY="117" width="128" height="74"/>
+    </elements>
+</model>

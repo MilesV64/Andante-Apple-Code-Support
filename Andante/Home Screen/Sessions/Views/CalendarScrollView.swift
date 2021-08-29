@@ -34,7 +34,7 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
     init() {
         super.init(frame: .zero)
         
-        layout = UICollectionViewFlowLayout()
+        layout = StretchyCollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
@@ -95,23 +95,27 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
         fatalError()
     }
     
+    private var lastContentSize: CGSize = .zero
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
         let count: CGFloat = min(14, floor(bounds.width / 75))
         
-        layout.itemSize = CGSize(width: (self.bounds.width - (Constants.xsMargin-4)*2)/count,
+        self.layout.itemSize = CGSize(width: (self.bounds.width - (Constants.xsMargin-4)*2)/count,
                                  height: self.bounds.height)
         
         
-        collectionView.frame = self.bounds
-        
-        collectionView.scrollToItem(at: IndexPath(row: amountOfDays()-1, section: 0), at: .left, animated: false)
+        if self.collectionView.frame != self.bounds || self.collectionView.contentSize != self.lastContentSize {
+            self.lastContentSize = self.collectionView.contentSize
+            self.collectionView.frame = self.bounds
+            self.collectionView.contentOffset.x = max(0, self.collectionView.contentSize.width - self.collectionView.bounds.width)
+        }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return amountOfDays()
+        return self.amountOfDays()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -139,6 +143,7 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
         let today = calendar.startOfDay(for: Date())
         return max(5, 1 + (calendar.dateComponents([.day], from: startDate, to: today).day ?? 0))
     }
+    
 }
 
 private class CalendarCollectionViewCell: UICollectionViewCell {

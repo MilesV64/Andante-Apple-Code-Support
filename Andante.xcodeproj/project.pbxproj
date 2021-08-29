@@ -196,6 +196,7 @@
 		02BBB95E25E5FC7600A10A3D /* SessionOptionsPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBB95D25E5FC7600A10A3D /* SessionOptionsPopupController.swift */; };
 		02BBB96825E72F3E00A10A3D /* SessionSharePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBB96725E72F3D00A10A3D /* SessionSharePopupView.swift */; };
 		02BBB96F25E7333A00A10A3D /* MoveSessionPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBB96E25E7333A00A10A3D /* MoveSessionPopupView.swift */; };
+		02BD468B26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD468A26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift */; };
 		02BD7E2824749FD200EB73D1 /* CalendarScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */; };
 		02C083D1254FF173006D9DA0 /* Tabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083D0254FF173006D9DA0 /* Tabbar.swift */; };
 		02C083DB254FF19A006D9DA0 /* NavigationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */; };
@@ -475,6 +476,7 @@
 		02BBB95D25E5FC7600A10A3D /* SessionOptionsPopupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionOptionsPopupController.swift; sourceTree = "<group>"; };
 		02BBB96725E72F3D00A10A3D /* SessionSharePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSharePopupView.swift; sourceTree = "<group>"; };
 		02BBB96E25E7333A00A10A3D /* MoveSessionPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSessionPopupView.swift; sourceTree = "<group>"; };
+		02BD468A26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StretchyCollectionViewFlowLayout.swift; path = ../../../../Documents/StretchyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScrollView.swift; sourceTree = "<group>"; };
 		02C083D0254FF173006D9DA0 /* Tabbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabbar.swift; sourceTree = "<group>"; };
 		02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationComponent.swift; sourceTree = "<group>"; };
@@ -721,6 +723,7 @@
 				02B4923C22FD06E500F8AFEE /* RecordingsManager.swift */,
 				025957DC22E3A80800CD2E2D /* Easing.swift */,
 				025957DA22E3A7D000CD2E2D /* Animator.swift */,
+				02BD468A26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift */,
 				02930C8A25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift */,
 				0242CD9F266E0027001DB823 /* Sound.swift */,
 				028F1E0925394D9700C1A5C6 /* IAPHelper.swift */,
@@ -1465,6 +1468,7 @@
 				026476E622DBF59D002EA732 /* Day.swift in Sources */,
 				02401BF224F494B200608B20 /* PracticeTimeStatView.swift in Sources */,
 				02BBB95E25E5FC7600A10A3D /* SessionOptionsPopupController.swift in Sources */,
+				02BD468B26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift in Sources */,
 				02CA947924B6F4A800566274 /* SettingsViewController.swift in Sources */,
 				026E847423F8BC060069B116 /* StatsViewController.swift in Sources */,
 				0222F17424C90D680070E638 /* SessionSaveNotification.swift in Sources */,

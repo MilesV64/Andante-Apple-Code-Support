@@ -660,7 +660,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             searchBarView.setSearching(true)
             
             
-            UIView.animateWithCurve(duration: 0.4, curve: UIView.CustomAnimationCurve.exponential.easeOut) {
+            UIView.animateWithCurve(duration: 0.3, curve: UIView.CustomAnimationCurve.cubic.easeOut) {
                 self.setCalendarHidden(true)
             } completion: { }
         }
@@ -864,7 +864,7 @@ class SessionsSearchBar: HeaderAccessoryView, UITextFieldDelegate {
         self.cancelButton.alpha = searching ? 0 : 1
         self.cancelButton.isHidden = false
         
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.86, initialSpringVelocity: 0, options: .curveEaseOut) {
+        UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 0.95, initialSpringVelocity: 0, options: .curveEaseOut) {
             self.cancelButton.alpha = searching ? 1 : 0
             self.layoutSubviews()
         } completion: { complete in
@@ -921,7 +921,7 @@ class SessionsSearchBar: HeaderAccessoryView, UITextFieldDelegate {
         else {
             bgView.roundCorners(12)
         }
-                
+                        
         contentView.frame = bgView.bounds
         
         let frame = CGRect(x: 6, y: bgView.bounds.midY - height/2 - 1, width: height, height: height)

@@ -223,7 +223,7 @@ class HeaderView: UIView {
         isBotViewFocused = focused
         
         if focused {
-            UIView.animateWithCurve(duration: 0.4, curve: UIView.CustomAnimationCurve.exponential.easeOut) {
+            UIView.animateWithCurve(duration: 0.3, curve: UIView.CustomAnimationCurve.cubic.easeOut) {
                 self.topView.alpha = 0
                 self.layoutSubviews()
             } completion: { }
@@ -235,7 +235,7 @@ class HeaderView: UIView {
                 topView.frame = CGRect(x: 0, y: safeAreaInsets.top, width: self.bounds.width, height: self.minHeight)
             }
             
-            UIView.animateWithCurve(duration: 0.4, curve: UIView.CustomAnimationCurve.exponential.easeOut) {
+            UIView.animateWithCurve(duration: 0.3, curve: UIView.CustomAnimationCurve.cubic.easeOut) {
                 self.topView.alpha = 1
                 self.botView.alpha = (isScrolledToTop || self.isSidebarLayout) ? 1 : 0
                 

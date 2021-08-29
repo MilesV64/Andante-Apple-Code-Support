@@ -13,7 +13,7 @@ import Combine
 import os.log
 import CloudKit
 
-public let storeVersionNumber = "2.1.3"
+public let storeVersionNumber = "2.1.4"
 
 public let StartPracticeSessionNotification = "Start Practice Session"
 public let ResumeSessionInProgressNotification = "Resume Practice Session"
@@ -97,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         IAPHelper.shared.fetchProducts()
         
         setupData()
-        
+                
         WidgetDataManager.writeData()
         
         clearTempDirectoryIfNeeded()

@@ -100,7 +100,6 @@
 		026476C822DBF0CB002EA732 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 026476C622DBF0CB002EA732 /* Main.storyboard */; };
 		026476CA22DBF0CD002EA732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 026476C922DBF0CD002EA732 /* Assets.xcassets */; };
 		026476CD22DBF0CD002EA732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 026476CB22DBF0CD002EA732 /* LaunchScreen.storyboard */; };
-		026476DC22DBF458002EA732 /* Practice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476DB22DBF458002EA732 /* Practice.swift */; };
 		026476DE22DBF4F1002EA732 /* PracticeDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */; };
 		026476E422DBF56E002EA732 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476E322DBF56E002EA732 /* Helpers.swift */; };
 		026476E622DBF59D002EA732 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476E522DBF59D002EA732 /* Day.swift */; };
@@ -376,7 +375,6 @@
 		026476C922DBF0CD002EA732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		026476CC22DBF0CD002EA732 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		026476CE22DBF0CD002EA732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		026476DB22DBF458002EA732 /* Practice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Practice.swift; sourceTree = "<group>"; };
 		026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeDatabase.swift; sourceTree = "<group>"; };
 		026476E322DBF56E002EA732 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		026476E522DBF59D002EA732 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
@@ -748,7 +746,6 @@
 				026476E722DBF5DA002EA732 /* UI */,
 				02DE15F82361431300CE7843 /* Sounds */,
 				02EF6C0B251EEA6A004E89A2 /* Widget */,
-				02794D142612CB4A00FA29B1 /* Realm */,
 			);
 			path = Andante;
 			sourceTree = "<group>";
@@ -934,14 +931,6 @@
 				0275B199251EDD9A00F853AE /* Info.plist */,
 			);
 			path = WidgetProfileIntentUI;
-			sourceTree = "<group>";
-		};
-		02794D142612CB4A00FA29B1 /* Realm */ = {
-			isa = PBXGroup;
-			children = (
-				026476DB22DBF458002EA732 /* Practice.swift */,
-			);
-			path = Realm;
 			sourceTree = "<group>";
 		};
 		02794D3D2612CC6700FA29B1 /* App */ = {
@@ -1403,7 +1392,6 @@
 			files = (
 				0252EE35262262C70017367F /* ClippingShadowView.swift in Sources */,
 				028FAACF25F3182F000561DD /* IconPickerPopupController.swift in Sources */,
-				026476DC22DBF458002EA732 /* Practice.swift in Sources */,
 				02011FCA251F01AC00565F75 /* WidgetFileManager.swift in Sources */,
 				02E99D9A261AAF6200EDCA52 /* TextEditorToolbar.swift in Sources */,
 				02A2DB4224CBEE23002E0760 /* IconPickerView.swift in Sources */,

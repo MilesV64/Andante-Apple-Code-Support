@@ -40,7 +40,6 @@ class CalendarGoalView: UIView, UICollectionViewDelegate, UICollectionViewDelega
         profile = User.getActiveProfile()
         if let earliest = PracticeDatabase.shared.sessions().last?.startTime {
             firstMonth = Month(date: earliest)
-            print(firstMonth)
         }
         else {
             firstMonth = Month(date: Date())
@@ -59,13 +58,13 @@ class CalendarGoalView: UIView, UICollectionViewDelegate, UICollectionViewDelega
         monthLabel.font = Fonts.semibold.withSize(18)
         self.addSubview(monthLabel)
         
-        nextButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)), for: .normal)
-        nextButton.tintColor = Colors.text
+        nextButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .heavy)), for: .normal)
+        nextButton.tintColor = Colors.text.withAlphaComponent(0.75)
         nextButton.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
         self.addSubview(nextButton)
         
-        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)), for: .normal)
-        backButton.tintColor = Colors.text
+        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .heavy)), for: .normal)
+        backButton.tintColor = Colors.text.withAlphaComponent(0.75)
         backButton.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
         self.addSubview(backButton)
         

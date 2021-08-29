@@ -206,21 +206,29 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func showAppTweaks() {
-        self.present(UINavigationController(rootViewController: AppTweaksTableViewController()), animated: true, completion: nil)
+        let appTweaksViewController = AppTweaksViewController()
+        appTweaksViewController.delegate = self
+        self.present(UINavigationController(rootViewController: appTweaksViewController), animated: true, completion: nil)
     }
     
     private func showPremiumController() {
         let vc = AndanteProViewController()
-        vc.successAction = {
-            [weak self] in
-            guard let self = self else { return }
-            
-            if Settings.isPremium && self.cells.first! === self.premiumCell {
-                self.cells.removeFirst().removeFromSuperview()
-            }
-            self.view.setNeedsLayout()
+        vc.successAction = { [weak self] in
+            self?.reloadPremiumCell()
         }
         self.present(vc, animated: true, completion: nil)
+    }
+    
+    private func reloadPremiumCell() {
+        if Settings.isPremium && self.cells.first! === self.premiumCell {
+            self.cells.removeFirst().removeFromSuperview()
+        }
+        else if Settings.isPremium == false && self.cells.first! !== self.premiumCell {
+            self.premiumCell.delegate = self
+            self.scrollView.addSubview(self.premiumCell)
+            self.cells.insert(self.premiumCell, at: 0)
+        }
+        self.view.setNeedsLayout()
     }
     
     private func newProfile() {
@@ -458,6 +466,14 @@ extension SettingsViewController: SettingsOptionDelegate, MFMailComposeViewContr
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+extension SettingsViewController: AppTweaksViewControllerDelegate {
+    
+    func appTweaksViewController(didChangeAndantePro isPremium: Bool) {
+        self.reloadPremiumCell()
     }
     
 }

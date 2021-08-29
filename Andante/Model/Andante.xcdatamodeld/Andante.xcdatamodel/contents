@@ -21,6 +21,14 @@
         <relationship name="entries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CDJournalEntry" inverseName="folder" inverseEntity="CDJournalEntry"/>
         <relationship name="profile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDProfile" inverseName="journalFolders" inverseEntity="CDProfile"/>
     </entity>
+    <entity name="CDOngoingSession" representedClassName="CDOngoingSession" syncable="YES">
+        <attribute name="isPaused" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="lastSave" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="notes" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="practiceTimeSeconds" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="recordingURLs" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="start" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
     <entity name="CDProfile" representedClassName="CDProfile" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" defaultDateTimeInterval="634447980" usesScalarValueType="NO"/>
         <attribute name="dailyGoal" optional="YES" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES"/>
@@ -100,8 +108,10 @@
     <configuration name="Local">
         <memberEntity name="CDReminder"/>
         <memberEntity name="CDAskForRatingTracker"/>
+        <memberEntity name="CDOngoingSession"/>
     </configuration>
     <elements>
+        <element name="CDAskForRatingTracker" positionX="-9" positionY="117" width="128" height="74"/>
         <element name="CDJournalEntry" positionX="-36" positionY="9" width="128" height="134"/>
         <element name="CDJournalFolder" positionX="-63" positionY="-18" width="128" height="104"/>
         <element name="CDProfile" positionX="18" positionY="63" width="128" height="149"/>
@@ -112,6 +122,6 @@
         <element name="CDStringAttributes" positionX="-54" positionY="-9" width="128" height="89"/>
         <element name="CDTextEditorBlock" positionX="-9" positionY="108" width="128" height="134"/>
         <element name="CDTextEditorEntry" positionX="0" positionY="117" width="128" height="74"/>
-        <element name="CDAskForRatingTracker" positionX="-9" positionY="117" width="128" height="74"/>
+        <element name="CDOngoingSession" positionX="-9" positionY="117" width="128" height="119"/>
     </elements>
 </model>

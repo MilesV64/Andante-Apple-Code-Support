@@ -137,6 +137,8 @@
 		027F351324B3C5D7002674EC /* CalendarGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F351224B3C5D7002674EC /* CalendarGoalView.swift */; };
 		027F351524B3C5E3002674EC /* CalendarGoalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F351424B3C5E3002674EC /* CalendarGoalCell.swift */; };
 		027F351724B3DA94002674EC /* HandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F351624B3DA94002674EC /* HandleView.swift */; };
+		02800EA326DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02800EA126DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift */; };
+		02800EA426DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02800EA226DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift */; };
 		02811F6024A5E2F8000E916E /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02811F5F24A5E2F8000E916E /* Separator.swift */; };
 		028142042425D6CD00C9461F /* SessionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028142032425D6CD00C9461F /* SessionsViewController.swift */; };
 		028142062426FB0000C9461F /* PopupMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028142052426FB0000C9461F /* PopupMenuViewController.swift */; };
@@ -412,6 +414,8 @@
 		027F351224B3C5D7002674EC /* CalendarGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarGoalView.swift; sourceTree = "<group>"; };
 		027F351424B3C5E3002674EC /* CalendarGoalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarGoalCell.swift; sourceTree = "<group>"; };
 		027F351624B3DA94002674EC /* HandleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleView.swift; sourceTree = "<group>"; };
+		02800EA126DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDOngoingSession+CoreDataClass.swift"; sourceTree = "<group>"; };
+		02800EA226DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDOngoingSession+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		02811F5F24A5E2F8000E916E /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		028142032425D6CD00C9461F /* SessionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsViewController.swift; sourceTree = "<group>"; };
 		028142052426FB0000C9461F /* PopupMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupMenuViewController.swift; sourceTree = "<group>"; };
@@ -672,6 +676,7 @@
 		024E4D8B25D0E5130083E653 /* Properties */ = {
 			isa = PBXGroup;
 			children = (
+				02800EA226DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift */,
 				021826F2262514B0008CB7C4 /* CDJournalEntry+CoreDataProperties.swift */,
 				0242664C26DB182B00041583 /* CDAskForRatingTracker+CoreDataProperties.swift */,
 				021826F4262514B0008CB7C4 /* CDSession+CoreDataProperties.swift */,
@@ -1108,6 +1113,7 @@
 			children = (
 				024E4D8B25D0E5130083E653 /* Properties */,
 				024E4D6B25D0E5010083E653 /* CDProfile+CoreDataClass.swift */,
+				02800EA126DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift */,
 				0242664B26DB182B00041583 /* CDAskForRatingTracker+CoreDataClass.swift */,
 				024E4D7625D0E5050083E653 /* CDSession+CoreDataClass.swift */,
 				02F9335225E1CF9500166027 /* CDSessionAttributes+CoreDataClass.swift */,
@@ -1402,6 +1408,7 @@
 				02F9335525E1CF9500166027 /* CDRecording+CoreDataProperties.swift in Sources */,
 				0287616B24DDF6F800F568CA /* BlurView.swift in Sources */,
 				02E99D94261AA4F300EDCA52 /* TextEditor+Extensions.swift in Sources */,
+				02800EA326DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift in Sources */,
 				02A2F23224C9766300D7FBD7 /* PlaceholderTextView.swift in Sources */,
 				028D5DD623FDDE9F00285204 /* JournalViewController.swift in Sources */,
 				02B2E29625DF4910006CBBD5 /* JournalEntryOptionsViewController.swift in Sources */,
@@ -1574,6 +1581,7 @@
 				02401BDB24EBA1E800608B20 /* TimerPickerAlertController.swift in Sources */,
 				02649354248DD08B00B543E2 /* NotesViewController.swift in Sources */,
 				026476C322DBF0CB002EA732 /* AppDelegate.swift in Sources */,
+				02800EA426DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift in Sources */,
 				0270BBA624A03CD6003AC91F /* HeaderView.swift in Sources */,
 				02D52A05250C39C3005504EA /* SessionShareView.swift in Sources */,
 			);

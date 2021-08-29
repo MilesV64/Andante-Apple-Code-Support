@@ -110,6 +110,11 @@ class HeaderView: UIView {
             streakView.isHidden = false
             label.font = Fonts.bold.withSize(18)
             
+            // Handle focus state
+            if self.isBotViewFocused {
+                self.topView.alpha = 0
+            }
+            
             height = 124
             minHeight = 52
         }
@@ -117,6 +122,9 @@ class HeaderView: UIView {
             profileView.isHidden = true
             streakView.isHidden = true
             label.font = Fonts.bold.withSize(20)
+            
+            // Handle focus state
+            self.topView.alpha = 1
             
             height = 60
             minHeight = 60
@@ -222,8 +230,10 @@ class HeaderView: UIView {
     public func setFocused(_ focused: Bool, isScrolledToTop: Bool) {
         isBotViewFocused = focused
         
+        if self.isSidebarLayout { return }
+        
         if focused {
-            UIView.animateWithCurve(duration: 0.4, curve: UIView.CustomAnimationCurve.exponential.easeOut) {
+            UIView.animateWithCurve(duration: 0.3, curve: UIView.CustomAnimationCurve.cubic.easeOut) {
                 self.topView.alpha = 0
                 self.layoutSubviews()
             } completion: { }
@@ -235,7 +245,7 @@ class HeaderView: UIView {
                 topView.frame = CGRect(x: 0, y: safeAreaInsets.top, width: self.bounds.width, height: self.minHeight)
             }
             
-            UIView.animateWithCurve(duration: 0.4, curve: UIView.CustomAnimationCurve.exponential.easeOut) {
+            UIView.animateWithCurve(duration: 0.3, curve: UIView.CustomAnimationCurve.cubic.easeOut) {
                 self.topView.alpha = 1
                 self.botView.alpha = (isScrolledToTop || self.isSidebarLayout) ? 1 : 0
                 

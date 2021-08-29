@@ -89,6 +89,8 @@ class SettingsViewController: UIViewController {
     private let handleView = HandleView()
     private let scrollView = CancelTouchScrollView()
     
+    private var appTweaksGestureRecognizer: UITapGestureRecognizer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -186,9 +188,16 @@ class SettingsViewController: UIViewController {
         versionLabel.text = storeVersionNumber
         versionLabel.textColor = Colors.lightText
         versionLabel.font = Fonts.regular.withSize(13)
+        versionLabel.textAlignment = .center
         scrollView.addSubview(versionLabel)
         
         scrollView.addSubview(handleView)
+        
+        #if DEBUG
+        self.appTweaksGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showAppTweaks))
+        self.versionLabel.addGestureRecognizer(self.appTweaksGestureRecognizer!)
+        self.versionLabel.isUserInteractionEnabled = true
+        #endif
                 
     }
     
@@ -196,18 +205,30 @@ class SettingsViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    @objc func showAppTweaks() {
+        let appTweaksViewController = AppTweaksViewController()
+        appTweaksViewController.delegate = self
+        self.present(UINavigationController(rootViewController: appTweaksViewController), animated: true, completion: nil)
+    }
+    
     private func showPremiumController() {
         let vc = AndanteProViewController()
-        vc.successAction = {
-            [weak self] in
-            guard let self = self else { return }
-            
-            if Settings.isPremium && self.cells.first! === self.premiumCell {
-                self.cells.removeFirst().removeFromSuperview()
-            }
-            self.view.setNeedsLayout()
+        vc.successAction = { [weak self] in
+            self?.reloadPremiumCell()
         }
         self.present(vc, animated: true, completion: nil)
+    }
+    
+    private func reloadPremiumCell() {
+        if Settings.isPremium && self.cells.first! === self.premiumCell {
+            self.cells.removeFirst().removeFromSuperview()
+        }
+        else if Settings.isPremium == false && self.cells.first! !== self.premiumCell {
+            self.premiumCell.delegate = self
+            self.scrollView.addSubview(self.premiumCell)
+            self.cells.insert(self.premiumCell, at: 0)
+        }
+        self.view.setNeedsLayout()
     }
     
     private func newProfile() {
@@ -320,10 +341,12 @@ class SettingsViewController: UIViewController {
             height: 20
         )
         
-        versionLabel.sizeToFit()
-        versionLabel.frame.origin = CGPoint(
-            x: self.view.bounds.midX - versionLabel.bounds.width/2,
-            y: separator4.frame.maxY + 20
+        
+        versionLabel.frame = CGRect(
+            x: self.view.bounds.midX - 50,
+            y: separator4.frame.maxY + 4,
+            width: 100,
+            height: 32
         )
         
         scrollView.contentSize.height = versionLabel.frame.maxY + max(self.view.safeAreaInsets.bottom + 4, 24)
@@ -443,6 +466,14 @@ extension SettingsViewController: SettingsOptionDelegate, MFMailComposeViewContr
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+extension SettingsViewController: AppTweaksViewControllerDelegate {
+    
+    func appTweaksViewController(didChangeAndantePro isPremium: Bool) {
+        self.reloadPremiumCell()
     }
     
 }

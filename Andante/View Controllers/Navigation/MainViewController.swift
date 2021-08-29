@@ -320,7 +320,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
             }
         }
                 
-        UIView.animateWithCurve(duration: 0.4, curve: UIView.CustomAnimationCurve.exponential.easeOut) {
+        UIView.animateWithCurve(duration: 0.3, curve: UIView.CustomAnimationCurve.cubic.easeOut) {
             self.updateHeaderView()
             if shouldScrollToTop, let scrollView = self.scrollView {
                 scrollView.setContentOffset(

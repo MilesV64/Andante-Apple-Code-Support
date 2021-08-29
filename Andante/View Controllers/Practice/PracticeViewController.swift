@@ -205,13 +205,12 @@ class PracticeViewController: PracticeAnimationViewController {
         
         setup()
         
-        //ONGS
-//        if OngoingSession.ongoingSession == nil {
-//            OngoingSession.createOngoingSession()
-//        }
-//        else {
-//            resumeOngoingSession()
-//        }
+        if CDOngoingSession.ongoingSession == nil {
+            CDOngoingSession.createOngoingSession()
+        }
+        else {
+            resumeOngoingSession()
+        }
         
         ongoingSessionUpdateTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: {
             [weak self] timer in
@@ -221,18 +220,17 @@ class PracticeViewController: PracticeAnimationViewController {
     }
     
     private func updateOngoingSession() {
-        //ONGS
-//        OngoingSession.ongoingSession?.update(updates: {
-//            [weak self] session in
-//            guard let self = self else { return }
-//
-//            session.lastSave = Date()
-//            session.isPaused = self.isTimerPaused
-//            session.start = self.timerManager.startTime ?? Date()
-//            session.practiceTimeSeconds = self.timerManager.timerSeconds
-//
-//            session.notes = self.session.notes
-//        })
+        CDOngoingSession.ongoingSession?.update(updates: {
+            [weak self] session in
+            guard let self = self else { return }
+
+            session.lastSave = Date()
+            session.isPaused = self.isTimerPaused
+            session.start = self.timerManager.startTime ?? Date()
+            session.practiceTimeSeconds = Int64(self.timerManager.timerSeconds)
+
+            session.notes = self.session.notes
+        })
     }
     
     override func didCollapse() {
@@ -330,9 +328,8 @@ class PracticeViewController: PracticeAnimationViewController {
         
         interactionHaptic.prepare()
 
-        //ONGS
-        if false { //let session = OngoingSession.ongoingSession {
-            //timerManager.startTimer(start: session.start, seconds: session.practiceTimeSeconds)
+        if let session = CDOngoingSession.ongoingSession {
+            timerManager.startTimer(start: session.start ?? Date(), seconds: Int(session.practiceTimeSeconds))
         }
         else {
             timerManager.startTimer()
@@ -358,36 +355,37 @@ class PracticeViewController: PracticeAnimationViewController {
     }
     
     private func resumeOngoingSession() {
-        //ONGS
-//        if let session = OngoingSession.ongoingSession {
-//            self.session.notes = session.notes
-//            if !session.isPaused {
-//                let diff = Int(Date().timeIntervalSince(session.lastSave))
-//                session.update { (session) in
-//                    session.practiceTimeSeconds += diff
-//                }
-//            }
-//            timerDidUpdate(seconds: session.practiceTimeSeconds)
-//
-//            session.update { (session) in
-//                session.isPaused = false
-//            }
-//
-//            for chunkFilename in session.recordingFilenames {
-//                let assetOpts = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
-//                let asset = AVURLAsset(
-//                    url: RecordingsManager.getRecordingURL(chunkFilename), options: assetOpts)
-//
-//                self.recordingChunks.append(asset)
-//            }
-//
-//            if session.recordingFilenames.count > 0 {
-//                activeTools.append(.record)
-//                recordView.showPlayback()
-//                view.setNeedsLayout()
-//            }
-//
-//        }
+        if let session = CDOngoingSession.ongoingSession {
+            self.session.notes = session.notes ?? ""
+            if !session.isPaused {
+                let diff = Int(Date().timeIntervalSince(session.lastSave ?? Date()))
+                session.update { (session) in
+                    session.practiceTimeSeconds += Int64(diff)
+                }
+            }
+            timerDidUpdate(seconds: Int(session.practiceTimeSeconds))
+
+            session.update { (session) in
+                session.isPaused = false
+            }
+            
+            let recordings = session.recordings
+
+            for chunkFilename in recordings {
+                let assetOpts = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
+                let asset = AVURLAsset(
+                    url: RecordingsManager.getRecordingURL(chunkFilename), options: assetOpts)
+
+                self.recordingChunks.append(asset)
+            }
+
+            if recordings.count > 0 {
+                activeTools.append(.record)
+                recordView.showPlayback()
+                view.setNeedsLayout()
+            }
+
+        }
         
     }
     
@@ -628,8 +626,8 @@ private extension PracticeViewController {
         }
         
         ongoingSessionUpdateTimer?.invalidate()
-        //ONGS
-        //OngoingSession.deleteOngoingSession()
+
+        CDOngoingSession.deleteOngoingSession()
         
         unscheduleTimerNotification()
     }
@@ -789,7 +787,7 @@ extension PracticeViewController: PracticeToolButtonDelegate, MetronomeToolViewD
             if Settings.isPremium {
                 let vc = NotesViewController()
                 
-                vc.notes = self.session.notes ?? ""
+                vc.notes = self.session.notes
                 vc.notesAction = {
                     [weak self] notes in
                     guard let self = self else { return }
@@ -1133,10 +1131,10 @@ extension PracticeViewController: RecordingToolViewDelegate {
         }
         
         recordingChunks.removeAll()
-        //ONGS
-//        OngoingSession.ongoingSession?.update(updates: { (session) in
-//            session.recordingFilenames.removeAll()
-//        })
+        
+        CDOngoingSession.ongoingSession?.update(updates: { (session) in
+            session.recordings = []
+        })
         
         activeTools.remove(at: 0)
                 
@@ -1216,10 +1214,11 @@ extension PracticeViewController: RecordingToolViewDelegate {
         self.recordingChunks.append(asset)
         self.updateRecordingPlaybackPosition()
         
-        //ONGS
-//        OngoingSession.ongoingSession?.update(updates: { (session) in
-//            session.recordingFilenames.append(RecordingsManager.filename(from: asset.url))
-//        })
+        CDOngoingSession.ongoingSession?.update(updates: { (session) in
+            var recordings = session.recordings
+            recordings.append(RecordingsManager.filename(from: asset.url))
+            session.recordings = recordings
+        })
         
         audioRecorder.prepare()
         
@@ -1427,7 +1426,7 @@ extension PracticeViewController {
     }
 }
 
-protocol AudioNotificationHandlerDelegate: class {
+protocol AudioNotificationHandlerDelegate: AnyObject {
     
     func audioInterruptionDidBegin()
     

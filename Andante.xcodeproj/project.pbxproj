@@ -46,7 +46,6 @@
 		02306CBD234489F000C8A2AC /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02306CBC234489EF00C8A2AC /* Intents.framework */; };
 		02306CBF234489F400C8A2AC /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02306CBE234489F400C8A2AC /* IntentsUI.framework */; };
 		02356329260556E90075494A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 026476C922DBF0CD002EA732 /* Assets.xcassets */; };
-		0239AC0B251C0A2000E9E6DE /* AskForRatingTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239AC0A251C0A2000E9E6DE /* AskForRatingTracker.swift */; };
 		023AFF3E25E22C4B00F9395D /* MoveEntryPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023AFF3D25E22C4B00F9395D /* MoveEntryPopupView.swift */; };
 		023AFF4C25E2323F00F9395D /* PopupSecondaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023AFF4B25E2323F00F9395D /* PopupSecondaryView.swift */; };
 		023BEEB325379FB7008A3371 /* ProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023BEEB225379FB7008A3371 /* ProgressRing.swift */; };
@@ -64,6 +63,8 @@
 		02401BF224F494B200608B20 /* PracticeTimeStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02401BF124F494B200608B20 /* PracticeTimeStatView.swift */; };
 		02401BF424F49A1000608B20 /* StatsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02401BF324F49A0F00608B20 /* StatsChartView.swift */; };
 		02401BF624F6327700608B20 /* StatsLineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02401BF524F6327700608B20 /* StatsLineChartView.swift */; };
+		0242664D26DB183400041583 /* CDAskForRatingTracker+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242664B26DB182B00041583 /* CDAskForRatingTracker+CoreDataClass.swift */; };
+		0242664E26DB183A00041583 /* CDAskForRatingTracker+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242664C26DB182B00041583 /* CDAskForRatingTracker+CoreDataProperties.swift */; };
 		0242CDA0266E0027001DB823 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242CD9F266E0027001DB823 /* Sound.swift */; };
 		02481C80251DEDCC0023FBBE /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0290AA60251D5DDD00B08CC0 /* SwiftUI.framework */; };
 		02481C83251DEDCE0023FBBE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0290AA5E251D5DDD00B08CC0 /* WidgetKit.framework */; };
@@ -136,6 +137,9 @@
 		027F351324B3C5D7002674EC /* CalendarGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F351224B3C5D7002674EC /* CalendarGoalView.swift */; };
 		027F351524B3C5E3002674EC /* CalendarGoalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F351424B3C5E3002674EC /* CalendarGoalCell.swift */; };
 		027F351724B3DA94002674EC /* HandleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F351624B3DA94002674EC /* HandleView.swift */; };
+		02800EA326DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02800EA126DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift */; };
+		02800EA426DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02800EA226DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift */; };
+		02800EA626DB61BE00B45268 /* AppTweaksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02800EA526DB61BE00B45268 /* AppTweaksViewController.swift */; };
 		02811F6024A5E2F8000E916E /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02811F5F24A5E2F8000E916E /* Separator.swift */; };
 		028142042425D6CD00C9461F /* SessionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028142032425D6CD00C9461F /* SessionsViewController.swift */; };
 		028142062426FB0000C9461F /* PopupMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028142052426FB0000C9461F /* PopupMenuViewController.swift */; };
@@ -318,7 +322,6 @@
 		02306CBB234489CB00C8A2AC /* AndanteRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndanteRelease.entitlements; sourceTree = "<group>"; };
 		02306CBC234489EF00C8A2AC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		02306CBE234489F400C8A2AC /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
-		0239AC0A251C0A2000E9E6DE /* AskForRatingTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskForRatingTracker.swift; sourceTree = "<group>"; };
 		0239B0B6253A41ED005440F9 /* AndanteProTest.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = AndanteProTest.storekit; sourceTree = "<group>"; };
 		0239B0BB253A42A7005440F9 /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = StoreKitTestCertificate.cer; sourceTree = "<group>"; };
 		023AFF3D25E22C4B00F9395D /* MoveEntryPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveEntryPopupView.swift; sourceTree = "<group>"; };
@@ -337,6 +340,8 @@
 		02401BF124F494B200608B20 /* PracticeTimeStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeTimeStatView.swift; sourceTree = "<group>"; };
 		02401BF324F49A0F00608B20 /* StatsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsChartView.swift; sourceTree = "<group>"; };
 		02401BF524F6327700608B20 /* StatsLineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsLineChartView.swift; sourceTree = "<group>"; };
+		0242664B26DB182B00041583 /* CDAskForRatingTracker+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDAskForRatingTracker+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0242664C26DB182B00041583 /* CDAskForRatingTracker+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDAskForRatingTracker+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0242CD9F266E0027001DB823 /* Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sound.swift; sourceTree = "<group>"; };
 		024A913E25648109003A44B2 /* ConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
 		024A914E2565026A003A44B2 /* Tuner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tuner.swift; sourceTree = "<group>"; };
@@ -410,6 +415,9 @@
 		027F351224B3C5D7002674EC /* CalendarGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarGoalView.swift; sourceTree = "<group>"; };
 		027F351424B3C5E3002674EC /* CalendarGoalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarGoalCell.swift; sourceTree = "<group>"; };
 		027F351624B3DA94002674EC /* HandleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleView.swift; sourceTree = "<group>"; };
+		02800EA126DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDOngoingSession+CoreDataClass.swift"; sourceTree = "<group>"; };
+		02800EA226DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDOngoingSession+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		02800EA526DB61BE00B45268 /* AppTweaksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTweaksViewController.swift; sourceTree = "<group>"; };
 		02811F5F24A5E2F8000E916E /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		028142032425D6CD00C9461F /* SessionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsViewController.swift; sourceTree = "<group>"; };
 		028142052426FB0000C9461F /* PopupMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupMenuViewController.swift; sourceTree = "<group>"; };
@@ -670,7 +678,9 @@
 		024E4D8B25D0E5130083E653 /* Properties */ = {
 			isa = PBXGroup;
 			children = (
+				02800EA226DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift */,
 				021826F2262514B0008CB7C4 /* CDJournalEntry+CoreDataProperties.swift */,
+				0242664C26DB182B00041583 /* CDAskForRatingTracker+CoreDataProperties.swift */,
 				021826F4262514B0008CB7C4 /* CDSession+CoreDataProperties.swift */,
 				021826F6262514B0008CB7C4 /* CDTextEditorEntry+CoreDataProperties.swift */,
 				021826F8262514B0008CB7C4 /* CDTextEditorBlock+CoreDataProperties.swift */,
@@ -930,7 +940,6 @@
 			isa = PBXGroup;
 			children = (
 				026476DB22DBF458002EA732 /* Practice.swift */,
-				0239AC0A251C0A2000E9E6DE /* AskForRatingTracker.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -1106,6 +1115,8 @@
 			children = (
 				024E4D8B25D0E5130083E653 /* Properties */,
 				024E4D6B25D0E5010083E653 /* CDProfile+CoreDataClass.swift */,
+				02800EA126DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift */,
+				0242664B26DB182B00041583 /* CDAskForRatingTracker+CoreDataClass.swift */,
 				024E4D7625D0E5050083E653 /* CDSession+CoreDataClass.swift */,
 				02F9335225E1CF9500166027 /* CDSessionAttributes+CoreDataClass.swift */,
 				024E4D6925D0E5000083E653 /* CDRecording+CoreDataClass.swift */,
@@ -1185,6 +1196,7 @@
 				02B2D0F02518573300DA75C7 /* SiriShortcutsViewController.swift */,
 				021012AF25FD87A900C4F340 /* MergeProfilesViewController.swift */,
 				028EAE27256DF03400DD0C7D /* RemindersViewController.swift */,
+				02800EA526DB61BE00B45268 /* AppTweaksViewController.swift */,
 				02ADF84F260EF641003B64D7 /* CloudSupportViewController.swift */,
 				02AE5C2D256F22A800244ABA /* NewReminderViewController.swift */,
 				0210A79F250D86690048FBF9 /* ExportDataViewController.swift */,
@@ -1399,9 +1411,9 @@
 				02F9335525E1CF9500166027 /* CDRecording+CoreDataProperties.swift in Sources */,
 				0287616B24DDF6F800F568CA /* BlurView.swift in Sources */,
 				02E99D94261AA4F300EDCA52 /* TextEditor+Extensions.swift in Sources */,
+				02800EA326DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift in Sources */,
 				02A2F23224C9766300D7FBD7 /* PlaceholderTextView.swift in Sources */,
 				028D5DD623FDDE9F00285204 /* JournalViewController.swift in Sources */,
-				0239AC0B251C0A2000E9E6DE /* AskForRatingTracker.swift in Sources */,
 				02B2E29625DF4910006CBBD5 /* JournalEntryOptionsViewController.swift in Sources */,
 				02DF2360251EAE4B009490B4 /* WidgetContent.swift in Sources */,
 				02F501D724B43E4800F4E438 /* MinutePickerView.swift in Sources */,
@@ -1485,13 +1497,16 @@
 				02401BDD24EDE14700608B20 /* TimerCompleteAlertController.swift in Sources */,
 				02D9F21C23358B7D0047139C /* GradientImageView.swift in Sources */,
 				0210A7A0250D86690048FBF9 /* ExportDataViewController.swift in Sources */,
+				0242664E26DB183A00041583 /* CDAskForRatingTracker+CoreDataProperties.swift in Sources */,
 				02F71F992511A67E004F69F6 /* TransitionManager.swift in Sources */,
 				025957DB22E3A7D000CD2E2D /* Animator.swift in Sources */,
 				021826D72625137A008CB7C4 /* CDTextEditorEntry+CoreDataClass.swift in Sources */,
 				02BD7E2824749FD200EB73D1 /* CalendarScrollView.swift in Sources */,
 				024E4D8125D0E5050083E653 /* CDJournalFolder+CoreDataClass.swift in Sources */,
 				02B2E28C25DF0D61006CBBD5 /* PopupViewController.swift in Sources */,
+				0242664D26DB183400041583 /* CDAskForRatingTracker+CoreDataClass.swift in Sources */,
 				02F9336025E1CF9500166027 /* CDSessionAttributes+CoreDataClass.swift in Sources */,
+				02800EA626DB61BE00B45268 /* AppTweaksViewController.swift in Sources */,
 				02DD115A24D01E6B009CB1DF /* SettingsDetailViews.swift in Sources */,
 				028EAE28256DF03400DD0C7D /* RemindersViewController.swift in Sources */,
 				023AFF3E25E22C4B00F9395D /* MoveEntryPopupView.swift in Sources */,
@@ -1570,6 +1585,7 @@
 				02401BDB24EBA1E800608B20 /* TimerPickerAlertController.swift in Sources */,
 				02649354248DD08B00B543E2 /* NotesViewController.swift in Sources */,
 				026476C322DBF0CB002EA732 /* AppDelegate.swift in Sources */,
+				02800EA426DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift in Sources */,
 				0270BBA624A03CD6003AC91F /* HeaderView.swift in Sources */,
 				02D52A05250C39C3005504EA /* SessionShareView.swift in Sources */,
 			);
@@ -1796,7 +1812,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				"OTHER_SWIFT_FLAGS[arch=*]" = "-Xfrontend -warn-long-expression-type-checking=140";
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1828,7 +1844,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1854,7 +1870,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntentUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1881,7 +1897,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntentUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1907,7 +1923,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntent";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1934,7 +1950,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntent";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1962,7 +1978,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.AndanteWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1991,7 +2007,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.AndanteWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

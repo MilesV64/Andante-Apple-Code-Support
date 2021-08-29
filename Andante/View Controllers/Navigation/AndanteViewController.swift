@@ -10,6 +10,7 @@ import UIKit
 import Combine
 import CoreData
 import AVFoundation
+import StoreKit
 
 class AndanteViewController: UIViewController, NavigationComponentDelegate {
     
@@ -255,10 +256,9 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
             
             whatsNew.closeAction = {
                 self.sessionsViewController.showTooltip(nil)
-                //ONGS
-//                if OngoingSession.ongoingSession != nil {
-//                    self.presentResumeSessionAlert()
-//                }
+                if CDOngoingSession.ongoingSession != nil {
+                    self.presentResumeSessionAlert()
+                }
             }
 
             self.present(whatsNew, animated: true, completion: nil)
@@ -266,10 +266,9 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
         else {
             self.sessionsViewController.animate()
             
-            //ONGS
-//            if OngoingSession.ongoingSession != nil {
-//                self.presentResumeSessionAlert()
-//            }
+            if CDOngoingSession.ongoingSession != nil {
+                self.presentResumeSessionAlert()
+            }
         }
         
     }
@@ -348,8 +347,7 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
         }
         
         popupVC.cancelAction = {
-            //ONGS
-            //OngoingSession.deleteOngoingSession()
+            CDOngoingSession.deleteOngoingSession()
         }
         
         self.presentPopupViewController(popupVC)
@@ -707,6 +705,14 @@ extension AndanteViewController {
         
         lastSession = session
         showSessionSaveNotification(delay: true)
+        
+        // Ask for rating
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if CDAskForRatingTracker.shouldAskForRating() {
+                SKStoreReviewController.requestReview()
+            }
+        }
+        
     }
     
     public func didChangeProfile(_ profile: CDProfile?) {

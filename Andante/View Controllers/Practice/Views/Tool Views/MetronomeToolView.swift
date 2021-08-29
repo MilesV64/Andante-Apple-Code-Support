@@ -38,7 +38,7 @@ class MetronomeToolView: PracticeToolView, MetronomeDelegate {
         
         metronome.delegate = self
         
-        setBPM(120)
+        setBPM(80)
         
         label.textColor = PracticeColors.text
         label.font = Fonts.regular.withSize(18)

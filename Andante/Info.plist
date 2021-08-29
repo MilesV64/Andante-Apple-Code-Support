@@ -27,7 +27,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Andante uses the microphone only when you are recording your audio during a session.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>App saves photo if user selects &apos;Save Image&apos; while sharing session</string>
+	<string>App saves photo if user selects 'Save Image' while sharing session</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Andante wants to use images from your Photo Library.</string>
 	<key>NSUserActivityTypes</key>

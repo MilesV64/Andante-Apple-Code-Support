@@ -46,7 +46,6 @@
 		02306CBD234489F000C8A2AC /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02306CBC234489EF00C8A2AC /* Intents.framework */; };
 		02306CBF234489F400C8A2AC /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02306CBE234489F400C8A2AC /* IntentsUI.framework */; };
 		02356329260556E90075494A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 026476C922DBF0CD002EA732 /* Assets.xcassets */; };
-		0239AC0B251C0A2000E9E6DE /* AskForRatingTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0239AC0A251C0A2000E9E6DE /* AskForRatingTracker.swift */; };
 		023AFF3E25E22C4B00F9395D /* MoveEntryPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023AFF3D25E22C4B00F9395D /* MoveEntryPopupView.swift */; };
 		023AFF4C25E2323F00F9395D /* PopupSecondaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023AFF4B25E2323F00F9395D /* PopupSecondaryView.swift */; };
 		023BEEB325379FB7008A3371 /* ProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023BEEB225379FB7008A3371 /* ProgressRing.swift */; };
@@ -320,7 +319,6 @@
 		02306CBB234489CB00C8A2AC /* AndanteRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndanteRelease.entitlements; sourceTree = "<group>"; };
 		02306CBC234489EF00C8A2AC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		02306CBE234489F400C8A2AC /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
-		0239AC0A251C0A2000E9E6DE /* AskForRatingTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskForRatingTracker.swift; sourceTree = "<group>"; };
 		0239B0B6253A41ED005440F9 /* AndanteProTest.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = AndanteProTest.storekit; sourceTree = "<group>"; };
 		0239B0BB253A42A7005440F9 /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = StoreKitTestCertificate.cer; sourceTree = "<group>"; };
 		023AFF3D25E22C4B00F9395D /* MoveEntryPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveEntryPopupView.swift; sourceTree = "<group>"; };
@@ -935,7 +933,6 @@
 			isa = PBXGroup;
 			children = (
 				026476DB22DBF458002EA732 /* Practice.swift */,
-				0239AC0A251C0A2000E9E6DE /* AskForRatingTracker.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -1407,7 +1404,6 @@
 				02E99D94261AA4F300EDCA52 /* TextEditor+Extensions.swift in Sources */,
 				02A2F23224C9766300D7FBD7 /* PlaceholderTextView.swift in Sources */,
 				028D5DD623FDDE9F00285204 /* JournalViewController.swift in Sources */,
-				0239AC0B251C0A2000E9E6DE /* AskForRatingTracker.swift in Sources */,
 				02B2E29625DF4910006CBBD5 /* JournalEntryOptionsViewController.swift in Sources */,
 				02DF2360251EAE4B009490B4 /* WidgetContent.swift in Sources */,
 				02F501D724B43E4800F4E438 /* MinutePickerView.swift in Sources */,

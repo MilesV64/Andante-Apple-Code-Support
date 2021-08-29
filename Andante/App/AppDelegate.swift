@@ -230,7 +230,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     private func logSession() {
-        //AFRT AskForRatingTracker.logSession()
+        CDAskForRatingTracker.logSession()
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {

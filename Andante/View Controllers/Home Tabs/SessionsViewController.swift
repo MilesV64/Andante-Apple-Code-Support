@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import StoreKit
 import Combine
 import CoreData
 
@@ -305,10 +304,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        //AFRT
-//        if AskForRatingTracker.shouldAskForRating {
-//            SKStoreReviewController.requestReview()
-//        }
+        
     }
     
     private var bottomSafeArea: CGFloat {

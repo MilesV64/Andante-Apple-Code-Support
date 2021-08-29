@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20G80" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CDAskForRatingTracker" representedClassName="CDAskForRatingTracker" syncable="YES">
+        <attribute name="lastSessionDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="sessions" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uniqueDays" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
     <entity name="CDJournalEntry" representedClassName="CDJournalEntry" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="editDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -94,6 +99,7 @@
     </configuration>
     <configuration name="Local">
         <memberEntity name="CDReminder"/>
+        <memberEntity name="CDAskForRatingTracker"/>
     </configuration>
     <elements>
         <element name="CDJournalEntry" positionX="-36" positionY="9" width="128" height="134"/>
@@ -106,5 +112,6 @@
         <element name="CDStringAttributes" positionX="-54" positionY="-9" width="128" height="89"/>
         <element name="CDTextEditorBlock" positionX="-9" positionY="108" width="128" height="134"/>
         <element name="CDTextEditorEntry" positionX="0" positionY="117" width="128" height="74"/>
+        <element name="CDAskForRatingTracker" positionX="-9" positionY="117" width="128" height="74"/>
     </elements>
 </model>

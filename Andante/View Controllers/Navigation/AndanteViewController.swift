@@ -10,6 +10,7 @@ import UIKit
 import Combine
 import CoreData
 import AVFoundation
+import StoreKit
 
 class AndanteViewController: UIViewController, NavigationComponentDelegate {
     
@@ -707,6 +708,14 @@ extension AndanteViewController {
         
         lastSession = session
         showSessionSaveNotification(delay: true)
+        
+        // Ask for rating
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if CDAskForRatingTracker.shouldAskForRating() {
+                SKStoreReviewController.requestReview()
+            }
+        }
+        
     }
     
     public func didChangeProfile(_ profile: CDProfile?) {

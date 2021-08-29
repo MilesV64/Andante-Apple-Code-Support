@@ -64,6 +64,8 @@
 		02401BF224F494B200608B20 /* PracticeTimeStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02401BF124F494B200608B20 /* PracticeTimeStatView.swift */; };
 		02401BF424F49A1000608B20 /* StatsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02401BF324F49A0F00608B20 /* StatsChartView.swift */; };
 		02401BF624F6327700608B20 /* StatsLineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02401BF524F6327700608B20 /* StatsLineChartView.swift */; };
+		0242664D26DB183400041583 /* CDAskForRatingTracker+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242664B26DB182B00041583 /* CDAskForRatingTracker+CoreDataClass.swift */; };
+		0242664E26DB183A00041583 /* CDAskForRatingTracker+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242664C26DB182B00041583 /* CDAskForRatingTracker+CoreDataProperties.swift */; };
 		0242CDA0266E0027001DB823 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242CD9F266E0027001DB823 /* Sound.swift */; };
 		02481C80251DEDCC0023FBBE /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0290AA60251D5DDD00B08CC0 /* SwiftUI.framework */; };
 		02481C83251DEDCE0023FBBE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0290AA5E251D5DDD00B08CC0 /* WidgetKit.framework */; };
@@ -337,6 +339,8 @@
 		02401BF124F494B200608B20 /* PracticeTimeStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeTimeStatView.swift; sourceTree = "<group>"; };
 		02401BF324F49A0F00608B20 /* StatsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsChartView.swift; sourceTree = "<group>"; };
 		02401BF524F6327700608B20 /* StatsLineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsLineChartView.swift; sourceTree = "<group>"; };
+		0242664B26DB182B00041583 /* CDAskForRatingTracker+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDAskForRatingTracker+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0242664C26DB182B00041583 /* CDAskForRatingTracker+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDAskForRatingTracker+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0242CD9F266E0027001DB823 /* Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sound.swift; sourceTree = "<group>"; };
 		024A913E25648109003A44B2 /* ConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
 		024A914E2565026A003A44B2 /* Tuner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tuner.swift; sourceTree = "<group>"; };
@@ -671,6 +675,7 @@
 			isa = PBXGroup;
 			children = (
 				021826F2262514B0008CB7C4 /* CDJournalEntry+CoreDataProperties.swift */,
+				0242664C26DB182B00041583 /* CDAskForRatingTracker+CoreDataProperties.swift */,
 				021826F4262514B0008CB7C4 /* CDSession+CoreDataProperties.swift */,
 				021826F6262514B0008CB7C4 /* CDTextEditorEntry+CoreDataProperties.swift */,
 				021826F8262514B0008CB7C4 /* CDTextEditorBlock+CoreDataProperties.swift */,
@@ -1106,6 +1111,7 @@
 			children = (
 				024E4D8B25D0E5130083E653 /* Properties */,
 				024E4D6B25D0E5010083E653 /* CDProfile+CoreDataClass.swift */,
+				0242664B26DB182B00041583 /* CDAskForRatingTracker+CoreDataClass.swift */,
 				024E4D7625D0E5050083E653 /* CDSession+CoreDataClass.swift */,
 				02F9335225E1CF9500166027 /* CDSessionAttributes+CoreDataClass.swift */,
 				024E4D6925D0E5000083E653 /* CDRecording+CoreDataClass.swift */,
@@ -1485,12 +1491,14 @@
 				02401BDD24EDE14700608B20 /* TimerCompleteAlertController.swift in Sources */,
 				02D9F21C23358B7D0047139C /* GradientImageView.swift in Sources */,
 				0210A7A0250D86690048FBF9 /* ExportDataViewController.swift in Sources */,
+				0242664E26DB183A00041583 /* CDAskForRatingTracker+CoreDataProperties.swift in Sources */,
 				02F71F992511A67E004F69F6 /* TransitionManager.swift in Sources */,
 				025957DB22E3A7D000CD2E2D /* Animator.swift in Sources */,
 				021826D72625137A008CB7C4 /* CDTextEditorEntry+CoreDataClass.swift in Sources */,
 				02BD7E2824749FD200EB73D1 /* CalendarScrollView.swift in Sources */,
 				024E4D8125D0E5050083E653 /* CDJournalFolder+CoreDataClass.swift in Sources */,
 				02B2E28C25DF0D61006CBBD5 /* PopupViewController.swift in Sources */,
+				0242664D26DB183400041583 /* CDAskForRatingTracker+CoreDataClass.swift in Sources */,
 				02F9336025E1CF9500166027 /* CDSessionAttributes+CoreDataClass.swift in Sources */,
 				02DD115A24D01E6B009CB1DF /* SettingsDetailViews.swift in Sources */,
 				028EAE28256DF03400DD0C7D /* RemindersViewController.swift in Sources */,

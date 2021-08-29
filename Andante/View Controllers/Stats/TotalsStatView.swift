@@ -34,10 +34,10 @@ class TotalsStatView: UIView {
         self.addSubview(moodView)
         self.addSubview(focusView)
         
-        practiceView.label.detailLabel.text = "Total practiced"
-        sessionsView.label.detailLabel.text = "Total sessions"
-        moodView.label.detailLabel.text = "Average mood"
-        focusView.label.detailLabel.text = "Average focus"
+        practiceView.detailText = "Total practiced"
+        sessionsView.detailText = "Total sessions"
+        moodView.detailText = "Average mood"
+        focusView.detailText = "Average focus"
 
         
     }
@@ -81,20 +81,20 @@ class TotalsStatView: UIView {
     }
     
     private func setUI(_ data: Data) {
-        practiceView.label.titleLabel.text = Formatter.formatMinutesCondensedButAlsoLong(data.practiceTime)
+        practiceView.setStat(Formatter.formatMinutesCondensedButAlsoLong(data.practiceTime))
         
-        sessionsView.label.titleLabel.text = "\(data.sessions)"
+        sessionsView.setStat("\(data.sessions)")
                 
         if data.sessions == 0 {
-            moodView.label.titleLabel.text = "--"
-            focusView.label.titleLabel.text = "--"
+            moodView.setStat("--")
+            focusView.setStat("--")
         }
         else {
-            moodView.label.titleLabel.text = Formatter.formatDecimals(
-                num: Double(data.mood) / Double(data.sessions))
+            moodView.setStat(Formatter.formatDecimals(
+                num: Double(data.mood) / Double(data.sessions)))
             
-            focusView.label.titleLabel.text = Formatter.formatDecimals(
-                num: Double(data.focus) / Double(data.sessions))
+            focusView.setStat(Formatter.formatDecimals(
+                num: Double(data.focus) / Double(data.sessions)))
         }
         
     }
@@ -150,8 +150,8 @@ extension TotalsStatView: StatDataSource {
 private class TotalsView: MaskedShadowView {
     
     private let iconView = IconView()
-    public let label = LabelGroup()
-    
+    private let label = LabelGroup()
+        
     public func setCompact(_ compact: Bool) {
         if compact {
             label.titleLabel.font = Fonts.bold.withSize(20)
@@ -159,8 +159,12 @@ private class TotalsView: MaskedShadowView {
         else {
             label.titleLabel.font = Fonts.bold.withSize(25)
         }
+        
         setNeedsLayout()
     }
+    
+    private var titlePlaceholder: UIView?
+    private var detailPlaceholder: UIView?
     
     init(_ stat: Stat) {
         super.init()
@@ -172,15 +176,62 @@ private class TotalsView: MaskedShadowView {
         iconView.iconColor = Colors.white
         self.addSubview(iconView)
         
+        label.titleLabel.text = "0000"
         label.titleLabel.textColor = Colors.text
-        label.titleLabel.font = Fonts.bold.withSize(20)
         label.detailLabel.textColor = Colors.lightText
         label.detailLabel.font = Fonts.regular.withSize(16)
         label.padding = 2
         
-        label.titleLabel.text = "--"
+        self.label.alpha = 0
+        
         self.addSubview(label)
         
+        self.titlePlaceholder = {
+            let view = UIView()
+            view.backgroundColor = Colors.lightColor
+            view.roundCorners(3)
+            return view
+        }()
+        
+        self.addSubview(self.titlePlaceholder!)
+        
+        self.detailPlaceholder = {
+            let view = UIView()
+            view.backgroundColor = Colors.extraLightColor
+            view.roundCorners(3)
+            self.addSubview(view)
+            return view
+        }()
+        
+        self.addSubview(self.detailPlaceholder!)
+        
+    }
+    
+    public func setStat(_ text: String) {
+        if let titlePlaceholder = self.titlePlaceholder, let detailPlaceholder = self.detailPlaceholder {
+            
+            self.label.titleLabel.text = text
+            
+            UIView.animate(withDuration: 0.4) {
+                self.titlePlaceholder?.alpha = 0
+                self.detailPlaceholder?.alpha = 0
+                self.label.alpha = 1
+            } completion: { complete in
+                self.titlePlaceholder?.removeFromSuperview()
+                self.titlePlaceholder = nil
+                self.detailPlaceholder?.removeFromSuperview()
+                self.detailPlaceholder = nil
+            }
+
+        }
+        else {
+            self.label.titleLabel.text = text
+        }
+    }
+    
+    public var detailText: String? {
+        get { return self.label.detailLabel.text }
+        set { self.label.detailLabel.text = newValue }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -205,6 +256,22 @@ private class TotalsView: MaskedShadowView {
             y: self.bounds.maxY - height - Constants.margin,
             width: self.bounds.width - Constants.margin*2,
             height: height)
+        
+        if let titlePlaceholder = self.titlePlaceholder, let detailPlaceholder = self.detailPlaceholder {
+            titlePlaceholder.frame = CGRect(
+                x: self.label.frame.minX,
+                y: self.label.frame.minY,
+                width: 80,
+                height: self.label.titleLabel.bounds.height - 2)
+            
+            let detailLabelFrame = self.label.convert(self.label.detailLabel.frame, to: self)
+            
+            detailPlaceholder.frame = CGRect(
+                x: detailLabelFrame.minX,
+                y: detailLabelFrame.minY + 1,
+                width: 120,
+                height: detailLabelFrame.height - 2)
+        }
         
     }
 }

@@ -100,7 +100,6 @@
 		026476C822DBF0CB002EA732 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 026476C622DBF0CB002EA732 /* Main.storyboard */; };
 		026476CA22DBF0CD002EA732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 026476C922DBF0CD002EA732 /* Assets.xcassets */; };
 		026476CD22DBF0CD002EA732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 026476CB22DBF0CD002EA732 /* LaunchScreen.storyboard */; };
-		026476DC22DBF458002EA732 /* Practice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476DB22DBF458002EA732 /* Practice.swift */; };
 		026476DE22DBF4F1002EA732 /* PracticeDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */; };
 		026476E422DBF56E002EA732 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476E322DBF56E002EA732 /* Helpers.swift */; };
 		026476E622DBF59D002EA732 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476E522DBF59D002EA732 /* Day.swift */; };
@@ -124,6 +123,8 @@
 		0270BB9B2492FE24003AC91F /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0270BB9A2492FE24003AC91F /* IconView.swift */; };
 		0270BBA624A03CD6003AC91F /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0270BBA524A03CD6003AC91F /* HeaderView.swift */; };
 		027387C425200EEF00365285 /* OptionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027387C325200EEE00365285 /* OptionPickerView.swift */; };
+		0274ABDA26DB799D00221890 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476E522DBF59D002EA732 /* Day.swift */; };
+		0274ABDC26DB7A7800221890 /* SettingsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0274ABDB26DB7A7800221890 /* SettingsDetailViewController.swift */; };
 		0275B18B251EDD9A00F853AE /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0275B18A251EDD9A00F853AE /* IntentHandler.swift */; };
 		0275B192251EDD9A00F853AE /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02306CBE234489F400C8A2AC /* IntentsUI.framework */; };
 		0275B195251EDD9A00F853AE /* IntentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0275B194251EDD9A00F853AE /* IntentViewController.swift */; };
@@ -180,7 +181,6 @@
 		02ADF850260EF641003B64D7 /* CloudSupportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02ADF84F260EF641003B64D7 /* CloudSupportViewController.swift */; };
 		02AE5C2E256F22A800244ABA /* NewReminderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AE5C2D256F22A800244ABA /* NewReminderViewController.swift */; };
 		02AF005B260047C9000AABF2 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF005A260047C9000AABF2 /* LaunchView.swift */; };
-		02B241A7252089CA00DFCC9B /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026476E522DBF59D002EA732 /* Day.swift */; };
 		02B265F7254F813E00D74024 /* AndanteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B265F6254F813E00D74024 /* AndanteViewController.swift */; };
 		02B2D0F12518573300DA75C7 /* SiriShortcutsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B2D0F02518573300DA75C7 /* SiriShortcutsViewController.swift */; };
 		02B2E28C25DF0D61006CBBD5 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B2E28B25DF0D61006CBBD5 /* PopupViewController.swift */; };
@@ -209,7 +209,6 @@
 		02D9F21C23358B7D0047139C /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9F21B23358B7D0047139C /* GradientImageView.swift */; };
 		02DA80F72561368B003A6AB6 /* UserVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DA80F62561368B003A6AB6 /* UserVersion.swift */; };
 		02DA80FD2561F51A003A6AB6 /* CenterLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DA80FC2561F51A003A6AB6 /* CenterLoadingController.swift */; };
-		02DD115724D01D05009CB1DF /* SettingsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD115624D01D05009CB1DF /* SettingsDetailViewController.swift */; };
 		02DD115A24D01E6B009CB1DF /* SettingsDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD115924D01E6B009CB1DF /* SettingsDetailViews.swift */; };
 		02DE16122369195600CE7843 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DE16112369195600CE7843 /* MainViewController.swift */; };
 		02DE9843252547070006C10E /* TutorialAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DE9842252547070006C10E /* TutorialAlert.swift */; };
@@ -376,7 +375,6 @@
 		026476C922DBF0CD002EA732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		026476CC22DBF0CD002EA732 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		026476CE22DBF0CD002EA732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		026476DB22DBF458002EA732 /* Practice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Practice.swift; sourceTree = "<group>"; };
 		026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeDatabase.swift; sourceTree = "<group>"; };
 		026476E322DBF56E002EA732 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		026476E522DBF59D002EA732 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
@@ -401,6 +399,7 @@
 		0270BBA524A03CD6003AC91F /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		027387B6251F30C100365285 /* AndanteWidgetExtensionDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndanteWidgetExtensionDebug.entitlements; sourceTree = "<group>"; };
 		027387C325200EEE00365285 /* OptionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionPickerView.swift; sourceTree = "<group>"; };
+		0274ABDB26DB7A7800221890 /* SettingsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsDetailViewController.swift; path = /Users/miles/github/andante/Andante/Settings/Detail/SettingsDetailViewController.swift; sourceTree = "<absolute>"; };
 		0275B188251EDD9A00F853AE /* WidgetProfileIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetProfileIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		0275B18A251EDD9A00F853AE /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		0275B18C251EDD9A00F853AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -490,7 +489,6 @@
 		02D9F21B23358B7D0047139C /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
 		02DA80F62561368B003A6AB6 /* UserVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVersion.swift; sourceTree = "<group>"; };
 		02DA80FC2561F51A003A6AB6 /* CenterLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterLoadingController.swift; sourceTree = "<group>"; };
-		02DD115624D01D05009CB1DF /* SettingsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsDetailViewController.swift; path = "Andante/View Controllers/Settings/Detail/SettingsDetailViewController.swift"; sourceTree = SOURCE_ROOT; };
 		02DD115924D01E6B009CB1DF /* SettingsDetailViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDetailViews.swift; sourceTree = "<group>"; };
 		02DE16112369195600CE7843 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		02DE9842252547070006C10E /* TutorialAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialAlert.swift; sourceTree = "<group>"; };
@@ -610,52 +608,6 @@
 			path = Menu;
 			sourceTree = "<group>";
 		};
-		022C3CE724C27B7900BE5956 /* Sessions */ = {
-			isa = PBXGroup;
-			children = (
-				0200C39624AC2A9000E787EC /* ManualSessionViewController.swift */,
-				0201AF97253E6D150015CA51 /* EditSessionViewController.swift */,
-				02AA3F9B250A01CA00EF19EA /* MoveSessionViewController.swift */,
-				0200C39424AC133700E787EC /* SessionDetailViewController.swift */,
-				02D52A04250C39C3005504EA /* SessionShareView.swift */,
-			);
-			path = Sessions;
-			sourceTree = "<group>";
-		};
-		0239DA0824C27B2B006D41E4 /* Journal */ = {
-			isa = PBXGroup;
-			children = (
-				0270BB982492F4AD003AC91F /* EntryViewController.swift */,
-				022C3CE824C27BF200BE5956 /* JournalFoldersViewController.swift */,
-				02D9D12724C28B810019D36C /* JournalFolderCell.swift */,
-			);
-			path = Journal;
-			sourceTree = "<group>";
-		};
-		02401BD524E1079E00608B20 /* Onboarding */ = {
-			isa = PBXGroup;
-			children = (
-				02401BD624E107AB00608B20 /* OnboardingViewController.swift */,
-				02F7310F256602FE007D80F7 /* WhatsNewViewController.swift */,
-			);
-			path = Onboarding;
-			sourceTree = "<group>";
-		};
-		02401BEA24F46CF800608B20 /* Stats */ = {
-			isa = PBXGroup;
-			children = (
-				02401BEB24F46D1700608B20 /* StatDataSource.swift */,
-				02401BEF24F48FA200608B20 /* BaseStatView.swift */,
-				02401BED24F46E0900608B20 /* TotalsStatView.swift */,
-				02401BF124F494B200608B20 /* PracticeTimeStatView.swift */,
-				0284197924F787E40040E394 /* MoodStatView.swift */,
-				0213D01D24FC475800D03347 /* ActivityStatView.swift */,
-				02401BF324F49A0F00608B20 /* StatsChartView.swift */,
-				02401BF524F6327700608B20 /* StatsLineChartView.swift */,
-			);
-			path = Stats;
-			sourceTree = "<group>";
-		};
 		024A9154256502E8003A44B2 /* Tuner */ = {
 			isa = PBXGroup;
 			children = (
@@ -706,16 +658,18 @@
 		026476B622DBF0CB002EA732 = {
 			isa = PBXGroup;
 			children = (
-				0239B0B6253A41ED005440F9 /* AndanteProTest.storekit */,
-				0239B0BB253A42A7005440F9 /* StoreKitTestCertificate.cer */,
-				027387B6251F30C100365285 /* AndanteWidgetExtensionDebug.entitlements */,
-				02DF2364251EB3AB009490B4 /* AndanteWidgetExtensionRelease.entitlements */,
 				026476C122DBF0CB002EA732 /* Andante */,
 				0290AA62251D5DDD00B08CC0 /* AndanteWidget */,
 				0275B189251EDD9A00F853AE /* WidgetProfileIntent */,
 				0275B193251EDD9A00F853AE /* WidgetProfileIntentUI */,
 				026476C022DBF0CB002EA732 /* Products */,
 				9E500A1A734661CC39BCB8A8 /* Frameworks */,
+				0239B0B6253A41ED005440F9 /* AndanteProTest.storekit */,
+				0239B0BB253A42A7005440F9 /* StoreKitTestCertificate.cer */,
+				027387B6251F30C100365285 /* AndanteWidgetExtensionDebug.entitlements */,
+				02DF2364251EB3AB009490B4 /* AndanteWidgetExtensionRelease.entitlements */,
+				02EF6C06251EEA08004E89A2 /* AndanteDebug.entitlements */,
+				02306CBB234489CB00C8A2AC /* AndanteRelease.entitlements */,
 			);
 			sourceTree = "<group>";
 		};
@@ -734,13 +688,13 @@
 			isa = PBXGroup;
 			children = (
 				026476CE22DBF0CD002EA732 /* Info.plist */,
-				02EF6C06251EEA08004E89A2 /* AndanteDebug.entitlements */,
-				02306CBB234489CB00C8A2AC /* AndanteRelease.entitlements */,
-				026476C922DBF0CD002EA732 /* Assets.xcassets */,
 				02794D3D2612CC6700FA29B1 /* App */,
 				02C5866B25CFD66500860F03 /* Model */,
 				026476D422DBF0F8002EA732 /* Storyboards */,
-				026476D522DBF132002EA732 /* View Controllers */,
+				02800EA826DB765400B45268 /* Onboarding */,
+				02800EA726DB763200B45268 /* Home Screen */,
+				027011EB244D6E2D001B46FD /* Practice */,
+				02FA154722FB6C3600641F6A /* Settings */,
 				0264773222E141F0002EA732 /* Alerts */,
 				026476DF22DBF522002EA732 /* Views */,
 				026476D822DBF24D002EA732 /* Classes */,
@@ -748,7 +702,6 @@
 				026476E722DBF5DA002EA732 /* UI */,
 				02DE15F82361431300CE7843 /* Sounds */,
 				02EF6C0B251EEA6A004E89A2 /* Widget */,
-				02794D142612CB4A00FA29B1 /* Realm */,
 			);
 			path = Andante;
 			sourceTree = "<group>";
@@ -762,41 +715,17 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
-		026476D522DBF132002EA732 /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				02401BEA24F46CF800608B20 /* Stats */,
-				02401BD524E1079E00608B20 /* Onboarding */,
-				02A2D7F824C13774005AAD90 /* Navigation */,
-				0264773F22E24CA7002EA732 /* Home Tabs */,
-				027011EB244D6E2D001B46FD /* Practice */,
-				02FA154722FB6C3600641F6A /* Settings */,
-				022C3CE724C27B7900BE5956 /* Sessions */,
-				0239DA0824C27B2B006D41E4 /* Journal */,
-				02A2D7F524C13724005AAD90 /* Detail Controllers */,
-				02860C8225312EB900624BDF /* AndanteProViewController.swift */,
-			);
-			path = "View Controllers";
-			sourceTree = "<group>";
-		};
 		026476D822DBF24D002EA732 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				02B4924022FD071A00F8AFEE /* HPRecorder.swift */,
 				02B4923C22FD06E500F8AFEE /* RecordingsManager.swift */,
 				025957DC22E3A80800CD2E2D /* Easing.swift */,
 				025957DA22E3A7D000CD2E2D /* Animator.swift */,
-				024A914E2565026A003A44B2 /* Tuner.swift */,
-				02078AF825C4D8C4009C6117 /* Synth.swift */,
 				02930C8A25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift */,
 				0242CD9F266E0027001DB823 /* Sound.swift */,
 				028F1E0925394D9700C1A5C6 /* IAPHelper.swift */,
-				026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */,
 				026476E522DBF59D002EA732 /* Day.swift */,
-				02FA153A22F43B5C00641F6A /* TimerManager.swift */,
-				02FA154822FB6C6A00641F6A /* Settings.swift */,
-				02401BD824E5F6EF00608B20 /* ToolTips.swift */,
-				02DA80F62561368B003A6AB6 /* UserVersion.swift */,
+				026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -815,8 +744,6 @@
 				02B2E29B25DF4F03006CBBD5 /* PopupOptionsView.swift */,
 				02FA153C22F50EFD00641F6A /* RecordingPlayerView.swift */,
 				023BEEB225379FB7008A3371 /* ProgressRing.swift */,
-				0222F17324C90D680070E638 /* SessionSaveNotification.swift */,
-				02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -834,6 +761,7 @@
 		026476E722DBF5DA002EA732 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				026476C922DBF0CD002EA732 /* Assets.xcassets */,
 				026476E822DBF5EA002EA732 /* Colors.swift */,
 				026476EA22DBF713002EA732 /* Fonts.swift */,
 				0264770822DC1AE7002EA732 /* Constants.swift */,
@@ -863,36 +791,20 @@
 			path = Alerts;
 			sourceTree = "<group>";
 		};
-		0264773F22E24CA7002EA732 /* Home Tabs */ = {
-			isa = PBXGroup;
-			children = (
-				028142032425D6CD00C9461F /* SessionsViewController.swift */,
-				026E847323F8BC060069B116 /* StatsViewController.swift */,
-				028D5DD523FDDE9F00285204 /* JournalViewController.swift */,
-			);
-			path = "Home Tabs";
-			sourceTree = "<group>";
-		};
-		02649350248DCFC500B543E2 /* Notes */ = {
-			isa = PBXGroup;
-			children = (
-				02649351248DD00D00B543E2 /* NotesNavigationController.swift */,
-				02649353248DD08B00B543E2 /* NotesViewController.swift */,
-			);
-			path = Notes;
-			sourceTree = "<group>";
-		};
 		027011EB244D6E2D001B46FD /* Practice */ = {
 			isa = PBXGroup;
 			children = (
-				02A2D7F424C13701005AAD90 /* Views */,
-				02649350248DCFC500B543E2 /* Notes */,
 				029F3284244D651300060F33 /* PracticeViewController.swift */,
-				02F71F9A2511C9E1004F69F6 /* ConfirmView.swift */,
 				024A913E25648109003A44B2 /* ConfirmViewController.swift */,
 				026831DD257B6B8B00B90884 /* PracticeAnimationViewController.swift */,
 				02F71F982511A67E004F69F6 /* TransitionManager.swift */,
-				02AC1364257DAEB50007A919 /* CollapsedSessionView.swift */,
+				02649351248DD00D00B543E2 /* NotesNavigationController.swift */,
+				02649353248DD08B00B543E2 /* NotesViewController.swift */,
+				02FA153A22F43B5C00641F6A /* TimerManager.swift */,
+				024A914E2565026A003A44B2 /* Tuner.swift */,
+				02078AF825C4D8C4009C6117 /* Synth.swift */,
+				02B4924022FD071A00F8AFEE /* HPRecorder.swift */,
+				02A2D7F424C13701005AAD90 /* Views */,
 			);
 			path = Practice;
 			sourceTree = "<group>";
@@ -911,6 +823,82 @@
 				0270BBA524A03CD6003AC91F /* HeaderView.swift */,
 			);
 			path = NavBarHeader;
+			sourceTree = "<group>";
+		};
+		0274ABD126DB777800221890 /* Sessions */ = {
+			isa = PBXGroup;
+			children = (
+				028142032425D6CD00C9461F /* SessionsViewController.swift */,
+				0200C39424AC133700E787EC /* SessionDetailViewController.swift */,
+				0200C39624AC2A9000E787EC /* ManualSessionViewController.swift */,
+				0201AF97253E6D150015CA51 /* EditSessionViewController.swift */,
+				02AA3F9B250A01CA00EF19EA /* MoveSessionViewController.swift */,
+				0274ABD626DB77F700221890 /* Views */,
+			);
+			path = Sessions;
+			sourceTree = "<group>";
+		};
+		0274ABD226DB778B00221890 /* Journal */ = {
+			isa = PBXGroup;
+			children = (
+				028D5DD523FDDE9F00285204 /* JournalViewController.swift */,
+				0270BB982492F4AD003AC91F /* EntryViewController.swift */,
+				022C3CE824C27BF200BE5956 /* JournalFoldersViewController.swift */,
+				0274ABD526DB77D800221890 /* Views */,
+			);
+			path = Journal;
+			sourceTree = "<group>";
+		};
+		0274ABD326DB778F00221890 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				026E847323F8BC060069B116 /* StatsViewController.swift */,
+				021C98E924848F650044947A /* GoalDetailViewController.swift */,
+				02401BEB24F46D1700608B20 /* StatDataSource.swift */,
+				0274ABD426DB77C600221890 /* Views */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		0274ABD426DB77C600221890 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				02401BEF24F48FA200608B20 /* BaseStatView.swift */,
+				02401BED24F46E0900608B20 /* TotalsStatView.swift */,
+				02401BF124F494B200608B20 /* PracticeTimeStatView.swift */,
+				0284197924F787E40040E394 /* MoodStatView.swift */,
+				0213D01D24FC475800D03347 /* ActivityStatView.swift */,
+				02401BF324F49A0F00608B20 /* StatsChartView.swift */,
+				02401BF524F6327700608B20 /* StatsLineChartView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0274ABD526DB77D800221890 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				02D9D12724C28B810019D36C /* JournalFolderCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0274ABD626DB77F700221890 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */,
+				02D52A04250C39C3005504EA /* SessionShareView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0274ABD726DB781400221890 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0222F17324C90D680070E638 /* SessionSaveNotification.swift */,
+				0270BBA424A03CBE003AC91F /* NavBarHeader */,
+				02C083CF254FF15F006D9DA0 /* Navigation Bars */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		0275B189251EDD9A00F853AE /* WidgetProfileIntent */ = {
@@ -936,18 +924,13 @@
 			path = WidgetProfileIntentUI;
 			sourceTree = "<group>";
 		};
-		02794D142612CB4A00FA29B1 /* Realm */ = {
-			isa = PBXGroup;
-			children = (
-				026476DB22DBF458002EA732 /* Practice.swift */,
-			);
-			path = Realm;
-			sourceTree = "<group>";
-		};
 		02794D3D2612CC6700FA29B1 /* App */ = {
 			isa = PBXGroup;
 			children = (
 				026476C222DBF0CB002EA732 /* AppDelegate.swift */,
+				02FA154822FB6C6A00641F6A /* Settings.swift */,
+				02401BD824E5F6EF00608B20 /* ToolTips.swift */,
+				02DA80F62561368B003A6AB6 /* UserVersion.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -959,6 +942,30 @@
 				027F351424B3C5E3002674EC /* CalendarGoalCell.swift */,
 			);
 			path = CalendarGoalView;
+			sourceTree = "<group>";
+		};
+		02800EA726DB763200B45268 /* Home Screen */ = {
+			isa = PBXGroup;
+			children = (
+				02B265F6254F813E00D74024 /* AndanteViewController.swift */,
+				02DE16112369195600CE7843 /* MainViewController.swift */,
+				0274ABD126DB777800221890 /* Sessions */,
+				0274ABD326DB778F00221890 /* Stats */,
+				0274ABD226DB778B00221890 /* Journal */,
+				02A2F22F24C973E200D7FBD7 /* TransitionViewController.swift */,
+				0274ABD726DB781400221890 /* Views */,
+			);
+			path = "Home Screen";
+			sourceTree = "<group>";
+		};
+		02800EA826DB765400B45268 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				02AF005A260047C9000AABF2 /* LaunchView.swift */,
+				02401BD624E107AB00608B20 /* OnboardingViewController.swift */,
+				02F7310F256602FE007D80F7 /* WhatsNewViewController.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		0290AA62251D5DDD00B08CC0 /* AndanteWidget */ = {
@@ -980,6 +987,8 @@
 		02A2D7F424C13701005AAD90 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				02F71F9A2511C9E1004F69F6 /* ConfirmView.swift */,
+				02AC1364257DAEB50007A919 /* CollapsedSessionView.swift */,
 				027011EF244D824F001B46FD /* PracticeRecordingBackgroundView.swift */,
 				027011F1244E3DD9001B46FD /* RecordingAudioWaveView.swift */,
 				027E855525C940A30054D210 /* TunerViewController.swift */,
@@ -989,27 +998,6 @@
 				02A2DB4824CE7D18002E0760 /* Tool Views */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		02A2D7F524C13724005AAD90 /* Detail Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				021C98E924848F650044947A /* GoalDetailViewController.swift */,
-			);
-			path = "Detail Controllers";
-			sourceTree = "<group>";
-		};
-		02A2D7F824C13774005AAD90 /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				02AF005A260047C9000AABF2 /* LaunchView.swift */,
-				02B265F6254F813E00D74024 /* AndanteViewController.swift */,
-				02DE16112369195600CE7843 /* MainViewController.swift */,
-				02A2F22F24C973E200D7FBD7 /* TransitionViewController.swift */,
-				02C083CF254FF15F006D9DA0 /* Navigation Bars */,
-				0270BBA424A03CBE003AC91F /* NavBarHeader */,
-			);
-			path = Navigation;
 			sourceTree = "<group>";
 		};
 		02A2D7F924C137AA005AAD90 /* Pickers */ = {
@@ -1135,7 +1123,7 @@
 		02DD115824D01DFF009CB1DF /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				02DD115624D01D05009CB1DF /* SettingsDetailViewController.swift */,
+				0274ABDB26DB7A7800221890 /* SettingsDetailViewController.swift */,
 				02DD115924D01E6B009CB1DF /* SettingsDetailViews.swift */,
 				020B163C24D0C7DA004070EE /* ProfileSettingsViewController.swift */,
 			);
@@ -1145,9 +1133,9 @@
 		02DE15F82361431300CE7843 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				024A9154256502E8003A44B2 /* Tuner */,
 				02401BE824F1CA6E00608B20 /* timer.notification.wav */,
 				02A2DB4B24CFAF88002E0760 /* metronome.click.wav */,
-				024A9154256502E8003A44B2 /* Tuner */,
 				02401BE224EF44D800608B20 /* recording.start.wav */,
 				02401BE324EF44D900608B20 /* recording.end.wav */,
 			);
@@ -1200,6 +1188,7 @@
 				02ADF84F260EF641003B64D7 /* CloudSupportViewController.swift */,
 				02AE5C2D256F22A800244ABA /* NewReminderViewController.swift */,
 				0210A79F250D86690048FBF9 /* ExportDataViewController.swift */,
+				02860C8225312EB900624BDF /* AndanteProViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1403,7 +1392,6 @@
 			files = (
 				0252EE35262262C70017367F /* ClippingShadowView.swift in Sources */,
 				028FAACF25F3182F000561DD /* IconPickerPopupController.swift in Sources */,
-				026476DC22DBF458002EA732 /* Practice.swift in Sources */,
 				02011FCA251F01AC00565F75 /* WidgetFileManager.swift in Sources */,
 				02E99D9A261AAF6200EDCA52 /* TextEditorToolbar.swift in Sources */,
 				02A2DB4224CBEE23002E0760 /* IconPickerView.swift in Sources */,
@@ -1436,6 +1424,7 @@
 				0200C39524AC133700E787EC /* SessionDetailViewController.swift in Sources */,
 				028142062426FB0000C9461F /* PopupMenuViewController.swift in Sources */,
 				0264771022DCEAC1002EA732 /* AndanteImageView.swift in Sources */,
+				0274ABDC26DB7A7800221890 /* SettingsDetailViewController.swift in Sources */,
 				02F9336125E1CF9500166027 /* CDSessionAttributes+CoreDataProperties.swift in Sources */,
 				029A70EA2338197B00C698BC /* ModalViewHeader.swift in Sources */,
 				024E4D8625D0E5050083E653 /* CDSession+CoreDataClass.swift in Sources */,
@@ -1543,7 +1532,6 @@
 				02FA153B22F43B5C00641F6A /* TimerManager.swift in Sources */,
 				0270BB992492F4AD003AC91F /* EntryViewController.swift in Sources */,
 				02195E1E2597FAE400592833 /* XCMetronome.swift in Sources */,
-				02DD115724D01D05009CB1DF /* SettingsDetailViewController.swift in Sources */,
 				02E99DB1261ECE5500EDCA52 /* TextEditorImageViewController.swift in Sources */,
 				026476F122DBFA5C002EA732 /* Tintbutton.swift in Sources */,
 				021DB00325D5C80600200D99 /* Andante.xcdatamodeld in Sources */,
@@ -1616,10 +1604,10 @@
 			files = (
 				02113478251DEAE200A3B6BF /* MediumWidget.swift in Sources */,
 				02011FD4251F030E00565F75 /* WidgetFileManager.swift in Sources */,
-				02B241A7252089CA00DFCC9B /* Day.swift in Sources */,
 				02113472251DE97400A3B6BF /* SmallWidget.swift in Sources */,
 				02600B5725363A41009AAE60 /* ProgressCircle.swift in Sources */,
 				02DF2361251EAE4B009490B4 /* WidgetContent.swift in Sources */,
+				0274ABDA26DB799D00221890 /* Day.swift in Sources */,
 				0290AA7B251D955B00B08CC0 /* IconProgressCircle.swift in Sources */,
 				02DF2374251EB9F5009490B4 /* ProfileIntent.intentdefinition in Sources */,
 				0290AA64251D5DDD00B08CC0 /* AndanteWidget.swift in Sources */,
@@ -1797,7 +1785,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = .dev;
-				CODE_SIGN_ENTITLEMENTS = Andante/AndanteDebug.entitlements;
+				CODE_SIGN_ENTITLEMENTS = AndanteDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 92QB2FTAJD;
@@ -1828,7 +1816,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = "";
-				CODE_SIGN_ENTITLEMENTS = Andante/AndanteRelease.entitlements;
+				CODE_SIGN_ENTITLEMENTS = AndanteRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

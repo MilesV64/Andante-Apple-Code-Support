@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Andante.xcodeproj">
+      location = "group:/Users/miles/github/andante/Andante/Settings/Detail/SettingsDetailViewController.swift">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>

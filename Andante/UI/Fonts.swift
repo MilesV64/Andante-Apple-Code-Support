@@ -18,7 +18,17 @@ class Fonts {
     }()
     
     private static func Font(_ weight: UIFont.Weight) -> UIFont {
-        let font = UIFont.systemFont(ofSize: 17, weight: weight)
+        let font: UIFont
+        switch weight {
+            case .light:    font = UIFont(name: "InterRounded-Light", size: 17)!
+            case .regular:  font = UIFont(name: "InterRounded-Regular", size: 17)!
+            case .medium:   font = UIFont(name: "InterRounded-Medium", size: 17)!
+            case .semibold: font = UIFont(name: "InterRounded-SemiBold", size: 17)!
+            case .bold:     font = UIFont(name: "InterRounded-Bold", size: 17)!
+            case .black:    font = UIFont(name: "InterRounded-Black", size: 17)!
+            default:        font = UIFont.systemFont(ofSize: 17, weight: weight)
+        }
+        
         let descriptor = font.fontDescriptor.addingAttributes(Fonts.FontAttributes)
         return UIFont(descriptor: descriptor, size: 0)
     }

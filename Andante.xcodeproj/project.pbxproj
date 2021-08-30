@@ -198,6 +198,12 @@
 		02BBB96F25E7333A00A10A3D /* MoveSessionPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBB96E25E7333A00A10A3D /* MoveSessionPopupView.swift */; };
 		02BD468B26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD468A26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift */; };
 		02BD468D26DC55000061CAF3 /* PullToSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD468C26DC55000061CAF3 /* PullToSettingsView.swift */; };
+		02BD46A126DCAAA70061CAF3 /* InterRounded-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02BD469B26DCAAA60061CAF3 /* InterRounded-Bold.ttf */; };
+		02BD46A226DCAAA70061CAF3 /* InterRounded-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02BD469C26DCAAA70061CAF3 /* InterRounded-Light.ttf */; };
+		02BD46A326DCAAA70061CAF3 /* InterRounded-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02BD469D26DCAAA70061CAF3 /* InterRounded-Medium.ttf */; };
+		02BD46A426DCAAA70061CAF3 /* InterRounded-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02BD469E26DCAAA70061CAF3 /* InterRounded-Regular.ttf */; };
+		02BD46A526DCAAA70061CAF3 /* InterRounded-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02BD469F26DCAAA70061CAF3 /* InterRounded-Black.ttf */; };
+		02BD46A626DCAAA70061CAF3 /* InterRounded-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02BD46A026DCAAA70061CAF3 /* InterRounded-SemiBold.ttf */; };
 		02BD7E2824749FD200EB73D1 /* CalendarScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */; };
 		02C083D1254FF173006D9DA0 /* Tabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083D0254FF173006D9DA0 /* Tabbar.swift */; };
 		02C083DB254FF19A006D9DA0 /* NavigationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */; };
@@ -479,6 +485,12 @@
 		02BBB96E25E7333A00A10A3D /* MoveSessionPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSessionPopupView.swift; sourceTree = "<group>"; };
 		02BD468A26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StretchyCollectionViewFlowLayout.swift; path = ../../../../Documents/StretchyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		02BD468C26DC55000061CAF3 /* PullToSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToSettingsView.swift; sourceTree = "<group>"; };
+		02BD469B26DCAAA60061CAF3 /* InterRounded-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InterRounded-Bold.ttf"; sourceTree = "<group>"; };
+		02BD469C26DCAAA70061CAF3 /* InterRounded-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InterRounded-Light.ttf"; sourceTree = "<group>"; };
+		02BD469D26DCAAA70061CAF3 /* InterRounded-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InterRounded-Medium.ttf"; sourceTree = "<group>"; };
+		02BD469E26DCAAA70061CAF3 /* InterRounded-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InterRounded-Regular.ttf"; sourceTree = "<group>"; };
+		02BD469F26DCAAA70061CAF3 /* InterRounded-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InterRounded-Black.ttf"; sourceTree = "<group>"; };
+		02BD46A026DCAAA70061CAF3 /* InterRounded-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "InterRounded-SemiBold.ttf"; sourceTree = "<group>"; };
 		02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScrollView.swift; sourceTree = "<group>"; };
 		02C083D0254FF173006D9DA0 /* Tabbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabbar.swift; sourceTree = "<group>"; };
 		02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationComponent.swift; sourceTree = "<group>"; };
@@ -767,6 +779,7 @@
 			isa = PBXGroup;
 			children = (
 				026476C922DBF0CD002EA732 /* Assets.xcassets */,
+				02BD468E26DCA9DA0061CAF3 /* Fonts */,
 				026476E822DBF5EA002EA732 /* Colors.swift */,
 				026476EA22DBF713002EA732 /* Fonts.swift */,
 				0264770822DC1AE7002EA732 /* Constants.swift */,
@@ -1093,6 +1106,19 @@
 			path = Session;
 			sourceTree = "<group>";
 		};
+		02BD468E26DCA9DA0061CAF3 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				02BD469F26DCAAA70061CAF3 /* InterRounded-Black.ttf */,
+				02BD469B26DCAAA60061CAF3 /* InterRounded-Bold.ttf */,
+				02BD469C26DCAAA70061CAF3 /* InterRounded-Light.ttf */,
+				02BD469D26DCAAA70061CAF3 /* InterRounded-Medium.ttf */,
+				02BD469E26DCAAA70061CAF3 /* InterRounded-Regular.ttf */,
+				02BD46A026DCAAA70061CAF3 /* InterRounded-SemiBold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		02C083CF254FF15F006D9DA0 /* Navigation Bars */ = {
 			isa = PBXGroup;
 			children = (
@@ -1346,10 +1372,15 @@
 				024A91772565D72F003A44B2 /* E.mp3 in Resources */,
 				026476CD22DBF0CD002EA732 /* LaunchScreen.storyboard in Resources */,
 				024A917E2565D72F003A44B2 /* F#.mp3 in Resources */,
+				02BD46A626DCAAA70061CAF3 /* InterRounded-SemiBold.ttf in Resources */,
+				02BD46A226DCAAA70061CAF3 /* InterRounded-Light.ttf in Resources */,
 				024A91762565D72F003A44B2 /* D.mp3 in Resources */,
 				024A91752565D72F003A44B2 /* Ab.mp3 in Resources */,
+				02BD46A126DCAAA70061CAF3 /* InterRounded-Bold.ttf in Resources */,
 				02401BE524EF44D900608B20 /* recording.end.wav in Resources */,
 				02A2DB4C24CFAF88002E0760 /* metronome.click.wav in Resources */,
+				02BD46A326DCAAA70061CAF3 /* InterRounded-Medium.ttf in Resources */,
+				02BD46A526DCAAA70061CAF3 /* InterRounded-Black.ttf in Resources */,
 				02401BE924F1CA6E00608B20 /* timer.notification.wav in Resources */,
 				026476CA22DBF0CD002EA732 /* Assets.xcassets in Resources */,
 				024A91802565D72F003A44B2 /* G.mp3 in Resources */,
@@ -1361,6 +1392,7 @@
 				024A917B2565D72F003A44B2 /* A.mp3 in Resources */,
 				024A91782565D72F003A44B2 /* Db.mp3 in Resources */,
 				024A917F2565D72F003A44B2 /* Bb.mp3 in Resources */,
+				02BD46A426DCAAA70061CAF3 /* InterRounded-Regular.ttf in Resources */,
 				02401BE424EF44D900608B20 /* recording.start.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

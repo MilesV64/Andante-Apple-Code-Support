@@ -80,11 +80,11 @@ class Colors: NSObject {
     
     //MARK: - Text
     class var text: UIColor {
-        return Colors.dynamicColor(light: UIColor("#333539"), dark: UIColor("#FEFFFE"))
+        return Colors.dynamicColor(light: UIColor("#131314"), dark: UIColor("#FEFFFE"))
     }
     
     class var lightText: UIColor {
-        return Colors.dynamicColor(light: UIColor("#1E3458").withAlphaComponent(0.52), dark: UIColor("#8799A5").withAlphaComponent(0.8))
+        return Colors.dynamicColor(light: UIColor("#96989D"), dark: UIColor("#8799A5").withAlphaComponent(0.8))
     }
     
     class var extraLightText: UIColor {

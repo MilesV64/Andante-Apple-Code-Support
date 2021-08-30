@@ -585,6 +585,8 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
     }
     
     override func didChangeProfile(profile: CDProfile) {
+        super.didChangeProfile(profile: profile)
+        
         if !didLoad {
             return
         }

@@ -197,6 +197,7 @@
 		02BBB96825E72F3E00A10A3D /* SessionSharePopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBB96725E72F3D00A10A3D /* SessionSharePopupView.swift */; };
 		02BBB96F25E7333A00A10A3D /* MoveSessionPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BBB96E25E7333A00A10A3D /* MoveSessionPopupView.swift */; };
 		02BD468B26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD468A26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift */; };
+		02BD468D26DC55000061CAF3 /* PullToSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD468C26DC55000061CAF3 /* PullToSettingsView.swift */; };
 		02BD7E2824749FD200EB73D1 /* CalendarScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */; };
 		02C083D1254FF173006D9DA0 /* Tabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083D0254FF173006D9DA0 /* Tabbar.swift */; };
 		02C083DB254FF19A006D9DA0 /* NavigationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */; };
@@ -477,6 +478,7 @@
 		02BBB96725E72F3D00A10A3D /* SessionSharePopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSharePopupView.swift; sourceTree = "<group>"; };
 		02BBB96E25E7333A00A10A3D /* MoveSessionPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSessionPopupView.swift; sourceTree = "<group>"; };
 		02BD468A26DC543C0061CAF3 /* StretchyCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StretchyCollectionViewFlowLayout.swift; path = ../../../../Documents/StretchyCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
+		02BD468C26DC55000061CAF3 /* PullToSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToSettingsView.swift; sourceTree = "<group>"; };
 		02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScrollView.swift; sourceTree = "<group>"; };
 		02C083D0254FF173006D9DA0 /* Tabbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabbar.swift; sourceTree = "<group>"; };
 		02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationComponent.swift; sourceTree = "<group>"; };
@@ -898,6 +900,7 @@
 			isa = PBXGroup;
 			children = (
 				0222F17324C90D680070E638 /* SessionSaveNotification.swift */,
+				02BD468C26DC55000061CAF3 /* PullToSettingsView.swift */,
 				0270BBA424A03CBE003AC91F /* NavBarHeader */,
 				02C083CF254FF15F006D9DA0 /* Navigation Bars */,
 			);
@@ -952,10 +955,10 @@
 			children = (
 				02B265F6254F813E00D74024 /* AndanteViewController.swift */,
 				02DE16112369195600CE7843 /* MainViewController.swift */,
+				02A2F22F24C973E200D7FBD7 /* TransitionViewController.swift */,
 				0274ABD126DB777800221890 /* Sessions */,
 				0274ABD326DB778F00221890 /* Stats */,
 				0274ABD226DB778B00221890 /* Journal */,
-				02A2F22F24C973E200D7FBD7 /* TransitionViewController.swift */,
 				0274ABD726DB781400221890 /* Views */,
 			);
 			path = "Home Screen";
@@ -1440,6 +1443,7 @@
 				0200C39724AC2A9000E787EC /* ManualSessionViewController.swift in Sources */,
 				02A2DB4724CD34F3002E0760 /* PracticeToolView.swift in Sources */,
 				02AE5C2E256F22A800244ABA /* NewReminderViewController.swift in Sources */,
+				02BD468D26DC55000061CAF3 /* PullToSettingsView.swift in Sources */,
 				02B2E29C25DF4F03006CBBD5 /* PopupOptionsView.swift in Sources */,
 				021826FE262514B0008CB7C4 /* CDTextEditorEntry+CoreDataProperties.swift in Sources */,
 				02BBB96F25E7333A00A10A3D /* MoveSessionPopupView.swift in Sources */,

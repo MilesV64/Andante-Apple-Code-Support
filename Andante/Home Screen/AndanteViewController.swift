@@ -723,7 +723,6 @@ extension AndanteViewController {
         sidebar?.reloadData()
         
         for vc in self.viewControllers {
-            vc.reloadHeader()
             vc.didChangeProfile(profile: profile)
             if vc == self.activeViewController {
                 vc.viewWillAppear(false)

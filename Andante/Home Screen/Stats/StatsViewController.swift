@@ -197,6 +197,8 @@ class StatsViewController: MainViewController {
     }
     
     override func didChangeProfile(profile: CDProfile) {
+        super.didChangeProfile(profile: profile)
+        
         setNeedsReload()
         monitorDailyGoal()
     }
@@ -219,6 +221,7 @@ class StatsViewController: MainViewController {
         super.viewDidLayoutSubviews()
         
         scrollView!.frame = self.view.bounds
+        scrollView?.contentSize.width = self.view.bounds.width
         
         if self.view.bounds.width > StatsViewController.compactBreakpoint {
             layoutRegular()

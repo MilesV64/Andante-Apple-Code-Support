@@ -20,6 +20,7 @@ extension CDJournalFolder {
     @NSManaged public var index: Int64
     @NSManaged public var isDefaultFolder: Bool
     @NSManaged public var title: String?
+    @NSManaged public var iconName: String?
     @NSManaged public var entries: NSSet?
     @NSManaged public var profile: CDProfile?
 

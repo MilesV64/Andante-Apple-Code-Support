@@ -15,6 +15,7 @@
         <relationship name="textEditorEntry" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CDTextEditorEntry" inverseName="journalEntry" inverseEntity="CDTextEditorEntry"/>
     </entity>
     <entity name="CDJournalFolder" representedClassName="CDJournalFolder" syncable="YES">
+        <attribute name="iconName" optional="YES" attributeType="String"/>
         <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isDefaultFolder" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
@@ -113,7 +114,8 @@
     <elements>
         <element name="CDAskForRatingTracker" positionX="-9" positionY="117" width="128" height="74"/>
         <element name="CDJournalEntry" positionX="-36" positionY="9" width="128" height="134"/>
-        <element name="CDJournalFolder" positionX="-63" positionY="-18" width="128" height="104"/>
+        <element name="CDJournalFolder" positionX="-63" positionY="-18" width="128" height="119"/>
+        <element name="CDOngoingSession" positionX="-9" positionY="117" width="128" height="119"/>
         <element name="CDProfile" positionX="18" positionY="63" width="128" height="149"/>
         <element name="CDRecording" positionX="36" positionY="81" width="128" height="74"/>
         <element name="CDReminder" positionX="-9" positionY="108" width="128" height="104"/>
@@ -122,6 +124,5 @@
         <element name="CDStringAttributes" positionX="-54" positionY="-9" width="128" height="89"/>
         <element name="CDTextEditorBlock" positionX="-9" positionY="108" width="128" height="134"/>
         <element name="CDTextEditorEntry" positionX="0" positionY="117" width="128" height="74"/>
-        <element name="CDOngoingSession" positionX="-9" positionY="117" width="128" height="119"/>
     </elements>
 </model>

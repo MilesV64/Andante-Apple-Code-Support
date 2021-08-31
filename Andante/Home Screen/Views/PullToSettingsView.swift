@@ -86,10 +86,10 @@ class PullToSettingsView: UIView {
         super.layoutSubviews()
         
         self.label.sizeToFit()
-        self.label.center = self.bounds.center.offset(dx: 0, dy: 24)
+        self.label.center = self.bounds.center.offset(dx: 0, dy: 20)
         
-        self.profileIcon.bounds.size = CGSize(width: 40, height: 40)
-        self.profileIcon.center = self.bounds.center.offset(dx: 0, dy: -18)
+        self.profileIcon.bounds.size = CGSize(width: 34, height: 34)
+        self.profileIcon.center = self.bounds.center.offset(dx: 0, dy: -14)
         
         self.animationRing.frame = self.profileIcon.bounds
         self.backgroundRing.frame = self.backgroundRing.bounds
@@ -99,17 +99,6 @@ class PullToSettingsView: UIView {
         self.backgroundPulse.center = self.profileIcon.center
         self.backgroundPulse.layer.cornerRadius = self.profileIcon.bounds.width / 2
         
-    }
-    
-    private func startAnimations() {
-        guard self.animationRing.animation(forKey: "rotation") == nil else { return }
-        
-        let anim = CABasicAnimation(keyPath: "transform.rotation.z")
-        anim.fromValue = 0
-        anim.toValue = CGFloat.pi * 2
-        anim.repeatCount = .infinity
-        anim.duration = 5
-        self.animationRing.add(anim, forKey: "rotate")
     }
     
     private func setArc(for progress: CGFloat) {
@@ -122,12 +111,26 @@ class PullToSettingsView: UIView {
             
     }
     
-    private func stopAnimations() {
-        self.animationRing.removeAllAnimations()
+    
+    private var isPausingAnimation = false
+    public func didPullToOpenSettings() {
+        // fade away and don't change anything else to keep the animation smooth
+        self.isPausingAnimation = true
+        
+        UIView.animate(withDuration: 0.15) {
+            self.alpha = 0
+        } completion: { complete in
+            self.isPausingAnimation = false
+            self.setProgress(self.progress)
+            self.alpha = 1
+        }
+
     }
     
     public func setProgress(_ progress: CGFloat) {
         self.progress = progress
+        
+        guard !self.isPausingAnimation else { return }
                 
         if progress > 0.25 {
             let newProgress = (progress - 0.25) / 0.75

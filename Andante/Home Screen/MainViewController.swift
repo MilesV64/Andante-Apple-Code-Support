@@ -149,7 +149,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
             
             if frame != self.pullToSettingsView.frame {
                 self.pullToSettingsView.frame = frame
-                self.pullToSettingsView.setProgress(max(0, min(1, height / 110)))
+                self.pullToSettingsView.setProgress(max(0, min(1, height / 100)))
             }
             
         }
@@ -206,6 +206,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
     func willEndScroll(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         
         if self.pullToSettingsView.progress >= 1 {
+            self.pullToSettingsView.didPullToOpenSettings()
             let settingsVC = SettingsContainerViewController()
             self.containerViewController.present(settingsVC, animated: true, completion: nil)
         }

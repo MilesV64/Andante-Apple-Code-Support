@@ -93,3 +93,5 @@ Thumbs.db
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+.DS_Store
+Andante/.DS_Store

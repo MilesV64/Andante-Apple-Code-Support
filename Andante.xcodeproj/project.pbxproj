@@ -200,6 +200,7 @@
 		02C083D1254FF173006D9DA0 /* Tabbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083D0254FF173006D9DA0 /* Tabbar.swift */; };
 		02C083DB254FF19A006D9DA0 /* NavigationComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */; };
 		02C083E9254FFA14006D9DA0 /* Sidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C083E8254FFA14006D9DA0 /* Sidebar.swift */; };
+		02C9B90426F2FB2F00379A31 /* AndanteCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C9B90326F2FB2F00379A31 /* AndanteCellView.swift */; };
 		02CA947924B6F4A800566274 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CA947824B6F4A800566274 /* SettingsViewController.swift */; };
 		02D52A05250C39C3005504EA /* SessionShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D52A04250C39C3005504EA /* SessionShareView.swift */; };
 		02D9D12824C28B810019D36C /* JournalFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9D12724C28B810019D36C /* JournalFolderCell.swift */; };
@@ -480,6 +481,7 @@
 		02C083DA254FF19A006D9DA0 /* NavigationComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationComponent.swift; sourceTree = "<group>"; };
 		02C083E8254FFA14006D9DA0 /* Sidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sidebar.swift; sourceTree = "<group>"; };
 		02C792AD251EE722002CFA67 /* WidgetProfileIntentUIRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetProfileIntentUIRelease.entitlements; sourceTree = "<group>"; };
+		02C9B90326F2FB2F00379A31 /* AndanteCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndanteCellView.swift; sourceTree = "<group>"; };
 		02CA947824B6F4A800566274 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		02D52A04250C39C3005504EA /* SessionShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionShareView.swift; sourceTree = "<group>"; };
 		02D9D12724C28B810019D36C /* JournalFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalFolderCell.swift; sourceTree = "<group>"; };
@@ -650,6 +652,7 @@
 			isa = PBXGroup;
 			children = (
 				025957FB22E7A1DF00CD2E2D /* PracticeSessionsCell.swift */,
+				02C9B90326F2FB2F00379A31 /* AndanteCellView.swift */,
 				0222F16B24C794580070E638 /* LongPressActionCell.swift */,
 			);
 			path = Cells;
@@ -1465,6 +1468,7 @@
 				026476E622DBF59D002EA732 /* Day.swift in Sources */,
 				02401BF224F494B200608B20 /* PracticeTimeStatView.swift in Sources */,
 				02BBB95E25E5FC7600A10A3D /* SessionOptionsPopupController.swift in Sources */,
+				02C9B90426F2FB2F00379A31 /* AndanteCellView.swift in Sources */,
 				02CA947924B6F4A800566274 /* SettingsViewController.swift in Sources */,
 				026E847423F8BC060069B116 /* StatsViewController.swift in Sources */,
 				0222F17424C90D680070E638 /* SessionSaveNotification.swift in Sources */,

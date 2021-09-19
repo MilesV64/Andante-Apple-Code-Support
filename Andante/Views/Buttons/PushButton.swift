@@ -61,7 +61,7 @@ class PushButton: CustomButton {
     
     public let buttonView = UIButton()
                 
-    public var transformScale: CGFloat = 0.96
+    public var transformScale: CGFloat = 0.94
     
     public var cornerRadius: CGFloat = 0 {
         didSet {
@@ -119,7 +119,10 @@ class PushButton: CustomButton {
         return pushableView ?? buttonView
     }
     
+    public var dimsBackgroundOnHighlight: Bool = false
     public var extraHighlightAction: ((Bool)->Void)?
+    
+    private var savedBackgroundColor: UIColor?
     
     override init() {
         super.init()
@@ -138,12 +141,20 @@ class PushButton: CustomButton {
             guard let self = self else { return }
             
             if isHighlighted {
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: [.curveEaseOut], animations: {
+                UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState], animations: {
+                    if self.dimsBackgroundOnHighlight, self.savedBackgroundColor == nil {
+                        self.savedBackgroundColor = self.pushView.backgroundColor
+                        self.pushView.backgroundColor = self.pushView.backgroundColor?.toColor(Colors.dynamicColor(light: .black, dark: Colors.backgroundColor), percentage: 6)
+                    }
                     self.pushView.transform = CGAffineTransform(scaleX: self.transformScale, y: self.transformScale)
                 }, completion: nil)
             }
             else {
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
+                UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState], animations: {
+                    if self.dimsBackgroundOnHighlight {
+                        self.pushView.backgroundColor = self.savedBackgroundColor
+                        self.savedBackgroundColor = nil
+                    }
                     self.pushView.transform = .identity
                 }, completion: nil)
             }

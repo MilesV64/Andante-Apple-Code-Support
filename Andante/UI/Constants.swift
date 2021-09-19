@@ -44,7 +44,7 @@ extension UIView {
 class Constants {
     
     class var margin: CGFloat {
-        return 18
+        return 20
     }
     
     class var largeMargin: CGFloat {
@@ -52,12 +52,12 @@ class Constants {
     }
     
     class var smallMargin: CGFloat {
-        return 17
+        return 18
     }
     
     /* Used for card style views */
     class var xsMargin: CGFloat {
-        return 12
+        return 14
     }
     
     class var sidebarWidth: CGFloat {

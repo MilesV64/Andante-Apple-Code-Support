@@ -11,28 +11,19 @@ import CoreData
 import Combine
 
 class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, FetchedObjectControllerDelegate {
-    
-    private let headerView = Separator()
-    private let headerLabel = UILabel()
-    
+        
     private var newProfileButton: BottomActionButton?
     
     private let tableView = UITableView()
     private var fetchController: FetchedObjectTableViewController<CDProfile>?
     
-    private let selectFeedback = UIImpactFeedbackGenerator(style: .light)
+    private var allProfilesCellView = CheckmarkCellView(title: "All Profiles", icon: "person.2.fill", iconColor: Colors.orange)
     
     public var selectedProfile: CDProfile?
     
     public var useNewProfileButton = true
     public var newProfileAction: (()->())?
     public var action: ((CDProfile)->())?
-    
-    override var title: String? {
-        didSet {
-            headerLabel.text = title
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,9 +40,11 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
             [weak self] (tableView, indexPath, profile) in
             guard let self = self else { return UITableViewCell() }
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SelectProfileCell
-            cell.profile = profile
-            cell.useCheckmark = profile == self.selectedProfile
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CheckmarkTableViewCell
+            
+            cell.checkmarkCellView.margin = 28
+            cell.checkmarkCellView.profile = profile
+            cell.checkmarkCellView.setChecked(profile == self.selectedProfile)
             
             return cell
             
@@ -59,23 +52,17 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         
         fetchController?.performFetch()
         
-        headerLabel.font = Fonts.semibold.withSize(17)
-        headerLabel.textColor = Colors.text
-        headerLabel.textAlignment = .center
-        headerLabel.text = title
-        headerView.addSubview(headerLabel)
-        
-        headerView.position = .bottom
-        //contentView.addSubview(headerView)
-        
         tableView.alwaysBounceVertical = false
-        tableView.rowHeight = 70
-        tableView.register(SelectProfileCell.self, forCellReuseIdentifier: "cell")
+        tableView.rowHeight = CheckmarkCellView.height
+        tableView.register(CheckmarkTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.backgroundColor = .clear
         tableView.separatorColor = .clear
-        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 1))
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: AndanteCellView.height))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4))
         contentView.addSubview(tableView)
+        
+        self.allProfilesCellView.margin = 28
+        tableView.tableHeaderView?.addSubview(self.allProfilesCellView)
         
         if useNewProfileButton {
             newProfileButton = BottomActionButton(title: "New Profile")
@@ -93,7 +80,6 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
             newProfileButton?.color = .clear
             newProfileButton?.button.backgroundColor = Colors.lightColor
             newProfileButton?.button.setTitleColor(Colors.text, for: .normal)
-            newProfileButton?.button.layer.shadowOpacity = 0
             newProfileButton?.action = {
                 [weak self] in
                 guard let self = self else { return }
@@ -102,13 +88,13 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
             contentView.addSubview(newProfileButton!)
         }
         
+        newProfileButton?.margin = 24
+        
         newProfileButton?.backgroundColor = .clear
         
         panGesture.delegate = self
         tableView.delegate = self
         tableView.contentInsetAdjustmentBehavior = .never
-        
-        selectFeedback.prepare()
         
     }
     
@@ -144,14 +130,13 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let profile = fetchController?.controller.object(at: indexPath) {
-            selectFeedback.impactOccurred()
             action?(profile)
             self.close()
         }
     }
     
     override func viewDidLayoutSubviews() {
-        let tableHeight: CGFloat = tableView.rowHeight * CGFloat(fetchController?.numberOfItems() ?? 0) + 5
+        let tableHeight: CGFloat = tableView.rowHeight * CGFloat((fetchController?.numberOfItems() ?? 0) + 1) + 16
         
         let buttonHeight = newProfileButton == nil ? 0 : BottomActionButton.height
         
@@ -160,9 +145,12 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         super.viewDidLayoutSubviews()
         
         tableView.frame = CGRect(
-            x: 0, y: 0,
+            x: 0, y: 12,
             width: contentView.bounds.width,
             height: tableHeight)
+        
+        allProfilesCellView.frame = CGRect(
+            x: 0, y: 0, width: tableView.bounds.width, height: AndanteCellView.height)
         
         newProfileButton?.frame = CGRect(
             x: 0, y: contentView.bounds.maxY - buttonHeight - contentView.safeAreaInsets.bottom,

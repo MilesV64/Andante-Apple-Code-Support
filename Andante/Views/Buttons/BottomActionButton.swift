@@ -40,7 +40,12 @@ class BottomActionButton: Separator {
             } else {
                 self.backgroundColor = Colors.backgroundColor
             }
-            button.setButtonShadow(floating: style == .floating)
+        }
+    }
+    
+    public var margin: CGFloat = Constants.margin {
+        didSet {
+            self.setNeedsLayout()
         }
     }
     
@@ -50,10 +55,22 @@ class BottomActionButton: Separator {
         self.position = .top
         self.color = Colors.barSeparator
         self.backgroundColor = Colors.foregroundColor
+        self.button.dimsBackgroundOnHighlight = true
         
         button.backgroundColor = Colors.orange
+//        button.extraHighlightAction = { [weak self] highlighted in
+//            if highlighted {
+//                UIView.animate(withDuration: 0.2) {
+//                    self?.button.alpha = 0.75
+//                }
+//            } else {
+//                UIView.animate(withDuration: 0.25) {
+//                    self?.button.alpha = 1
+//                }
+//            }
+//
+//        }
         button.setTitle(title, color: Colors.white, font: Fonts.semibold.withSize(17))
-        button.setButtonShadow(floating: style == .floating)
         button.action = action
         self.addSubview(button)
         
@@ -70,7 +87,7 @@ class BottomActionButton: Separator {
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let buttonHeight: CGFloat = 52
-        let padding: CGFloat = 34
+        let padding: CGFloat = 20 + 20
         let extraSpace = buttonHeight + padding
         let bottomSpace: CGFloat = superview?.safeAreaInsets.bottom ?? 0
         
@@ -84,10 +101,10 @@ class BottomActionButton: Separator {
         super.layoutSubviews()
         
         button.frame = CGRect(
-            x: Constants.margin, y: 16,
-            width: self.bounds.width - Constants.margin*2,
+            x: self.margin, y: 20,
+            width: self.bounds.width - self.margin*2,
             height: 50)
-        button.cornerRadius = 12
+        button.cornerRadius = 25
         
     }
 }

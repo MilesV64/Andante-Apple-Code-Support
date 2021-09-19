@@ -39,11 +39,11 @@ class HandleView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
        
-        let handleSize = CGSize(width: 36, height: 6)
+        let handleSize = CGSize(width: 36, height: 5)
         handleView.frame = CGRect(
             center: CGPoint(
                 x: self.bounds.midX,
-                y: 10),
+                y: 15),
             size: handleSize)
         handleView.roundCorners()
         

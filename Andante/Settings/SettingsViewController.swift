@@ -18,73 +18,73 @@ class SettingsViewController: UIViewController {
     
     private let headerView = SettingsHeaderView()
         
-    private let profileCell = SettingsProfileView()
+    private let profileCell = AndanteCellView()
     private let separator = Separator()
     
     private let versionLabel = UILabel()
     
-    private let siriShortcutsCell = SettingsOptionView(
+    private let siriShortcutsCell = AndanteCellView(
         title: "Siri Shortcuts",
-        iconName: "mic.fill",
+        icon: "mic.fill",
         iconColor: UIColor("#2096F3"))
     
-    private let premiumCell = SettingsUpgradeView()
+    private let premiumCell = AndanteCellView(
+        title: "Get Andante Pro",
+        icon: "star.fill",
+        iconColor: Colors.orange)
     
-    private let exportCell = SettingsOptionView(
+    private let exportCell = AndanteCellView(
         title: "Export Practice Log",
-        iconName: "arrow.up.doc.fill",
+        icon: "arrow.up.doc.fill",
         iconColor: Colors.green)
     
-    private let remindersCell = SettingsOptionView(
+    private let remindersCell = AndanteCellView(
         title: "Practice Reminders",
-        iconName: "alarm.fill",
+        icon: "alarm.fill",
         iconColor: UIColor.systemPurple)
     
-    private let separator2 = Separator()
-    private let separator3 = Separator()
-    private let separator4 = Separator()
+    private let profilesLabel = UILabel()
+    private let toolsLabel = UILabel()
+    private let helpLabel = UILabel()
+    private let andanteLabel = UILabel()
     
-    private let shareCell = SettingsOptionView(
+    private let shareCell = AndanteCellView(
         title: "Share Andante",
-        iconName: "square.and.arrow.up.fill",
+        icon: "square.and.arrow.up.fill",
         iconColor: UIColor("#5D7DEA"))
     
-    private let reviewCell = SettingsOptionView(
+    private let reviewCell = AndanteCellView(
         title: "Review Andante",
-        iconName: "heart.fill",
+        icon: "heart.fill",
         iconColor: UIColor("#FD606D"))
     
-    private let feedbackCell = SettingsOptionView(
+    private let feedbackCell = AndanteCellView(
         title: "Send Me Feedback",
-        iconName: "ellipsis.bubble.fill",
+        icon: "ellipsis.bubble.fill",
         iconColor: Colors.focusColor)
     
-    private let helpCell = SettingsOptionView(
+    private let helpCell = AndanteCellView(
         title: "Help",
-        iconName: "questionmark.circle.fill",
+        icon: "questionmark.circle.fill",
         iconColor: Colors.lightBlue)
     
-    private let cloudCell = SettingsOptionView(
+    private let cloudCell = AndanteCellView(
         title: "iCloud Sync Support",
-        iconName: "cloud.fill",
+        icon: "cloud.fill",
         iconColor: Colors.purple)
     
-    private let contactCell = SettingsOptionView(
+    private let contactCell = AndanteCellView(
         title: "Contact Me",
-        iconName: "envelope.fill",
+        icon: "envelope.fill",
         iconColor: Colors.sessionsColor)
     
-    private let instagramCell = SettingsOptionView(
+    private let instagramCell = AndanteCellView(
         title: "Andante on Instagram",
-        iconName: "instagram",
+        icon: UIImage(named: "instagram"),
+        imageSize: CGSize(width: 22, height: 22),
         iconColor: UIColor("FD6099"))
     
-    private let twitterCell = SettingsOptionView(
-        title: "Andante on Twitter",
-        iconName: "twitter",
-        iconColor: UIColor("1DA1F2"))
-    
-    private var cells: [SettingsCellView]!
+    private var cells: [AndanteCellView]!
     
     private let handleView = HandleView()
     private let scrollView = CancelTouchScrollView()
@@ -107,6 +107,11 @@ class SettingsViewController: UIViewController {
             self.contactCell,
             self.instagramCell,
         ]
+        
+        premiumCell.label.font = Fonts.semibold.withSize(17)
+        premiumCell.label.textColor = Colors.orange
+        premiumCell.accessoryStyle = .arrow
+        premiumCell.margin = 24
 
         if Settings.isPremium == false  {
             cells.insert(premiumCell, at: 0)
@@ -158,6 +163,7 @@ class SettingsViewController: UIViewController {
             
             
         }
+        
         scrollView.addSubview(headerView)
         
         profileCell.profile = User.getActiveProfile()
@@ -166,22 +172,25 @@ class SettingsViewController: UIViewController {
             guard let self = self, let profile = User.getActiveProfile() else { return }
             self.addChildTransitionController(ProfileSettingsViewController(profile: profile))
         }
+        profileCell.margin = 24
+        profileCell.accessoryStyle = .arrow
         scrollView.addSubview(profileCell)
         
-        separator.position = .middle
-        scrollView.addSubview(separator)
+        profilesLabel.text = "PROFILES"
+        toolsLabel.text = "TOOLS"
+        helpLabel.text = "SUPPORT"
+        andanteLabel.text = "ANDANTE"
         
-        separator2.position = .middle
-        scrollView.addSubview(separator2)
-        
-        separator3.position = .middle
-        scrollView.addSubview(separator3)
-        
-        separator4.position = .middle
-        scrollView.addSubview(separator4)
+        [profilesLabel, toolsLabel, helpLabel, andanteLabel].forEach { label in
+            label.textColor = Colors.extraLightText
+            label.font = Fonts.semibold.withSize(13)
+            scrollView.addSubview(label)
+        }
         
         cells.forEach { (option) in
-            option.delegate = self
+            option.action = { [weak self] in self?.didSelectOption(option) }
+            option.margin = 24
+            option.accessoryStyle = .arrow
             scrollView.addSubview(option)
         }
                 
@@ -224,7 +233,11 @@ class SettingsViewController: UIViewController {
             self.cells.removeFirst().removeFromSuperview()
         }
         else if Settings.isPremium == false && self.cells.first! !== self.premiumCell {
-            self.premiumCell.delegate = self
+            self.premiumCell.action = {
+                [weak self] in
+                guard let self = self else { return }
+                self.didSelectOption(self.premiumCell)
+            }
             self.scrollView.addSubview(self.premiumCell)
             self.cells.insert(self.premiumCell, at: 0)
         }
@@ -266,15 +279,7 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        let separatorInset = UIEdgeInsets(
-            top: 0, left: view.responsiveMargin,
-            bottom: 0, right: view.responsiveMargin)
-        separator.inset = separatorInset
-        separator2.inset = separatorInset
-        separator3.inset = separatorInset
-        separator4.inset = separatorInset
-        
+
         scrollView.frame = self.view.bounds
         
         handleView.frame = CGRect(x: 0, y: 0, width: scrollView.bounds.width, height: 20)
@@ -283,19 +288,25 @@ class SettingsViewController: UIViewController {
             x: 0, y: 0,
             width: scrollView.bounds.width, height: 282)
         
-        let cellHeight: CGFloat = 76
+        let cellHeight: CGFloat = AndanteCellView.height
+        let margin: CGFloat = 24
+        
+        var minY: CGFloat = headerView.frame.maxY
+        
+        profilesLabel.sizeToFit()
+        profilesLabel.frame.origin = CGPoint(x: margin, y: minY + 22)
+        minY += profilesLabel.bounds.height + 8 + 22
         
         profileCell.frame = CGRect(
-            x: 0, y: headerView.frame.maxY,
+            x: 0, y: minY,
             width: self.view.bounds.width,
             height: cellHeight)
         
-        separator.frame = CGRect(
-            x: 0, y: profileCell.frame.maxY,
-            width: scrollView.bounds.width,
-            height: 20)
+        minY += cellHeight
         
-        var minY: CGFloat = separator.frame.maxY
+        toolsLabel.sizeToFit()
+        toolsLabel.frame.origin = CGPoint(x: margin, y: minY + 22)
+        minY += toolsLabel.bounds.height + 8 + 22
         
         let group1 = cells.contains(premiumCell) ? 4 : 3
         for i in 0..<group1 {
@@ -306,11 +317,9 @@ class SettingsViewController: UIViewController {
             minY += cellHeight
         }
         
-        separator2.frame = CGRect(
-            x: 0, y: minY,
-            width: scrollView.bounds.width,
-            height: 20)
-        minY = separator2.frame.maxY
+        helpLabel.sizeToFit()
+        helpLabel.frame.origin = CGPoint(x: margin, y: minY + 22)
+        minY += helpLabel.bounds.height + 8 + 22
         
         let group2 = 2
         for i in group1..<(group1+group2) {
@@ -321,11 +330,9 @@ class SettingsViewController: UIViewController {
             minY += cellHeight
         }
         
-        separator3.frame = CGRect(
-            x: 0, y: minY,
-            width: scrollView.bounds.width,
-            height: 20)
-        minY = separator3.frame.maxY
+        andanteLabel.sizeToFit()
+        andanteLabel.frame.origin = CGPoint(x: margin, y: minY + 22)
+        minY += andanteLabel.bounds.height + 8 + 22
         
         for i in (group1+group2)..<cells.count {
             cells[i].frame = CGRect(
@@ -335,16 +342,9 @@ class SettingsViewController: UIViewController {
             minY += cellHeight
         }
         
-        separator4.frame = CGRect(
-            x: 0, y: minY,
-            width: scrollView.bounds.width,
-            height: 20
-        )
-        
-        
         versionLabel.frame = CGRect(
             x: self.view.bounds.midX - 50,
-            y: separator4.frame.maxY + 4,
+            y: minY + 24,
             width: 100,
             height: 32
         )
@@ -355,9 +355,9 @@ class SettingsViewController: UIViewController {
     
 }
 
-extension SettingsViewController: SettingsOptionDelegate, MFMailComposeViewControllerDelegate {
+extension SettingsViewController: MFMailComposeViewControllerDelegate {
     
-    func didSelectOption(_ option: CustomButton) {
+    func didSelectOption(_ option: AndanteCellView) {
         
         if option === siriShortcutsCell {
             self.addChildTransitionController(SiriShortcutsViewController())
@@ -385,11 +385,6 @@ extension SettingsViewController: SettingsOptionDelegate, MFMailComposeViewContr
         }
         else if option === feedbackCell {
             if let url = URL(string: "https://airtable.com/shr8LpJHSEJUWIPJ2") {
-                UIApplication.shared.open(url)
-            }
-        }
-        else if option == twitterCell {
-            if let url = URL(string: "https://twitter.com/AppAndante") {
                 UIApplication.shared.open(url)
             }
         }
@@ -810,7 +805,6 @@ class SettingsHeaderView: UIView {
         
         changeProfileButton.backgroundColor = Colors.orange
         changeProfileButton.setTitle("Change Profile", color: Colors.white, font: Fonts.semibold.withSize(16))
-        changeProfileButton.setButtonShadow()
         self.addSubview(changeProfileButton)
         
     }
@@ -832,7 +826,7 @@ class SettingsHeaderView: UIView {
         
         let buttonWidth = self.bounds.width - responsiveMargin*2
         changeProfileButton.frame = CGRect(x: self.bounds.midX - buttonWidth/2, y: activeProfileLabel.frame.maxY + 24, width: buttonWidth, height: 50)
-        changeProfileButton.cornerRadius = 12
+        changeProfileButton.cornerRadius = 25
             
         
     }

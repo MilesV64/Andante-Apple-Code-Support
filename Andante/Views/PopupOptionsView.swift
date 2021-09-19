@@ -19,14 +19,14 @@ class PopupOptionsView: Separator {
     private var options: [OptionButton] = []
     
     public static var height: CGFloat {
-        return 76 + 16 + 8
+        return 76 + 16 + 12
     }
     
     init() {
         super.init(frame: .zero)
         
         self.position = .bottom
-        self.color = Colors.barSeparator
+        self.color = Colors.separatorColor
         
     }
     
@@ -46,7 +46,7 @@ class PopupOptionsView: Separator {
         for (i, option) in options.enumerated() {
             option.frame = CGRect(
                 x: CGFloat(i)*(itemWidth + spacing),
-                y: 8, width: itemWidth, height: itemHeight)
+                y: 12, width: itemWidth, height: itemHeight)
         }        
         
     }
@@ -109,7 +109,7 @@ class PopupOptionsView: Separator {
             self.action = action
             
             self.backgroundColor = Colors.lightColor
-            self.cornerRadius = 8
+            self.cornerRadius = 10
             
         }
         

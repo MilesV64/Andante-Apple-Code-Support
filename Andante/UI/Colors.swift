@@ -80,6 +80,7 @@ class Colors: NSObject {
     
     //MARK: - Text
     class var text: UIColor {
+        return Colors.dynamicColor(light: .black, dark: UIColor("#FEFFFE"))
         return Colors.dynamicColor(light: UIColor("#333539"), dark: UIColor("#FEFFFE"))
     }
     
@@ -103,19 +104,19 @@ class Colors: NSObject {
     class var dimColor: UIColor {
         return Colors.dynamicColor(
             light: UIColor.black.withAlphaComponent(0.18),
-            dark: UIColor.black.withAlphaComponent(0.28))
+            dark: UIColor.black.withAlphaComponent(0.32))
     }
     
     class var lighterDimColor: UIColor {
         return Colors.dynamicColor(
             light: UIColor.black.withAlphaComponent(0.1),
-            dark: UIColor.black.withAlphaComponent(0.2))
+            dark: UIColor.black.withAlphaComponent(0.24))
     }
     
     class var evenLighterDimColor: UIColor {
         return Colors.dynamicColor(
             light: UIColor.black.withAlphaComponent(0.04),
-            dark: UIColor.black.withAlphaComponent(0.075))
+            dark: UIColor.black.withAlphaComponent(0.1))
     }
     
     class var moodColor: UIColor {
@@ -140,7 +141,7 @@ class Colors: NSObject {
     }
     
     class var orange: UIColor {
-        return dynamicColor(light: UIColor("#FD7757"), dark: UIColor("#FF7A6F"))
+        return dynamicColor(light: UIColor("#FD7757", displayP3: true), dark: UIColor("#FF7A6F", displayP3: true))
     }
     
     class var barShadowColor: UIColor {
@@ -183,7 +184,7 @@ extension Colors {
 
 extension UIColor {
     
-    convenience init(_ hex: String) {
+    convenience init(_ hex: String, displayP3: Bool = false) {
         let r, g, b: CGFloat
         let max: CGFloat = 255
 
@@ -199,7 +200,13 @@ extension UIColor {
                 g = CGFloat((hexNumber & 0x00ff00) >> 8) / max
                 b = CGFloat(hexNumber & 0x0000ff) / max
 
-                self.init(red: r, green: g, blue: b, alpha: 1)
+                if displayP3 {
+                    self.init(displayP3Red: r, green: g, blue: b, alpha: 1)
+                }
+                else {
+                    self.init(red: r, green: g, blue: b, alpha: 1)
+                }
+                
                 return
             }
         }

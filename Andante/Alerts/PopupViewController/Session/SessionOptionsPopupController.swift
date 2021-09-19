@@ -26,8 +26,8 @@ class SessionOptionsPopupController: TransitionPopupViewController {
     
     private let optionsView = PopupOptionsView()
     
-    private let profileOptionView = SessionProfileButton()
-    private let editSessionView = EditSessionButton()
+    private let profileOptionView = AndanteCellView()
+    private let editSessionView = AndanteCellView(title: "Edit Session", icon: "switch.2", iconColor: Colors.orange)
     
     public var deleteHandler: (()->())?
     public var editHandler: (()->())?
@@ -79,7 +79,9 @@ class SessionOptionsPopupController: TransitionPopupViewController {
         
         primaryView.addSubview(optionsView)
         
+        profileOptionView.margin = 24
         profileOptionView.profile = session.profile
+        profileOptionView.alternateProfileTitle = "Move Session"
         profileOptionView.action = {
             [weak self] in
             guard let self = self else { return }
@@ -95,6 +97,7 @@ class SessionOptionsPopupController: TransitionPopupViewController {
         }
         primaryView.addSubview(profileOptionView)
         
+        editSessionView.margin = 24
         editSessionView.action = {
             [weak self] in
             guard let self = self else { return }
@@ -169,28 +172,28 @@ class SessionOptionsPopupController: TransitionPopupViewController {
     override func preferredHeightForPrimaryView(for width: CGFloat) -> CGFloat {
         let optionsHeight = PopupOptionsView.height
         let otherOptionHeight: CGFloat = 60
-        return optionsHeight + otherOptionHeight*2 + 34
+        return optionsHeight + otherOptionHeight*2 + 20
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         let optionsHeight = PopupOptionsView.height
-        let otherOptionHeight: CGFloat = 60
+        let otherOptionHeight: CGFloat = AndanteCellView.height
         
         optionsView.frame = CGRect(
-            x: Constants.smallMargin,
+            x: 24,
             y: 0,
-            width: contentView.bounds.width - Constants.smallMargin*2,
+            width: contentView.bounds.width - 24*2,
             height: optionsHeight)
         
         profileOptionView.frame = CGRect(
-            x: 0, y: optionsView.frame.maxY + 16,
+            x: 0, y: optionsView.frame.maxY + 8,
             width: contentView.bounds.width,
             height: otherOptionHeight)
         
         editSessionView.frame = CGRect(
-            x: 0, y: profileOptionView.frame.maxY + 4,
+            x: 0, y: profileOptionView.frame.maxY,
             width: contentView.bounds.width,
             height: otherOptionHeight)
         

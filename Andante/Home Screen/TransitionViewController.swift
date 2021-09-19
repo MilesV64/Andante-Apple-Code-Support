@@ -18,7 +18,7 @@ class TransitionContentView: UIView {
             if useRoundCorners {
                 contentView.roundCorners(UIDevice.current.deviceCornerRadius())
             } else {
-                contentView.roundCorners(10)
+                //contentView.roundCorners(10)
             }
         }
     }
@@ -32,9 +32,9 @@ class TransitionContentView: UIView {
         shadowView.layer.rasterizationScale = UIScreen.main.scale
         super.addSubview(shadowView)
         
-        if useRoundCorners {
-            contentView.roundCorners(UIDevice.current.deviceCornerRadius())
-        }
+//        if useRoundCorners {
+//            contentView.roundCorners(UIDevice.current.deviceCornerRadius())
+//        }
         contentView.clipsToBounds = true
         contentView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         contentView.backgroundColor = Colors.foregroundColor
@@ -133,9 +133,11 @@ class TransitionViewController: UIViewController {
                 self.view.isUserInteractionEnabled = false
                 self.inputAccessoryView?.transform = .identity
                 self.dimView.alpha = 1
-                presentingView.transform = CGAffineTransform(translationX: -60, y: 0)
+                presentingView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
                 self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
             }, completion: {
+                presentingView.transform = .identity
+                self.view.transform = .identity
                 self.view.isUserInteractionEnabled = true
                 self.parent?.view.isUserInteractionEnabled = true
             })
@@ -162,6 +164,7 @@ class TransitionViewController: UIViewController {
         dimView.translatesAutoresizingMaskIntoConstraints = false
         dimView.isUserInteractionEnabled = true
         (self.view as! TransitionContentView).addNonContentSubview(dimView)
+        (self.view as! TransitionContentView).useRoundCorners = false
         NSLayoutConstraint.activate([
             dimView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             dimView.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -197,7 +200,7 @@ class TransitionViewController: UIViewController {
             self.view.transform = CGAffineTransform(
                 translationX: translation + self.identityTransform*(1-progress), y: 0)
             self.inputAccessoryView?.transform = CGAffineTransform(translationX: translation, y: 0)
-            presentingView?.transform = CGAffineTransform(translationX: -60*(1-progress), y: 0)
+            presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width*(1-progress), y: 0)
             self.dimView.alpha = 1 - progress
         }
         else {
@@ -226,9 +229,12 @@ class TransitionViewController: UIViewController {
                 UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: -velocity, options: .curveLinear, animations: {
                     self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
                     self.inputAccessoryView?.transform = CGAffineTransform(translationX: 0, y: 0)
-                    self.presentingView?.transform = CGAffineTransform(translationX: -60, y: 0)
+                    self.presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
                     self.dimView.alpha = 1
-                }, completion: nil)
+                }, completion: { _ in
+                    self.view.transform = .identity
+                    self.presentingView?.transform = .identity
+                })
             }
             else {
                 if progress > 0.5 {
@@ -246,9 +252,12 @@ class TransitionViewController: UIViewController {
                     UIView.animateWithCurve(duration: 0.5, x1: 0.2, y1: 1, x2: 0.36, y2: 1, animation: {
                         self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
                         self.inputAccessoryView?.transform = CGAffineTransform(translationX: 0, y: 0)
-                        self.presentingView?.transform = CGAffineTransform(translationX: -60, y: 0)
+                        self.presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
                         self.dimView.alpha = 1
-                    }, completion: nil)
+                    }, completion: {
+                        self.view.transform = .identity
+                        self.presentingView?.transform = .identity
+                    })
                 }
             }
             
@@ -256,6 +265,8 @@ class TransitionViewController: UIViewController {
     }
     
     public func close(animated: Bool = true, completion: (()->Void)? = nil) {
+        self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
+        self.presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
                 self.view.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
@@ -290,7 +301,7 @@ class ChildTransitionViewController: TransitionViewController, UIGestureRecogniz
     }
     
     override var identityTransform: CGFloat {
-        return 60
+        return self.view.bounds.width
     }
     
     private var firstAppear = true

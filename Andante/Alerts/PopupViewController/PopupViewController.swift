@@ -269,7 +269,7 @@ extension PopupViewController {
     private func setupUI() {
         self.view.backgroundColor = .clear
         
-        dimView.backgroundColor = Colors.lighterDimColor
+        dimView.backgroundColor = Colors.dimColor
         dimView.alpha = 0
         view.addSubview(dimView)
         
@@ -334,8 +334,8 @@ extension PopupViewController {
 
         }
         
-        blurView.roundCorners(16)
-        bgView.roundCorners(16)
+        blurView.roundCorners(25)
+        bgView.roundCorners(25)
         
         blurView.layer.maskedCorners = [
             .layerMaxXMinYCorner, .layerMinXMinYCorner
@@ -345,7 +345,7 @@ extension PopupViewController {
             .layerMaxXMinYCorner, .layerMinXMinYCorner
         ]
         
-        dimView.backgroundColor = Colors.lighterDimColor
+        dimView.backgroundColor = Colors.dimColor
         setBGShadow()
         
         bgView.addGestureRecognizer(panGesture)
@@ -372,7 +372,7 @@ extension PopupViewController {
             .layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner
         ]
         
-        dimView.backgroundColor = Colors.evenLighterDimColor
+        dimView.backgroundColor = Colors.lighterDimColor
         setBGShadow()
         
         bgView.removeGestureRecognizer(panGesture)

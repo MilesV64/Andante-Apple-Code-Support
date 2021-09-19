@@ -252,10 +252,8 @@ extension UIView {
      If cornerRadius is nil, this needs to be called in layoutSubviews to work
      */
     func roundCorners(_ cornerRadius: CGFloat? = nil, prefersContinuous: Bool = true) {
-        if #available(iOS 13.0, *) {
-            if prefersContinuous {
-                self.layer.cornerCurve = .continuous
-            }
+        if prefersContinuous {
+            self.layer.cornerCurve = .continuous
         }
         self.layer.cornerRadius = cornerRadius ?? self.bounds.height/2
     }

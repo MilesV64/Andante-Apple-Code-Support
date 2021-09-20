@@ -27,6 +27,8 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
     let calendar = Calendar.current
     var startDate = Date()
     
+    private var daysToDisplay: Int = 0
+    
     public func reloadData() {
         collectionView.reloadSections([0])
     }
@@ -56,8 +58,35 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
         
     }
     
+    private var indexPathsToAnimate: [IndexPath] = []
+    
     public func dayDidChange() {
-        setStartDay()
+        let currentCount = self.daysToDisplay
+        let trueCount = self.amountOfDays()
+        
+        let diff = trueCount - currentCount
+        
+        
+        if diff > 0 {
+            let maxOffset = self.collectionView.contentSize.width - self.collectionView.bounds.width
+            
+            self.daysToDisplay += diff
+            
+            let indexes = (0..<diff).map { IndexPath(row: self.daysToDisplay - diff + $0, section: 0) }
+            self.indexPathsToAnimate = indexes
+            
+            self.collectionView.insertItems(at: indexes)
+            
+            // Don't scroll to new cell if you already have scrolled from the end
+            if self.collectionView.contentOffset.x == maxOffset {
+                collectionView.scrollToItem(at: IndexPath(row: self.daysToDisplay-1, section: 0), at: .left, animated: true)
+            }
+            
+        }
+        else {
+            // Something went wrong, just reload to get back on track
+            self.setStartDay()
+        }
     }
     
     @objc func databaseDidUpdate() {
@@ -86,9 +115,9 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
             self.startDate = startDate
         }
         
+        self.daysToDisplay = self.amountOfDays()
         collectionView.reloadData()
 
-        setNeedsLayout()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -106,18 +135,18 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
         
         collectionView.frame = self.bounds
         
-        collectionView.scrollToItem(at: IndexPath(row: amountOfDays()-1, section: 0), at: .left, animated: false)
+        collectionView.scrollToItem(at: IndexPath(row: self.daysToDisplay-1, section: 0), at: .left, animated: false)
         
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return amountOfDays()
+        return self.daysToDisplay
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CalendarCollectionViewCell
         
-        let day = Day(date: calendar.date(byAdding: .day, value: indexPath.row, to: startDate) ?? Date())
+        let day = self.day(for: indexPath.row)
         
         if let sessions = PracticeDatabase.shared.sessions(for: day) {
             cell.sessionCount = min(6, sessions.count)
@@ -131,19 +160,32 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let day = Day(date: calendar.date(byAdding: .day, value: indexPath.row, to: startDate) ?? Date())
-        delegate?.didSelectCalendarCell(day, sourceView: collectionView.cellForItem(at: indexPath))
+        delegate?.didSelectCalendarCell(self.day(for: indexPath.row), sourceView: collectionView.cellForItem(at: indexPath))
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if let firstIndex = self.indexPathsToAnimate.firstIndex(of: indexPath) {
+            let cell = cell as! CalendarCollectionViewCell
+            cell.animate()
+            self.indexPathsToAnimate.remove(at: firstIndex)
+
+        }
+    }
+    
+    private func day(for index: Int) -> Day {
+        return Day(date: calendar.date(byAdding: .day, value: index, to: startDate) ?? Date())
     }
     
     private func amountOfDays() -> Int {
         let today = calendar.startOfDay(for: Date())
-        return max(5, 1 + (calendar.dateComponents([.day], from: startDate, to: today).day ?? 0))
+        return 1 + (calendar.dateComponents([.day], from: startDate, to: today).day ?? 0)
     }
 }
 
 private class CalendarCollectionViewCell: UICollectionViewCell {
     
-    private let bgView = MaskedShadowView()
+    let bgView = MaskedShadowView()
 
     public var day = Day(day: 0, month: 0, year: 0) {
         didSet {
@@ -178,6 +220,20 @@ private class CalendarCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func animate() {
+        self.bgView.alpha = 0
+        self.bgView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5).concatenating(CGAffineTransform(translationX: -self.bounds.width * 0.7, y: 0))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: []) {
+                self.bgView.alpha = 1
+                self.bgView.transform = .identity
+            } completion: { _ in
+                //
+            }
+        }
+        
+    }
+    
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
@@ -193,7 +249,7 @@ private class CalendarCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        bgView.frame = self.bounds.insetBy(dx: 4, dy: 0)
+        bgView.contextualFrame = self.bounds.insetBy(dx: 4, dy: 0)
                 
         centerLabel.sizeToFit()
         centerLabel.center = bgView.bounds.center.offset(dx: 0, dy: 1)

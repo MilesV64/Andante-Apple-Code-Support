@@ -111,6 +111,9 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             fetchedObjectController.performFetch()
         }
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.sessionCalendarView.dayDidChange()
+        }
         
     }
     
@@ -394,7 +397,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
                 guard let self = self else { return }
                 let vc = ManualSessionViewController()
                 vc.calendarPicker.setInitialDay(day)
-                self.containerViewController?.present(vc, animated: true, completion: nil)
+                self.containerViewController?.presentModal(vc, animated: true, completion: nil)
             }
             popup.close()
             self.sessionCalendarDetailViewController = nil
@@ -638,7 +641,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         menu.addTitleItem(title: "Sessions")
         menu.addItem(title: "Add a session", icon: nil, handler: {
             let vc = ManualSessionViewController()
-            self.containerViewController?.present(vc, animated: true, completion: nil)
+            self.containerViewController?.presentModal(vc, animated: true, completion: nil)
         })
        
         menu.show(self)

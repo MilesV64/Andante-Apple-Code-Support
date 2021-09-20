@@ -201,7 +201,7 @@ class ExportDataViewController: UIViewController {
 
                         let ac = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                         ac.popoverPresentationController?.sourceView = self.button
-                        self.present(ac, animated: true, completion: {
+                        self.presentModal(ac, animated: true, completion: {
                             [weak self] in
                             guard let self = self else { return }
                             self.isExporting = false

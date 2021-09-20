@@ -82,7 +82,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
                 return true
             }
             else {
-                self.present(AndanteProViewController(), animated: true, completion: nil)
+                self.presentModal(AndanteProViewController(), animated: true, completion: nil)
                 return false
             }
         }
@@ -382,7 +382,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
                         try? FileManager.default.removeItem(at: url)
                     }
                     
-                    self.present(ac, animated: true, completion: nil)
+                    self.presentModal(ac, animated: true, completion: nil)
                 }
                 
             }
@@ -401,7 +401,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
                 }
             }
             
-            self.present(ac, animated: true, completion: nil)
+            self.presentModal(ac, animated: true, completion: nil)
         }
         
         
@@ -430,7 +430,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
             
         }
         
-        self.present(editController, animated: true, completion: nil)
+        self.presentModal(editController, animated: true, completion: nil)
 
     }
     

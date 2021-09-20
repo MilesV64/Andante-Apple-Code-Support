@@ -134,7 +134,7 @@ class JournalFoldersViewController: UIViewController {
             self.present(newFolderAlert, animated: false, completion: nil)
         }
         else {
-            self.present(AndanteProViewController(), animated: true, completion: nil)
+            self.presentModal(AndanteProViewController(), animated: true, completion: nil)
         }
 
     }

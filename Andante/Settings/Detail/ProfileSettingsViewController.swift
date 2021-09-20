@@ -124,7 +124,7 @@ class ProfileSettingsViewController: SettingsDetailViewController {
             }
             else {
                 let vc = MergeProfilesViewController(self.profile)
-                self.present(vc, animated: true, completion: nil)
+                self.presentModal(vc, animated: true, completion: nil)
             }
             
         }

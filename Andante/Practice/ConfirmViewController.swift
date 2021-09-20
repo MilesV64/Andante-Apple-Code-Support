@@ -51,7 +51,7 @@ class ConfirmViewController: UIViewController {
         confirmView.premiumHandler = {
             [weak self] in
             guard let self = self else { return }
-            self.present(AndanteProViewController(), animated: true, completion: nil)
+            self.presentModal(AndanteProViewController(), animated: true, completion: nil)
         }
         
         confirmView.setBackButtonType(.cancel)

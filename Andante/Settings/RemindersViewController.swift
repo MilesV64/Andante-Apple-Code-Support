@@ -161,7 +161,7 @@ class RemindersViewController: ChildTransitionViewController {
         }))
         alert.addAction(UIAlertAction(title: "Not now", style: .cancel, handler: nil))
         
-        self.present(alert, animated: true, completion: nil)
+        self.presentModal(alert, animated: true, completion: nil)
     }
     
     private func newReminder() {
@@ -186,7 +186,7 @@ class RemindersViewController: ChildTransitionViewController {
 
         }
         
-        self.present(vc, animated: true, completion: nil)
+        self.presentModal(vc, animated: true, completion: nil)
     }
     
     @objc func didTapBack() {
@@ -269,7 +269,7 @@ extension RemindersViewController: UITableViewDelegate, ReminderCellDelegate, Fe
             DataManager.context.delete(reminder)
         }
         
-        self.present(vc, animated: true, completion: nil)
+        self.presentModal(vc, animated: true, completion: nil)
     }
     
 }

@@ -53,7 +53,7 @@ class SiriShortcutsViewController: SettingsDetailViewController, UITableViewDele
             let vc = INUIAddVoiceShortcutViewController(shortcut: shortcut)
             vc.view.tintColor = Colors.orange
             vc.delegate = self
-            self.present(vc, animated: true, completion: nil)
+            self.presentModal(vc, animated: true, completion: nil)
         }
     }
     

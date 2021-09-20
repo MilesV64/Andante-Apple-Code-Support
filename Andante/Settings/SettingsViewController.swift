@@ -217,7 +217,7 @@ class SettingsViewController: UIViewController {
     @objc func showAppTweaks() {
         let appTweaksViewController = AppTweaksViewController()
         appTweaksViewController.delegate = self
-        self.present(UINavigationController(rootViewController: appTweaksViewController), animated: true, completion: nil)
+        self.presentModal(UINavigationController(rootViewController: appTweaksViewController), animated: true, completion: nil)
     }
     
     private func showPremiumController() {
@@ -225,7 +225,7 @@ class SettingsViewController: UIViewController {
         vc.successAction = { [weak self] in
             self?.reloadPremiumCell()
         }
-        self.present(vc, animated: true, completion: nil)
+        self.presentModal(vc, animated: true, completion: nil)
     }
     
     private func reloadPremiumCell() {
@@ -252,7 +252,7 @@ class SettingsViewController: UIViewController {
                 guard let self = self else { return }
                 self.changeProfile(to: profile)
             }
-            self.present(newProfileVC, animated: true, completion: nil)
+            self.presentModal(newProfileVC, animated: true, completion: nil)
         }
         else {
             showPremiumController()
@@ -399,7 +399,7 @@ extension SettingsViewController: MFMailComposeViewControllerDelegate {
     func handleExport() {
         if Settings.isPremium {
             let vc = ExportDataViewController()
-            self.present(vc, animated: true, completion: nil)
+            self.presentModal(vc, animated: true, completion: nil)
         }
         else {
             showPremiumController()
@@ -424,7 +424,7 @@ extension SettingsViewController: MFMailComposeViewControllerDelegate {
     func handleCloud() {
         let vc = CloudSupportViewController()
         vc.settingsViewController = self
-        self.present(vc, animated: true, completion: nil)
+        self.presentModal(vc, animated: true, completion: nil)
     }
     
     func handleReview() {
@@ -438,7 +438,7 @@ extension SettingsViewController: MFMailComposeViewControllerDelegate {
             let objectsToShare = [urlStr]
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
 
-            self.present(activityVC, animated: true, completion: nil)
+            self.presentModal(activityVC, animated: true, completion: nil)
         }
     }
     
@@ -448,7 +448,7 @@ extension SettingsViewController: MFMailComposeViewControllerDelegate {
             mail.setToRecipients(["contact@andante.app"])
             mail.setSubject("Andante")
             mail.mailComposeDelegate = self
-            self.present(mail, animated: true, completion: nil)
+            self.presentModal(mail, animated: true, completion: nil)
 
         } else {
             let alert = DescriptionActionPopupViewController(title: "Can't send mail", description: "Your device isn't configured to automatically send emails. Try copying the address instead!", actionText: "Copy Email", action: nil)
@@ -803,6 +803,7 @@ class SettingsHeaderView: UIView {
         activeProfileLabel.textAlignment = .center
         self.addSubview(activeProfileLabel)
         
+        changeProfileButton.dimsBackgroundOnHighlight = true
         changeProfileButton.backgroundColor = Colors.orange
         changeProfileButton.setTitle("Change Profile", color: Colors.white, font: Fonts.semibold.withSize(16))
         self.addSubview(changeProfileButton)

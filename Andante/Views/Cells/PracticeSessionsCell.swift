@@ -213,12 +213,18 @@ class MaskedShadowView: UIView {
         }
     }
     
+    public var cornerRadius: CGFloat = 10 {
+        didSet {
+            self.setNeedsLayout()
+        }
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
         fgView.center = self.bounds.center
         fgView.bounds.size = self.bounds.size
-        fgView.roundCorners(10)
+        fgView.roundCorners(self.cornerRadius)
         
         fgView.layer.shadowPath = UIBezierPath(
             roundedRect: fgView.bounds,

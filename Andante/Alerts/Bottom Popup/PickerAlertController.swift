@@ -318,7 +318,7 @@ private extension PickerAlertController {
         
         popupView.center = CGPoint(x: rect.midX, y: rect.midY)
         popupView.bounds.size = rect.size
-        popupView.roundCorners(14)
+        popupView.roundCorners(25)
         
         handleView.frame = CGRect(x: 0, y: 0, width: popupView.bounds.width, height: 20)
         

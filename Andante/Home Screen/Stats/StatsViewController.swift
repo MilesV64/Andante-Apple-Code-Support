@@ -51,7 +51,7 @@ class StatsViewController: MainViewController {
             vc.popoverPresentationController?.sourceRect = CGRect(
                 x: self.headerView.bounds.midX - 4, y: self.headerView.bounds.midY + 20,
                 width: 8, height: 8)
-            self.present(vc, animated: true, completion: nil)
+            self.presentModal(vc, animated: true, completion: nil)
         }
         
         scrollView!.addSubview(totalsView)

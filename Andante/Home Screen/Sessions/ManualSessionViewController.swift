@@ -95,7 +95,7 @@ class ManualSessionViewController: UIViewController, UITextViewDelegate, Calenda
                 return true
             }
             else {
-                self.present(AndanteProViewController(), animated: true, completion: nil)
+                self.presentModal(AndanteProViewController(), animated: true, completion: nil)
                 return false
             }
         }

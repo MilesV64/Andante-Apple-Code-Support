@@ -61,7 +61,7 @@ class Sidebar: NavigationComponent, SidebarFoldersDelegate {
             [weak self] in
             guard let self = self else { return }
             let vc = SettingsContainerViewController()
-            self.delegate?.presentingViewController().present(vc, animated: true, completion: nil)
+            self.delegate?.presentingViewController().presentModal(vc, animated: true, completion: nil)
         }
         scrollView.addSubview(profileView)
         

@@ -261,7 +261,7 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
                 }
             }
 
-            self.present(whatsNew, animated: true, completion: nil)
+            self.presentModal(whatsNew, animated: true, completion: nil)
         }
         else {
             self.sessionsViewController.animate()
@@ -330,10 +330,10 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
                 User.reloadData()
                 self.didChangeProfile(profile)
             }
-            self.present(newProfileVC, animated: true, completion: nil)
+            self.presentModal(newProfileVC, animated: true, completion: nil)
         }
         else {
-            self.present(AndanteProViewController(), animated: true, completion: nil)
+            self.presentModal(AndanteProViewController(), animated: true, completion: nil)
         }
         
     }
@@ -537,7 +537,7 @@ extension AndanteViewController {
 
         actionButton.longPressCompletion = {
             let vc = ManualSessionViewController()
-            self.present(vc, animated: true, completion: nil)
+            self.presentModal(vc, animated: true, completion: nil)
         }
 
         actionButtonFeedback.prepare()
@@ -835,7 +835,7 @@ extension AndanteViewController {
             self.present(newFolderAlert, animated: false, completion: nil)
         }
         else {
-            self.present(AndanteProViewController(), animated: true, completion: nil)
+            self.presentModal(AndanteProViewController(), animated: true, completion: nil)
         }
     }
     

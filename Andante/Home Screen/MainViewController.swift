@@ -82,7 +82,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
         
         headerView.profileButtonHandler = {
             let settingsVC = SettingsContainerViewController()
-            self.containerViewController.present(settingsVC, animated: true, completion: nil)
+            self.containerViewController.presentModal(settingsVC, animated: true, completion: nil)
         }
         
         headerView.streakViewHandler = {

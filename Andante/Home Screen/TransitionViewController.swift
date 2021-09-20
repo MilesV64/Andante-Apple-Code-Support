@@ -10,19 +10,19 @@ import UIKit
 
 class TransitionContentView: UIView {
     
-    private var contentView = UIView()
-    private var shadowView = UIView()
+    let contentView = UIView()
+    let shadowView = UIView()
     
     public var useRoundCorners = true {
         didSet {
             if useRoundCorners {
                 contentView.roundCorners(UIDevice.current.deviceCornerRadius())
             } else {
-                //contentView.roundCorners(10)
+                contentView.roundCorners(0)
             }
         }
     }
-        
+     
     init() {
         super.init(frame: .zero)
         
@@ -32,9 +32,6 @@ class TransitionContentView: UIView {
         shadowView.layer.rasterizationScale = UIScreen.main.scale
         super.addSubview(shadowView)
         
-//        if useRoundCorners {
-//            contentView.roundCorners(UIDevice.current.deviceCornerRadius())
-//        }
         contentView.clipsToBounds = true
         contentView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         contentView.backgroundColor = Colors.foregroundColor
@@ -101,6 +98,37 @@ class TransitionViewController: UIViewController {
         return 0
     }
 
+    enum TransitionStyle {
+        case push, overlap
+    }
+    
+    private var contentView: TransitionContentView {
+        return self.view as! TransitionContentView
+    }
+    
+    public var transitionStyle: TransitionStyle = .overlap {
+        didSet {
+            switch self.transitionStyle {
+            case .overlap:
+                self.contentView.shadowView.isHidden = false
+                self.dimView.isHidden = false
+                self.contentView.useRoundCorners = true
+                
+            case .push:
+                self.contentView.shadowView.isHidden = true
+                self.dimView.isHidden = true
+                self.contentView.useRoundCorners = false
+            }
+        }
+    }
+    
+    /// The total transform to be applied to the parent, as a positive value
+    private var parentTransform: CGFloat {
+        switch self.transitionStyle {
+        case .overlap: return 60
+        case .push: return self.view.bounds.width
+        }
+    }
     
     convenience init(shouldAnimatePresentation: Bool) {
         self.init()
@@ -110,6 +138,7 @@ class TransitionViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.modalPresentationStyle = .overFullScreen
+        self.contentView.useRoundCorners = true
     }
     
     required init?(coder: NSCoder) {
@@ -133,7 +162,7 @@ class TransitionViewController: UIViewController {
                 self.view.isUserInteractionEnabled = false
                 self.inputAccessoryView?.transform = .identity
                 self.dimView.alpha = 1
-                presentingView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
+                presentingView.transform = CGAffineTransform(translationX: -self.parentTransform, y: 0)
                 self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
             }, completion: {
                 presentingView.transform = .identity
@@ -164,7 +193,6 @@ class TransitionViewController: UIViewController {
         dimView.translatesAutoresizingMaskIntoConstraints = false
         dimView.isUserInteractionEnabled = true
         (self.view as! TransitionContentView).addNonContentSubview(dimView)
-        (self.view as! TransitionContentView).useRoundCorners = false
         NSLayoutConstraint.activate([
             dimView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             dimView.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -200,7 +228,7 @@ class TransitionViewController: UIViewController {
             self.view.transform = CGAffineTransform(
                 translationX: translation + self.identityTransform*(1-progress), y: 0)
             self.inputAccessoryView?.transform = CGAffineTransform(translationX: translation, y: 0)
-            presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width*(1-progress), y: 0)
+            presentingView?.transform = CGAffineTransform(translationX: -self.parentTransform*(1-progress), y: 0)
             self.dimView.alpha = 1 - progress
         }
         else {
@@ -229,7 +257,7 @@ class TransitionViewController: UIViewController {
                 UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: -velocity, options: .curveLinear, animations: {
                     self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
                     self.inputAccessoryView?.transform = CGAffineTransform(translationX: 0, y: 0)
-                    self.presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
+                    self.presentingView?.transform = CGAffineTransform(translationX: -self.parentTransform, y: 0)
                     self.dimView.alpha = 1
                 }, completion: { _ in
                     self.view.transform = .identity
@@ -252,7 +280,7 @@ class TransitionViewController: UIViewController {
                     UIView.animateWithCurve(duration: 0.5, x1: 0.2, y1: 1, x2: 0.36, y2: 1, animation: {
                         self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
                         self.inputAccessoryView?.transform = CGAffineTransform(translationX: 0, y: 0)
-                        self.presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
+                        self.presentingView?.transform = CGAffineTransform(translationX: -self.parentTransform, y: 0)
                         self.dimView.alpha = 1
                     }, completion: {
                         self.view.transform = .identity
@@ -315,6 +343,15 @@ class ChildTransitionViewController: TransitionViewController, UIGestureRecogniz
         
         super.viewDidAppear(animated)
         
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.transitionStyle = .push
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {

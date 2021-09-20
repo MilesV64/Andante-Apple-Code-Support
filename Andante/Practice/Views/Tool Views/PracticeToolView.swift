@@ -28,14 +28,13 @@ class PracticeToolView: UIView {
         super.init(frame: .zero)
         
         contentView.backgroundColor = PracticeColors.secondaryBackground
-        contentView.roundCorners(10)
+        contentView.roundCorners(14)
         contentView.clipsToBounds = true
         
         self.hide()
         
         bgView.backgroundColor = PracticeColors.secondaryBackground
-        bgView.roundCorners(12)
-        bgView.setShadow(radius: 3, yOffset: 6, opacity: 0.03)
+        bgView.roundCorners(14)
         self.addSubview(bgView)
         
         bgView.addSubview(contentView)

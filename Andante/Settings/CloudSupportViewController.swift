@@ -138,7 +138,7 @@ class CloudSupportViewController: UIViewController, UITextViewDelegate, MFMailCo
                 mail.setToRecipients(["contact@andante.app"])
                 mail.setSubject("Andante")
                 mail.mailComposeDelegate = self
-                self.present(mail, animated: true, completion: nil)
+                self.presentModal(mail, animated: true, completion: nil)
 
             }
         }

@@ -237,7 +237,7 @@ class JournalViewController: MainViewController, JournalHeaderDelegate, UICollec
             User.setActiveFolder(folder)
             self.reloadData()
         }
-        self.present(foldersVC, animated: true, completion: nil)
+        self.presentModal(foldersVC, animated: true, completion: nil)
     }
     
     func journalHeaderDidTapOptions() {

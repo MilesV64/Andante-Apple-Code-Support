@@ -271,6 +271,17 @@ extension UIView {
     }
 }
 
+extension UIViewController {
+    
+    func presentModal(_ viewControllerToPresent: UIViewController, animated: Bool, completion: (() -> Void)?) {
+        if #available(iOS 15.0, *) {
+            viewControllerToPresent.sheetPresentationController?.preferredCornerRadius = 25
+        }
+        self.present(viewControllerToPresent, animated: animated, completion: completion)
+    }
+    
+}
+
 extension Date {
     var startOfWeek: Date? {
         let calendar = Calendar.current

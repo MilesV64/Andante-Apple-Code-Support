@@ -494,7 +494,7 @@ private extension PracticeViewController {
         confirmView.premiumHandler = {
             [weak self] in
             guard let self = self else { return }
-            self.present(AndanteProViewController(), animated: true, completion: nil)
+            self.presentModal(AndanteProViewController(), animated: true, completion: nil)
         }
         
         transitionManager.openHandler = {
@@ -565,7 +565,7 @@ private extension PracticeViewController {
             }
             
             self.pauseAudio()
-            self.present(vc, animated: true, completion: nil)
+            self.presentModal(vc, animated: true, completion: nil)
         }
     }
     
@@ -798,10 +798,10 @@ extension PracticeViewController: PracticeToolButtonDelegate, MetronomeToolViewD
                     guard let self = self else { return }
                     self.confirmView.updateNotes()
                 }
-                self.present(vc, animated: true, completion: nil)
+                self.presentModal(vc, animated: true, completion: nil)
             }
             else {
-                self.present(AndanteProViewController(), animated: true, completion: nil)
+                self.presentModal(AndanteProViewController(), animated: true, completion: nil)
             }
             
             return
@@ -1021,7 +1021,7 @@ extension PracticeViewController {
                 self.presentAlert(alert, sourceView: tunerButton, arrowDirection: .down)
             }
             else {
-                self.present(AndanteProViewController(), animated: true, completion: nil)
+                self.presentModal(AndanteProViewController(), animated: true, completion: nil)
             }
         }
         

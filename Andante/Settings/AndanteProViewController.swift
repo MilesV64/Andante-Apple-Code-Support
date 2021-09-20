@@ -99,13 +99,13 @@ class AndanteProViewController: UIViewController, UIScrollViewDelegate {
         }
         scrollView.addSubview(purchaseButton)
         
-        restoreButton.setTitle("Restore Purchase", color: Colors.orange, font: Fonts.regular.withSize(15))
+        restoreButton.setTitle("Already Purchased? Restore Purchase", color: Colors.orange, font: Fonts.regular.withSize(15))
         restoreButton.addTarget(self, action: #selector(didTapRestore), for: .touchUpInside)
         scrollView.addSubview(restoreButton)
         
         devicesImage.backgroundColor = Colors.lightColorOpaque.withAlphaComponent(0.75)
         devicesImage.image = UIImage(named: "AndanteProImg")
-        devicesImage.roundCorners(12)
+        devicesImage.roundCorners(16)
         devicesImage.clipsToBounds = true
         scrollView.addSubview(devicesImage)
         
@@ -279,7 +279,7 @@ fileprivate class FeatureCell: MaskedShadowView {
             }
         }
         
-        roundCorners(12)
+        self.cornerRadius = 16
         
         iconView.backgroundColor = color
         iconView.iconColor = Colors.white

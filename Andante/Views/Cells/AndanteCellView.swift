@@ -117,6 +117,16 @@ class AndanteCellView: UIView {
         }
     }
     
+    public var tintsTitleWithIconColor: Bool = false {
+        didSet {
+            if self.tintsTitleWithIconColor {
+                self.label.textColor = self.iconBG.backgroundColor
+            } else {
+                self.label.textColor = Colors.text
+            }
+        }
+    }
+    
     
     // - Init
     
@@ -127,8 +137,10 @@ class AndanteCellView: UIView {
         
     }
     
-    init(title: String, icon: String, iconColor: UIColor) {
+    init(title: String, icon: String, iconColor: UIColor, tintsTitleWithIconColor: Bool = false) {
         super.init(frame: .zero)
+        
+        self.tintsTitleWithIconColor = tintsTitleWithIconColor
         
         self.label.text = title
         self.iconView.image = UIImage(name: icon, pointSize: 17, weight: .medium)?.withRenderingMode(.alwaysTemplate)
@@ -139,8 +151,10 @@ class AndanteCellView: UIView {
         
     }
     
-    init(title: String, icon: UIImage?, imageSize: CGSize? = nil, iconColor: UIColor) {
+    init(title: String, icon: UIImage?, imageSize: CGSize? = nil, iconColor: UIColor, tintsTitleWithIconColor: Bool = false) {
         super.init(frame: .zero)
+        
+        self.tintsTitleWithIconColor = tintsTitleWithIconColor
         
         self.label.text = title
         self.iconView.image = icon?.withRenderingMode(.alwaysTemplate)
@@ -177,11 +191,20 @@ class AndanteCellView: UIView {
     
     public func sharedInit() {
         
+        self.iconBG.isUserInteractionEnabled = false
+        self.iconView.isUserInteractionEnabled = false
+        
         self.iconBG.roundCorners(8)
         self.iconBG.addSubview(self.iconView)
         self.button.addSubview(self.iconBG)
         
-        self.label.textColor = Colors.text
+        if self.tintsTitleWithIconColor {
+            self.label.textColor = iconBG.backgroundColor
+        }
+        else {
+            self.label.textColor = Colors.text
+        }
+        
         self.label.font = Fonts.medium.withSize(17)
         self.button.addSubview(self.label)
         
@@ -210,7 +233,7 @@ class AndanteCellView: UIView {
         switch accessoryStyle {
         case .arrow:
             let accessoryView = UIImageView(image: UIImage(name: "chevron.right", pointSize: 13, weight: .heavy)?.withRenderingMode(.alwaysTemplate))
-            accessoryView.tintColor = Colors.lightText
+            accessoryView.tintColor = Colors.extraLightText
             accessoryView.sizeToFit()
             self.accessoryView = accessoryView
             self.setNeedsLayout()
@@ -352,6 +375,41 @@ class CheckmarkTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.checkmarkCellView.frame = self.bounds
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+// MARK: - Andante Cell Header View
+
+class AndanteCellHeaderView: UIView {
+    
+    static let height: CGFloat = 46 //22 + 8 + 16
+    let label = UILabel()
+    
+    public var margin: CGFloat = Constants.margin
+    
+    init(title: String) {
+        super.init(frame: .zero)
+        
+        label.text = title.uppercased()
+        label.textColor = Colors.lightText
+        label.font = Fonts.semibold.withSize(13)
+        addSubview(label)
+        
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        label.frame = CGRect(
+            x: margin, y: 22,
+            width: bounds.width - margin*2,
+            height: 16)
+        
     }
     
     required init?(coder: NSCoder) {

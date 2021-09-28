@@ -56,6 +56,8 @@ class SettingsContainerViewController: UIViewController {
     
     public var settingsViewController: SettingsViewController?
     
+    private let handleView = HandleView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -76,12 +78,17 @@ class SettingsContainerViewController: UIViewController {
         
         settingsVC.didMove(toParent: self)
         
+        
+        self.view.addSubview(handleView)
+        
     }
     
     
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        handleView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 20)
         
     }
     

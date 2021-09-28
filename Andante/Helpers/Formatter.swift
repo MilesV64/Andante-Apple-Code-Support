@@ -168,6 +168,11 @@ class Formatter {
         return ""
     }
     
+    class func formatSessionCount(_ count: Int?) -> String {
+        let count = count ?? 0
+        return "\(count) \(count == 1 ? "session" : "sessions")"
+    }
+    
     class func formatDate(_ date: Date, includeDay: Bool = true, includeMonth: Bool = true, includeYear: Bool = true) -> String {
         let calendar = Calendar.current
         let year = calendar.component(.year, from: date)

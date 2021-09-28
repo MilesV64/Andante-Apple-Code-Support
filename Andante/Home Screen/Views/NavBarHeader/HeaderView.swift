@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Lottie
 
 class HeaderView: UIView {
     
@@ -24,6 +25,10 @@ class HeaderView: UIView {
     private let sep = Separator(position: .bottom)
         
     private let streakView = CustomButton()
+    
+    private let streakAnimation = AnimationView(name: "flame")
+    private let streakLabel = UILabel()
+    
     private let profileView = ProfileImagePushButton()
     private let label = UILabel()
     
@@ -54,10 +59,57 @@ class HeaderView: UIView {
         }
     }
     
+    private func setFlameColor(_ color: UIColor) {
+        color.lottieColorValue
+        self.streakAnimation.setValueProvider(
+            ColorValueProvider(color.lottieColorValue),
+            keypath: AnimationKeypath(keypath: "fire.Shape 1.Fill 1.Color"))
+        
+        self.streakAnimation.setValueProvider(
+            ColorValueProvider(Colors.foregroundColor.lottieColorValue),
+            keypath: AnimationKeypath(keypath: "cutout.Group 1.Fill 1.Color"))
+    }
+    
+    private var lastStreak: Int = 0
+    
     @objc func reloadStreak() {
         let streak = PracticeDatabase.shared.currentStreak()
-        streakView.setTitle("🔥 \(streak)", for: .normal)
-        streakView.setTitleColor(streak == 0 ? Colors.lightText : Colors.text, for: .normal)
+        self.lastStreak = streak
+        streakLabel.text = "\(streak)"
+        streakLabel.textColor = streak == 0 ? Colors.extraLightText : Colors.text
+        
+        if streak > 0 {
+            setFlameColor(Colors.orange)
+            if streakAnimation.isAnimationPlaying == false {
+                streakAnimation.play()
+            }
+        } else {
+            setFlameColor(Colors.extraLightText)
+            streakAnimation.stop()
+        }
+        
+        setNeedsLayout()
+    }
+    
+    public var streakAnimationFrame: AnimationFrameTime {
+        get { return self.streakAnimation.currentFrame }
+        set {
+            self.streakAnimation.currentFrame = newValue
+            if lastStreak > 0 {
+                self.streakAnimation.play()
+            }
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
+            if lastStreak > 0 {
+                setFlameColor(Colors.orange)
+            } else {
+                setFlameColor(Colors.extraLightText)
+            }
+        }
     }
     
     init() {
@@ -67,12 +119,15 @@ class HeaderView: UIView {
         
         addSubview(topView)
         
-        streakView.setTitle("🔥 0", for: .normal)
-        streakView.setTitleColor(Colors.text, for: .normal)
+        self.streakAnimation.loopMode = .loop
+        self.streakAnimation.backgroundBehavior = .pauseAndRestore
+        self.streakView.addSubview(self.streakAnimation)
+        
+        self.streakLabel.font = Fonts.semibold.withSize(17)
+        self.streakView.addSubview(self.streakLabel)
+        
         streakView.titleLabel?.font = Fonts.semibold.withSize(17)
         streakView.addTarget(self, action: #selector(didTapStreakView), for: .touchUpInside)
-        streakView.contentHorizontalAlignment = .right
-        streakView.titleEdgeInsets.right = Constants.margin
         streakView.highlightAction = { highlighted in
             if highlighted {
                 self.streakView.alpha = 0.2
@@ -85,6 +140,8 @@ class HeaderView: UIView {
         }
         streakView.isUserInteractionEnabled = false
         topView.addSubview(streakView)
+        
+        self.reloadStreak()
                 
         profileView.action = {
             self.profileButtonHandler?()
@@ -152,10 +209,21 @@ class HeaderView: UIView {
         profileView.frame = CGRect(x: Constants.smallMargin, y: 4,
             width: profileSize, height: profileSize).integral
                 
-        let width = streakView.titleLabel!.sizeThatFits(self.bounds.size).width + Constants.margin + 10
+        streakLabel.sizeToFit()
+        let labelWidth = streakLabel.bounds.width
+        let flameWidth: CGFloat = 30
+        let totalStreakWidth = labelWidth + flameWidth + 2
         streakView.frame = CGRect(
-            x: self.bounds.maxX - width, y: 4,
-            width: width, height: profileSize)
+            x: self.bounds.maxX - totalStreakWidth - Constants.margin, y: 4,
+            width: totalStreakWidth, height: profileSize)
+        
+        streakAnimation.frame = CGRect(
+            x: 0, y: self.streakView.bounds.midY - flameWidth / 2,
+            width: flameWidth, height: flameWidth).insetBy(dx: -8, dy: -8)
+        
+        streakLabel.frame.origin = CGPoint(
+            x: self.streakView.bounds.maxX - streakLabel.bounds.width,
+            y: self.streakView.bounds.midY - streakLabel.bounds.height / 2)
         
         if !isSidebarLayout {
             label.sizeToFit()

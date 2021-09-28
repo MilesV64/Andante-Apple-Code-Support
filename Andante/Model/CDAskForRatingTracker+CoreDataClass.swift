@@ -45,7 +45,7 @@ public class CDAskForRatingTracker: NSManagedObject {
             print("AskForRatingTracker: Logging session. Sessions: \(instance.sessions), Unique Days: \(instance.uniqueDays)")
             
             // No need to update if it's already past the threshold
-            guard instance.sessions < 10 && instance.uniqueDays < 3 else { return }
+            guard instance.sessions < 10 || instance.uniqueDays < 3 else { return }
             
             instance.sessions += 1
             

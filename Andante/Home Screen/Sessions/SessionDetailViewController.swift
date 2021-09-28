@@ -33,8 +33,8 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
     private var optionsButton: Button!
     private var headerView = UIView()
     
-    public var session: CDSession!
-    public var indexPath: IndexPath?
+    public let session: CDSession
+    public let indexPath: IndexPath?
     
     private let titleLabel = UITextField()
     private let dateLabel = UILabel()
@@ -51,6 +51,16 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
     private var recordingView: RecordingPlayerView?
     
     private var cancellables = Set<AnyCancellable>()
+    
+    init(session: CDSession, indexPath: IndexPath?) {
+        self.session = session
+        self.indexPath = indexPath
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

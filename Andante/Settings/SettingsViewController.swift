@@ -14,11 +14,10 @@ let WeekStartDidChangeNotification = "WeekStartDidChange"
 let AppearanceDidChangeNotification = "AppearanceDidChange"
 let SessionsShouldReloadAttributesNotification = "SessionsShouldReloadAttributes"
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController, UIScrollViewDelegate {
     
     private let headerView = SettingsHeaderView()
         
-    private let profileCell = AndanteCellView()
     private let separator = Separator()
     
     private let versionLabel = UILabel()
@@ -86,8 +85,9 @@ class SettingsViewController: UIViewController {
     
     private var cells: [AndanteCellView]!
     
-    private let handleView = HandleView()
     private let scrollView = CancelTouchScrollView()
+    
+    private let changeProfileButton = PushButton()
     
     private var appTweaksGestureRecognizer: UITapGestureRecognizer?
     
@@ -120,11 +120,18 @@ class SettingsViewController: UIViewController {
         self.view.backgroundColor = Colors.foregroundColor
         
         scrollView.backgroundColor = Colors.foregroundColor
+        scrollView.delegate = self
+        scrollView.showsVerticalScrollIndicator = false
         self.view.addSubview(scrollView)
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-        headerView.changeProfileButton.action = {
+        changeProfileButton.backgroundColor = Colors.orange
+        changeProfileButton.setButtonShadow(floating: false)
+        changeProfileButton.setTitle("Change Profile", color: Colors.white, font: Fonts.semibold.withSize(16))
+        self.scrollView.addSubview(changeProfileButton)
+        
+        changeProfileButton.action = {
             [weak self] in
             guard let self = self else { return }
             
@@ -164,17 +171,7 @@ class SettingsViewController: UIViewController {
             
         }
         
-        scrollView.addSubview(headerView)
-        
-        profileCell.profile = User.getActiveProfile()
-        profileCell.action = {
-            [weak self] in
-            guard let self = self, let profile = User.getActiveProfile() else { return }
-            self.addChildTransitionController(ProfileSettingsViewController(profile: profile))
-        }
-        profileCell.margin = 24
-        profileCell.accessoryStyle = .arrow
-        scrollView.addSubview(profileCell)
+        self.view.addSubview(headerView)
         
         profilesLabel.text = "PROFILES"
         toolsLabel.text = "TOOLS"
@@ -182,7 +179,7 @@ class SettingsViewController: UIViewController {
         andanteLabel.text = "ANDANTE"
         
         [profilesLabel, toolsLabel, helpLabel, andanteLabel].forEach { label in
-            label.textColor = Colors.extraLightText
+            label.textColor = Colors.lightText
             label.font = Fonts.semibold.withSize(13)
             scrollView.addSubview(label)
         }
@@ -200,8 +197,10 @@ class SettingsViewController: UIViewController {
         versionLabel.textAlignment = .center
         scrollView.addSubview(versionLabel)
         
-        scrollView.addSubview(handleView)
+        self.reloadProfiles()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadProfiles), name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)
+            
         #if DEBUG
         self.appTweaksGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showAppTweaks))
         self.versionLabel.addGestureRecognizer(self.appTweaksGestureRecognizer!)
@@ -210,14 +209,37 @@ class SettingsViewController: UIViewController {
                 
     }
     
-    @objc func didTapDone() {
-        self.dismiss(animated: true, completion: nil)
+    private var profileCells: [AndanteCellView] = []
+    
+    @objc func reloadProfiles() {
+        profileCells.forEach { $0.removeFromSuperview() }
+        profileCells.removeAll()
+        
+        for profile in CDProfile.getAllProfiles() {
+            let profileCell = AndanteCellView(profile: profile)
+            profileCell.action = { [weak self] in
+                self?.addChildTransitionController(ProfileSettingsViewController(profile: profile))
+            }
+            profileCell.margin = 24
+            profileCell.accessoryStyle = .arrow
+            profileCells.append(profileCell)
+            scrollView.addSubview(profileCell)
+        }
+        
+        self.view.setNeedsLayout()
+        
     }
     
     @objc func showAppTweaks() {
         let appTweaksViewController = AppTweaksViewController()
         appTweaksViewController.delegate = self
-        self.presentModal(UINavigationController(rootViewController: appTweaksViewController), animated: true, completion: nil)
+        
+        let navController = UINavigationController(rootViewController: appTweaksViewController)
+        if #available(iOS 15.0, *) {
+            navController.sheetPresentationController?.detents = [.medium(), .large()]
+            navController.sheetPresentationController?.selectedDetentIdentifier = .medium
+        }
+        self.presentModal(navController, animated: true, completion: nil)
     }
     
     private func showPremiumController() {
@@ -267,42 +289,69 @@ class SettingsViewController: UIViewController {
             container.didChangeProfile(profile)
         }
         
-        UIView.transition(with: profileCell, duration: 0.1, options: [.transitionCrossDissolve], animations: {
-            self.profileCell.profile = profile
-        }, completion: nil)
-        
         UIView.transition(with: headerView, duration: 0.1, options: [.transitionCrossDissolve], animations: {
             self.headerView.profile = profile
         }, completion: nil)
     
     }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = min(140, scrollView.contentOffset.y)
+        
+        if offset < 0 {
+            self.headerView.setOffset(0)
+            self.headerView.frame = CGRect(
+                x: 0, y: -offset,
+                width: scrollView.bounds.width,
+                height: 220)
+        }
+        else {
+            self.headerView.setOffset(offset)
+            self.headerView.frame = CGRect(
+                x: 0, y: 0,
+                width: scrollView.bounds.width,
+                height: 220 - offset)
+        }
+        
+
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        scrollView.frame = self.view.bounds
-        
-        handleView.frame = CGRect(x: 0, y: 0, width: scrollView.bounds.width, height: 20)
-        
-        headerView.frame = CGRect(
+        scrollView.frame = self.view.bounds.inset(by: UIEdgeInsets(t: 70, l: 0, b: 0, r: 0))
+                
+        let offset = max(0, min(140, scrollView.contentOffset.y))
+        self.headerView.frame = CGRect(
             x: 0, y: 0,
-            width: scrollView.bounds.width, height: 282)
+            width: scrollView.bounds.width,
+            height: 220 - offset)
+        
+        let buttonWidth = self.view.bounds.width - Constants.margin*2
+        changeProfileButton.frame = CGRect(
+            x: self.view.bounds.midX - buttonWidth/2,
+            y: 220 - 70,
+            width: buttonWidth, height: 50)
+        changeProfileButton.cornerRadius = 25
         
         let cellHeight: CGFloat = AndanteCellView.height
         let margin: CGFloat = 24
         
-        var minY: CGFloat = headerView.frame.maxY
+        var minY: CGFloat = changeProfileButton.frame.maxY + 20
         
         profilesLabel.sizeToFit()
         profilesLabel.frame.origin = CGPoint(x: margin, y: minY + 22)
         minY += profilesLabel.bounds.height + 8 + 22
         
-        profileCell.frame = CGRect(
-            x: 0, y: minY,
-            width: self.view.bounds.width,
-            height: cellHeight)
         
-        minY += cellHeight
+        for cell in profileCells {
+            cell.frame = CGRect(
+                x: 0, y: minY,
+                width: self.view.bounds.width,
+                height: cellHeight)
+            
+            minY += cellHeight
+        }
         
         toolsLabel.sizeToFit()
         toolsLabel.frame.origin = CGPoint(x: margin, y: minY + 22)
@@ -474,297 +523,13 @@ extension SettingsViewController: AppTweaksViewControllerDelegate {
 }
 
 
-//MARK: - OptionView
-protocol SettingsOptionDelegate: class {
-    func didSelectOption(_ option: CustomButton)
-}
-
-class SettingsCellView: CustomButton {
-    public weak var delegate: SettingsOptionDelegate?
-}
-
-class SettingsOptionView: SettingsCellView {
-    
-    private let iconViewBG = UIView()
-    private let iconView = UIImageView()
-    private let label = UILabel()
-    private let arrow = IconView()
-    
-    private var offset: CGFloat = 0
-    
-    private var useFixedIconSize = false
-    
-    init(title: String?, iconName: String, iconColor: UIColor?) {
-        super.init()
-        
-        iconViewBG.backgroundColor = iconColor
-        
-        if let image = UIImage(name: iconName, pointSize: 18, weight: .medium) {
-            iconView.image = image
-        } else {
-            iconView.image = UIImage(named: iconName)
-            useFixedIconSize = true
-        }
-       
-        if iconName == "square.and.arrow.up.fill" {
-            offset = 1
-        }
-        
-        iconView.setImageColor(color: Colors.white)
-        iconViewBG.roundCorners(Constants.iconBGCornerRadius)
-        self.addSubview(iconViewBG)
-        iconViewBG.addSubview(iconView)
-        
-        label.text = title
-        
-        if title == "Get Andante Pro" {
-            label.textColor = Colors.orange
-            label.font = Fonts.semibold.withSize(16)
-        }
-        else {
-            label.textColor = Colors.text
-            label.font = Fonts.medium.withSize(16)
-        }
-        self.addSubview(label)
-        
-        arrow.icon = UIImage(
-            systemName: "chevron.right",
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold))
-        arrow.iconColor = Colors.extraLightText
-        arrow.isUserInteractionEnabled = false
-        self.addSubview(arrow)
-        
-        self.action = {
-            self.delegate?.didSelectOption(self)
-        }
-        
-        self.highlightAction = { isHighlighted in
-            if isHighlighted {
-                self.backgroundColor = Colors.cellHighlightColor
-            }
-            else {
-                UIView.animate(withDuration: 0.2) {
-                    self.backgroundColor = .clear
-                }
-            }
-        }
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let iconSize: CGFloat = Constants.iconBGSize.width
-        iconViewBG.frame = CGRect(
-            x: responsiveMargin,
-            y: self.bounds.midY - iconSize/2,
-            width: iconSize, height: iconSize)
-        
-        if useFixedIconSize {
-            iconView.bounds.size = CGSize(24)
-        }
-        else {
-            iconView.sizeToFit()
-        }
-        
-        iconView.center = iconViewBG.bounds.center.offset(by: CGPoint(x: 0, y: -offset))
-        
-        label.sizeToFit()
-        label.frame.origin = CGPoint(
-            x: iconViewBG.frame.maxX + 14,
-            y: iconViewBG.frame.midY - label.bounds.height/2)
-        
-        arrow.sizeToFit()
-        arrow.frame.origin = CGPoint(
-            x: self.bounds.maxX - arrow.bounds.width - responsiveSmallMargin,
-            y: iconViewBG.frame.midY - arrow.bounds.height/2)
-        
-    }
-}
-
-class SettingsUpgradeView: SettingsCellView {
-        
-    private let iconViewBG = CAGradientLayer()
-    private let iconView = UIImageView()
-    private let label = LabelGroup()
-    private let arrow = IconView()
-    
-    private var offset: CGFloat = 0
-    
-    override init() {
-        super.init()
-        
-        iconViewBG.colors = [Colors.orange.withAlphaComponent(0.9).cgColor, Colors.orange.toColor(.systemRed, percentage: 20).cgColor]
-        iconViewBG.startPoint = .zero
-        iconViewBG.endPoint = CGPoint(x: 1, y: 1)
-        iconViewBG.cornerRadius = Constants.iconBGCornerRadius
-        iconViewBG.cornerCurve = .continuous
-        
-        iconView.image = UIImage(named: "AndanteProIcon")
-        
-        iconView.setImageColor(color: Colors.white)
-        self.layer.addSublayer(iconViewBG)
-        self.addSubview(iconView)
-        
-        label.titleLabel.text = "Get Andante Pro"
-        label.titleLabel.textColor = Colors.orange
-        label.titleLabel.font = Fonts.semibold.withSize(16)
-        
-        label.detailLabel.textColor = Colors.lightText
-        label.detailLabel.font = Fonts.medium.withSize(14)
-        label.padding = 0
-        label.isUserInteractionEnabled = false
-        self.addSubview(label)
-        
-        let taglines = [
-            "Support indie development!",
-            "Buy the dev a coffee!",
-            "Cool features inside!",
-            "👀",
-            "Unlimited profiles!"
-        ]
-        label.detailLabel.text = taglines[Int.random(in: 0..<taglines.count)]
-        
-        arrow.icon = UIImage(
-            systemName: "chevron.right",
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold))
-        arrow.iconColor = Colors.extraLightText
-        arrow.isUserInteractionEnabled = false
-        self.addSubview(arrow)
-        
-        self.action = {
-            self.delegate?.didSelectOption(self)
-        }
-        
-        self.highlightAction = { isHighlighted in
-            if isHighlighted {
-                self.backgroundColor = Colors.cellHighlightColor
-            }
-            else {
-                UIView.animate(withDuration: 0.2) {
-                    self.backgroundColor = .clear
-                }
-            }
-        }
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        iconViewBG.colors = [Colors.orange.withAlphaComponent(0.9).cgColor, Colors.orange.toColor(.systemRed, percentage: 20).cgColor]
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let iconSize: CGFloat = 38
-        iconViewBG.frame = CGRect(
-            x: responsiveMargin,
-            y: self.bounds.midY - iconSize/2,
-            width: iconSize, height: iconSize)
-        
-        iconView.frame = iconViewBG.frame.insetBy(dx: 2, dy: 2)
-        
-        label.sizeToFit()
-        label.frame.origin = CGPoint(
-            x: iconViewBG.frame.maxX + 14,
-            y: iconViewBG.frame.midY - label.bounds.height/2)
-        
-        arrow.sizeToFit()
-        arrow.frame.origin = CGPoint(
-            x: self.bounds.maxX - arrow.bounds.width - responsiveMargin,
-            y: iconViewBG.frame.midY - arrow.bounds.height/2)
-        
-    }
-}
-
-class SettingsProfileView: CustomButton {
-        
-    private let iconView = ProfileImageView()
-    private let label = UILabel()
-    private let arrow = IconView()
-        
-    public var profile: CDProfile? {
-        didSet {
-            if let profile = profile {
-                iconView.profile = profile
-            }
-        }
-    }
-    
-    override init() {
-        super.init()
-        
-        iconView.cornerRadius = 10
-        iconView.inset = 6
-        self.addSubview(iconView)
-        
-        label.text = "Profile Settings"
-        label.font = Fonts.medium.withSize(16)
-        label.textColor = Colors.text
-        self.addSubview(label)
-        
-        arrow.icon = UIImage(
-            systemName: "chevron.right",
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold))
-        arrow.iconColor = Colors.extraLightText
-        arrow.isUserInteractionEnabled = false
-        self.addSubview(arrow)
-        
-        self.highlightAction = { isHighlighted in
-            if isHighlighted {
-                self.backgroundColor = Colors.cellHighlightColor
-            }
-            else {
-                UIView.animate(withDuration: 0.2) {
-                    self.backgroundColor = .clear
-                }
-            }
-        }
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let iconSize: CGFloat = 38
-        iconView.frame = CGRect(
-            x: responsiveMargin,
-            y: self.bounds.midY - iconSize/2,
-            width: iconSize, height: iconSize)
-        
-        label.sizeToFit()
-        label.frame.origin = CGPoint(
-            x: iconView.frame.maxX + 14,
-            y: iconView.frame.midY - label.bounds.height/2)
-        
-        arrow.sizeToFit()
-        arrow.frame.origin = CGPoint(
-            x: self.bounds.maxX - arrow.bounds.width - responsiveSmallMargin,
-            y: iconView.frame.midY - arrow.bounds.height/2)
-        
-    }
-}
-
-
 //MARK: - Header
+
 class SettingsHeaderView: UIView {
     
     private let activeProfileIcon = ProfileImageView()
     private let activeProfileLabel = LabelGroup()
-    public let changeProfileButton = PushButton()
+    private let separator = Separator(position: .bottom)
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -779,6 +544,13 @@ class SettingsHeaderView: UIView {
                 self.setNeedsLayout()
             }.store(in: &cancellables)
             
+            profile?.publisher(for: \.sessions).sink {
+                [weak self] sessions in
+                guard let self = self else { return }
+                self.activeProfileLabel.detailLabel.text = Formatter.formatSessionCount(sessions?.count)
+                self.setNeedsLayout()
+            }.store(in: &cancellables)
+            
             activeProfileIcon.profile = profile
             
         }
@@ -786,6 +558,8 @@ class SettingsHeaderView: UIView {
     
     init() {
         super.init(frame: .zero)
+        
+        self.backgroundColor = Colors.foregroundColor
         
         let profile = User.getActiveProfile()
         
@@ -796,17 +570,16 @@ class SettingsHeaderView: UIView {
         activeProfileLabel.titleLabel.text = profile?.name
         activeProfileLabel.titleLabel.textColor = Colors.text
         activeProfileLabel.titleLabel.font = Fonts.bold.withSize(21)
-        activeProfileLabel.detailLabel.text = "Current Profile"
+        activeProfileLabel.detailLabel.text = Formatter.formatSessionCount(profile?.sessions?.count)
         activeProfileLabel.detailLabel.textColor = Colors.lightText
         activeProfileLabel.detailLabel.font = Fonts.medium.withSize(15)
         activeProfileLabel.padding = 6
         activeProfileLabel.textAlignment = .center
         self.addSubview(activeProfileLabel)
         
-        changeProfileButton.dimsBackgroundOnHighlight = true
-        changeProfileButton.backgroundColor = Colors.orange
-        changeProfileButton.setTitle("Change Profile", color: Colors.white, font: Fonts.semibold.withSize(16))
-        self.addSubview(changeProfileButton)
+        self.separator.alpha = 0
+        self.separator.inset = .zero
+        self.addSubview(self.separator)
         
     }
     
@@ -814,116 +587,50 @@ class SettingsHeaderView: UIView {
         fatalError()
     }
     
+    public func setOffset(_ offset: CGFloat) {
+        let progress = min(1, offset / 140)
+        print(offset, progress)
+        self.activeProfileIcon.transform = {
+            let size = 94 - offset
+            let scale = max(0, size / 94)
+            let translation = (94 - 94*scale)/2
+            return CGAffineTransform(scaleX: scale, y: scale).concatenating(CGAffineTransform(translationX: 0, y: -translation))
+        }()
+
+        let maxTitleOffset: CGFloat = 116
+        let scale = 1 - (0.15 * progress)
+        if offset > maxTitleOffset {
+            self.activeProfileLabel.transform = CGAffineTransform(translationX: 0, y: offset - maxTitleOffset).concatenating(CGAffineTransform(scaleX: scale, y: scale))
+        }
+        else {
+            self.activeProfileLabel.transform = CGAffineTransform(scaleX: scale, y: scale)
+        }
+        
+        if progress > 0.75 {
+            separator.alpha = (progress - 0.75) / 0.25
+        } else {
+            separator.alpha = 0
+        }
+        
+        self.activeProfileIcon.alpha = 1 - progress*2
+        self.activeProfileLabel.detailLabel.alpha = 1 - progress*2
+        
+        
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        activeProfileIcon.frame = CGRect(x: self.bounds.midX - 94/2, y: 40,
+        self.separator.frame = CGRect(x: 0, y: 0, width: bounds.width, height: 80)
+        
+        activeProfileIcon.contextualFrame = CGRect(x: self.bounds.midX - 94/2, y: 40,
                                              width: 94, height: 94)
         
         let height = activeProfileLabel.sizeThatFits(self.bounds.size).height
-        activeProfileLabel.frame = CGRect(x: 40, y: activeProfileIcon.frame.maxY + 12,
-                                          width: self.bounds.width - 80,
-                                          height: height)
+        activeProfileLabel.contextualFrame = CGRect(x: 40, y: self.bounds.maxY - height - 20,
+                                             width: self.bounds.width - 80,
+                                             height: height)
         
-        let buttonWidth = self.bounds.width - responsiveMargin*2
-        changeProfileButton.frame = CGRect(x: self.bounds.midX - buttonWidth/2, y: activeProfileLabel.frame.maxY + 24, width: buttonWidth, height: 50)
-        changeProfileButton.cornerRadius = 25
-            
         
-    }
-}
-
-fileprivate class SocialMediaView: UIView {
-    
-    let twitter = SocialMediaButton("twitter", color: UIColor("1DA1F2"))
-    let insta = SocialMediaButton("instagram", color: UIColor("FD6099"))
-        
-    init() {
-        super.init(frame: .zero)
-        
-        self.addSubview(twitter)
-        self.addSubview(insta)
-        
-        twitter.action = {
-            if let url = URL(string: "https://twitter.com/AppAndante") {
-                UIApplication.shared.open(url)
-            }
-        }
-        
-        insta.action = {
-            if let url = URL(string: "https://www.instagram.com/andante_practice_journal/") {
-                UIApplication.shared.open(url)
-            }
-        }
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let itemSize: CGFloat = 52
-        let spacing: CGFloat = 58
-        
-        let minX = self.bounds.midX - spacing/2 - itemSize
-        let minY = self.bounds.midY - itemSize/2
-        
-        insta.frame = CGRect(
-            x: minX, y: minY,
-            width: itemSize, height: itemSize)
-        
-        twitter.frame = CGRect(
-            x: insta.frame.maxX + spacing, y: minY,
-            width: itemSize, height: itemSize)
-        
-    }
-    
-    class SocialMediaButton: CustomButton {
-        
-        init(_ iconName: String, color: UIColor?) {
-            super.init()
-            
-            self.setImage(UIImage(named: iconName), for: .normal)
-            self.tintColor = color
-            
-            self.imageEdgeInsets = UIEdgeInsets(14)
-            self.adjustsImageWhenHighlighted = false
-            
-            self.highlightAction = {
-                [weak self] highlighted in
-                guard let self = self else { return }
-                
-                if highlighted {
-                    UIView.animate(withDuration: 0.15) {
-                        self.backgroundColor = self.tintColor.withAlphaComponent(0.15)
-                    }
-                } else {
-                    UIView.animate(withDuration: 0.35) {
-                        self.backgroundColor = .clear
-                    }
-                }
-            }
-            
-            self.layer.borderWidth = 1.4
-            self.layer.borderColor = Colors.separatorColor.cgColor
-            
-        }
-        
-        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
-            self.layer.borderColor = Colors.separatorColor.cgColor
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError()
-        }
-        
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            self.layer.cornerRadius = self.bounds.width/2
-        }
     }
 }

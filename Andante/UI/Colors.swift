@@ -184,7 +184,7 @@ extension Colors {
 
 extension UIColor {
     
-    convenience init(_ hex: String, displayP3: Bool = false) {
+    convenience init(_ hex: String, displayP3: Bool = true) {
         let r, g, b: CGFloat
         let max: CGFloat = 255
 

@@ -63,13 +63,13 @@ class LabelGroup: UIView {
         let combinedHeight = titleSize.height + detailSize.height + padding
         let minY = self.bounds.midY - combinedHeight/2
         
-        titleLabel.frame = CGRect(x: 0,
+        titleLabel.contextualFrame = CGRect(x: 0,
                                   y: minY,
                                   width: self.bounds.width,
                                   height: titleSize.height).integral
         
-        detailLabel.frame = CGRect(x: 0,
-                                   y: titleLabel.frame.maxY + padding,
+        detailLabel.contextualFrame = CGRect(x: 0,
+                                   y: titleLabel.contextualFrame.maxY + padding,
                                    width: self.bounds.width,
                                    height: detailSize.height).integral
         

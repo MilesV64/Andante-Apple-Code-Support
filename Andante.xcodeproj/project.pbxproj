@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -165,6 +165,8 @@
 		0290AA7B251D955B00B08CC0 /* IconProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0290AA77251D926D00B08CC0 /* IconProgressCircle.swift */; };
 		02930C8B25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02930C8A25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift */; };
 		029A70EA2338197B00C698BC /* ModalViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029A70E92338197B00C698BC /* ModalViewHeader.swift */; };
+		029BA39726FD527000CEC028 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 029BA39626FD527000CEC028 /* Lottie */; };
+		029C5FF726FD2548000D9936 /* flame.json in Resources */ = {isa = PBXBuildFile; fileRef = 029C5FF626FD2548000D9936 /* flame.json */; };
 		029EA97624B5430500C37072 /* TimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029EA97524B5430500C37072 /* TimePickerView.swift */; };
 		029F3285244D651300060F33 /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029F3284244D651300060F33 /* PracticeViewController.swift */; };
 		02A2DB1C24C98743002E0760 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A2DB1B24C98743002E0760 /* ContainerViewController.swift */; };
@@ -445,6 +447,8 @@
 		0290AA77251D926D00B08CC0 /* IconProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconProgressCircle.swift; sourceTree = "<group>"; };
 		02930C8A25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		029A70E92338197B00C698BC /* ModalViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewHeader.swift; sourceTree = "<group>"; };
+		029BA39526FD51BD00CEC028 /* lottie-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lottie-ios"; path = "../lottie-ios"; sourceTree = "<group>"; };
+		029C5FF626FD2548000D9936 /* flame.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = flame.json; sourceTree = "<group>"; };
 		029EA97524B5430500C37072 /* TimePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerView.swift; sourceTree = "<group>"; };
 		029F3284244D651300060F33 /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
 		02A2DB1B24C98743002E0760 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -530,6 +534,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				029BA39726FD527000CEC028 /* Lottie in Frameworks */,
 				021DB0A725D913D600200D99 /* CloudKit.framework in Frameworks */,
 				02306CBD234489F000C8A2AC /* Intents.framework in Frameworks */,
 				02306CBF234489F400C8A2AC /* IntentsUI.framework in Frameworks */,
@@ -661,6 +666,7 @@
 		026476B622DBF0CB002EA732 = {
 			isa = PBXGroup;
 			children = (
+				029BA39526FD51BD00CEC028 /* lottie-ios */,
 				026476C122DBF0CB002EA732 /* Andante */,
 				0290AA62251D5DDD00B08CC0 /* AndanteWidget */,
 				0275B189251EDD9A00F853AE /* WidgetProfileIntent */,
@@ -765,6 +771,7 @@
 			isa = PBXGroup;
 			children = (
 				026476C922DBF0CD002EA732 /* Assets.xcassets */,
+				029C5FF626FD2548000D9936 /* flame.json */,
 				026476E822DBF5EA002EA732 /* Colors.swift */,
 				026476EA22DBF713002EA732 /* Fonts.swift */,
 				0264770822DC1AE7002EA732 /* Constants.swift */,
@@ -1229,6 +1236,9 @@
 				0275B19E251EDD9A00F853AE /* PBXTargetDependency */,
 			);
 			name = Andante;
+			packageProductDependencies = (
+				029BA39626FD527000CEC028 /* Lottie */,
+			);
 			productName = Andante;
 			productReference = 026476BF22DBF0CB002EA732 /* Andante.app */;
 			productType = "com.apple.product-type.application";
@@ -1322,6 +1332,8 @@
 				Base,
 			);
 			mainGroup = 026476B622DBF0CB002EA732;
+			packageReferences = (
+			);
 			productRefGroup = 026476C022DBF0CB002EA732 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1348,6 +1360,7 @@
 				02401BE524EF44D900608B20 /* recording.end.wav in Resources */,
 				02A2DB4C24CFAF88002E0760 /* metronome.click.wav in Resources */,
 				02401BE924F1CA6E00608B20 /* timer.notification.wav in Resources */,
+				029C5FF726FD2548000D9936 /* flame.json in Resources */,
 				026476CA22DBF0CD002EA732 /* Assets.xcassets in Resources */,
 				024A91802565D72F003A44B2 /* G.mp3 in Resources */,
 				024A917C2565D72F003A44B2 /* F.mp3 in Resources */,
@@ -2058,6 +2071,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		029BA39626FD527000CEC028 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		021DB00125D5C80600200D99 /* Andante.xcdatamodeld */ = {

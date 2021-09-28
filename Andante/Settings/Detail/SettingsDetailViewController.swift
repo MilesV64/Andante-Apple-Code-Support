@@ -8,9 +8,10 @@
 
 import UIKit
 
-class SettingsDetailViewController: ChildTransitionViewController {
+class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewDelegate {
     
     public let headerView = UIView()
+    private let headerBG = Separator(position: .bottom)
     private let backButton = Button("chevron.left")
     private let titleLabel = UILabel()
     
@@ -45,10 +46,18 @@ class SettingsDetailViewController: ChildTransitionViewController {
         self.view.backgroundColor = Colors.backgroundColor
         scrollView.backgroundColor = Colors.backgroundColor
         scrollView.alwaysBounceVertical = true
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.delegate = self
         self.view.addSubview(scrollView)
 
+        
         headerView.backgroundColor = Colors.backgroundColor
         self.view.addSubview(headerView)
+        
+        self.headerBG.backgroundColor = Colors.foregroundColor
+        self.headerBG.inset = .zero
+        self.headerBG.setBarShadow()
+        headerView.addSubview(headerBG)
         
         titleLabel.textColor = Colors.text
         titleLabel.font = Fonts.semibold.withSize(17)
@@ -68,6 +77,11 @@ class SettingsDetailViewController: ChildTransitionViewController {
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.headerBG.setBarShadow()
     }
     
     @objc func adjustForKeyboard(notification: Notification) {
@@ -120,10 +134,11 @@ class SettingsDetailViewController: ChildTransitionViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        headerView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 66)
+        headerView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 80)
+        headerBG.frame = headerView.bounds
         
-        backButton.frame = CGRect(x: 0, y: 6, width: 50, height: 60)
-        titleLabel.frame = CGRect(x: 50, y: 6, width: headerView.bounds.width - 100, height: 60)
+        backButton.frame = CGRect(x: 5, y: 12, width: 50, height: 70)
+        titleLabel.frame = CGRect(x: 50, y: 10, width: headerView.bounds.width - 100, height: 70)
         
         scrollView.frame = self.view.bounds
         scrollView.contentInset.top = headerView.bounds.height
@@ -140,6 +155,11 @@ class SettingsDetailViewController: ChildTransitionViewController {
         
         scrollView.contentSize.height = CGFloat(items.count)*itemHeight + headerView.bounds.height
         
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset.y + scrollView.adjustedContentInset.top
+        self.headerBG.alpha = offset / 10
     }
     
 }

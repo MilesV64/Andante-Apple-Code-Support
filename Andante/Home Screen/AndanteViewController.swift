@@ -112,14 +112,13 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
             return
         }
         
-        var viewController: MainViewController!
-
+        let viewController: MainViewController
         switch index {
         case 0: viewController = sessionsViewController
         case 1: viewController = statsViewController
         default: viewController = journalViewController
         }
-        
+                
         if index >= 2 && activeIndex >= 2 {
             activeIndex = index
             sidebar?.setSelectedTab(index)
@@ -136,6 +135,10 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
             addChild(viewController)
             contentView.insertSubview(viewController.view, belowSubview: self.actionButtonView)
             viewController.didMove(toParent: self)
+            
+            if self.activeViewController != nil {
+                viewController.mainHeaderView.streakAnimationFrame = activeViewController.mainHeaderView.streakAnimationFrame
+            }
             
             activeViewController = viewController
             view.setNeedsLayout()
@@ -614,8 +617,7 @@ extension AndanteViewController {
             [weak self] in
             guard let self = self else { return }
 
-            let detailVC = SessionDetailViewController()
-            detailVC.session = session
+            let detailVC = SessionDetailViewController(session: session, indexPath: nil)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 self.sessionSaveNotificationTimer?.invalidate()

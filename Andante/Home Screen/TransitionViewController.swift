@@ -102,22 +102,22 @@ class TransitionViewController: UIViewController {
         case push, overlap
     }
     
-    private var contentView: TransitionContentView {
-        return self.view as! TransitionContentView
+    private var contentView: TransitionContentView? {
+        return self.view as? TransitionContentView
     }
     
     public var transitionStyle: TransitionStyle = .overlap {
         didSet {
             switch self.transitionStyle {
             case .overlap:
-                self.contentView.shadowView.isHidden = false
+                self.contentView?.shadowView.isHidden = false
                 self.dimView.isHidden = false
-                self.contentView.useRoundCorners = true
+                self.contentView?.useRoundCorners = true
                 
             case .push:
-                self.contentView.shadowView.isHidden = true
+                self.contentView?.shadowView.isHidden = true
                 self.dimView.isHidden = true
-                self.contentView.useRoundCorners = false
+                self.contentView?.useRoundCorners = false
             }
         }
     }
@@ -138,7 +138,7 @@ class TransitionViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.modalPresentationStyle = .overFullScreen
-        self.contentView.useRoundCorners = true
+        self.contentView?.useRoundCorners = true
     }
     
     required init?(coder: NSCoder) {

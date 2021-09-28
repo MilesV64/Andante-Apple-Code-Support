@@ -12,7 +12,6 @@ class AreYouSurePopupViewController: PopupViewController {
     
     private let titleLabel = UILabel()
     private let textView = UITextView()
-    private let separator = Separator()
     
     public var titleText: String? {
         didSet {
@@ -38,8 +37,8 @@ class AreYouSurePopupViewController: PopupViewController {
         }
     }
     
-    private let destructiveButton = PushButton()
-    private let cancelButton = PushButton()
+    private let destructiveButton = Button(destructive: true)
+    private let cancelButton = Button(destructive: false)
     
     public var destructiveAction: (()->Void)?
     
@@ -82,67 +81,51 @@ class AreYouSurePopupViewController: PopupViewController {
         textView.backgroundColor = .clear
         self.contentView.addSubview(textView)
         
-        cancelButton.setTitle(cancelText ?? "Cancel", color: Colors.text, font: Fonts.semibold.withSize(17))
+        cancelButton.setTitle(cancelText ?? "Cancel", color: Colors.lightText, font: Fonts.medium.withSize(19))
         cancelButton.action = {
             [weak self] in
             guard let self = self else { return }
             self.close()
         }
-        cancelButton.backgroundColor = Colors.lightColor
-        cancelButton.cornerRadius = 10
         self.contentView.addSubview(cancelButton)
         
-        let textColor = isDestructive ? Colors.red : Colors.white
-        let buttonColor = isDestructive ? Colors.red.withAlphaComponent(0.13) : Colors.orange
-        
-        destructiveButton.setTitle(destructiveText ?? "", color: textColor, font: Fonts.medium.withSize(17))
+        let textColor = isDestructive ? Colors.red : Colors.orange
+        destructiveButton.setTitle(destructiveText ?? "", color: textColor, font: Fonts.medium.withSize(19))
         destructiveButton.action = {
             [weak self] in
             guard let self = self else { return }
             self.didSelectDestructive = true
             self.close()
         }
-        destructiveButton.backgroundColor = buttonColor
-        destructiveButton.cornerRadius = 10
         self.contentView.addSubview(destructiveButton)
-        
-        separator.insetToMargins()
-        separator.position = .top
-        self.contentView.addSubview(separator)
-        
+                
     }
     
     override func viewDidLayoutSubviews() {
         
-        let buttonHeight: CGFloat = 50
-        let buttonSpacing: CGFloat = 10
+        let buttonHeight: CGFloat = 70
         
         let titleHeight = titleLabel.sizeThatFits(CGSize(width: contentWidth, height: .infinity)).height
         let textHeight = textView.sizeThatFits(CGSize(width: contentWidth, height: CGFloat.infinity)).height
         
         let totalTextHeight: CGFloat = titleHeight + textHeight
-        let totalButtonHeight: CGFloat = buttonHeight*2 + buttonSpacing*3
+        let totalButtonHeight: CGFloat = buttonHeight*2
         
-        self.preferredContentHeight = totalTextHeight + totalButtonHeight + 16 + 10 + 16
+        self.preferredContentHeight = totalTextHeight + totalButtonHeight + 20 + 20
         
         super.viewDidLayoutSubviews()
         
-        titleLabel.frame = CGRect(x: 0, y: 16, width: self.contentView.bounds.width, height: titleHeight)
+        titleLabel.frame = CGRect(x: 0, y: 20, width: self.contentView.bounds.width, height: titleHeight)
         textView.frame = CGRect(x: 0, y: titleLabel.frame.maxY, width: self.contentView.bounds.width, height: textHeight)
         
-        separator.frame = CGRect(
-            x: 0, y: textView.frame.maxY + 10,
-            width: contentView.bounds.width,
-            height: 6)
-        
         destructiveButton.frame = CGRect(
-            x: Constants.margin, y: separator.frame.maxY + buttonSpacing,
-            width: contentView.bounds.width - Constants.margin*2,
+            x: 0, y: textView.frame.maxY + 20,
+            width: contentView.bounds.width,
             height: buttonHeight)
         
         cancelButton.frame = CGRect(
-            x: Constants.margin, y: destructiveButton.frame.maxY + buttonSpacing,
-            width: contentView.bounds.width - Constants.margin*2,
+            x: 0, y: destructiveButton.frame.maxY,
+            width: contentView.bounds.width,
             height: buttonHeight)
         
         
@@ -180,11 +163,11 @@ class AreYouSurePopupViewController: PopupViewController {
                 guard let self = self else { return }
                 
                 if highlighted {
-                    self.titleLabel?.alpha = 0.25
+                    self.backgroundColor = Colors.cellHighlightColor
                 }
                 else {
                     UIView.animate(withDuration: 0.2) {
-                        self.titleLabel?.alpha = 1
+                        self.backgroundColor = .clear
                     }
                 }
                 

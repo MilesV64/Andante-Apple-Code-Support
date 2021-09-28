@@ -40,6 +40,7 @@ class BottomActionButton: Separator {
             } else {
                 self.backgroundColor = Colors.backgroundColor
             }
+            button.setButtonShadow(floating: self.style == .floating)
         }
     }
     
@@ -55,7 +56,6 @@ class BottomActionButton: Separator {
         self.position = .top
         self.color = Colors.barSeparator
         self.backgroundColor = Colors.foregroundColor
-        self.button.dimsBackgroundOnHighlight = true
         
         button.backgroundColor = Colors.orange
 //        button.extraHighlightAction = { [weak self] highlighted in
@@ -71,6 +71,7 @@ class BottomActionButton: Separator {
 //
 //        }
         button.setTitle(title, color: Colors.white, font: Fonts.semibold.withSize(17))
+        button.setButtonShadow(floating: self.style == .floating)
         button.action = action
         self.addSubview(button)
         

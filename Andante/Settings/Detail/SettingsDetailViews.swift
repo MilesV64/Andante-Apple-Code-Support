@@ -246,15 +246,17 @@ class SettingsDetailGroupView: SettingsDetailItem {
         
         self.color = .clear
         
+        bgView.cornerRadius = 12
         self.addSubview(bgView)
         
         contentView.clipsToBounds = true
-        contentView.roundCorners(10)
+        contentView.roundCorners(12)
         bgView.addSubview(contentView)
         
         for item in items {
             contentView.addSubview(item)
             item.inset.left = Constants.margin
+            item.inset.right = Constants.margin
         }
         
         items.last?.color = .clear

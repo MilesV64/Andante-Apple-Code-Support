@@ -386,8 +386,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         let popup = CalendarDetailAlertController(day: day)
         
         popup.sessionHandler = { session in
-            let detailVC = SessionDetailViewController()
-            detailVC.session = session
+            let detailVC = SessionDetailViewController(session: session, indexPath: nil)
             self.present(detailVC, animated: false, completion: nil)
         }
         
@@ -696,11 +695,7 @@ extension SessionsViewController {
         searchBarView.stopEditing()
         
         if let session = fetchedObjectController.object(at: indexPath) {
-            let vc = SessionDetailViewController()
-            
-            vc.indexPath = indexPath
-            vc.session = session
-            
+            let vc = SessionDetailViewController(session: session, indexPath: indexPath)
             self.present(vc, animated: false, completion: nil)
         }
         

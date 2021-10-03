@@ -133,6 +133,10 @@ class AppTweaksViewController: UITableViewController {
             let cell = cell as! ToggleTableViewCell
             cell.isOn = item.isOn?() ?? false
             cell.action = item.action
+            cell.textLabel?.textColor = UIColor.label
+        }
+        else {
+            cell.textLabel?.textColor = UIColor.systemBlue
         }
         
         return cell

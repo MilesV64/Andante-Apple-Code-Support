@@ -114,8 +114,6 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        print("viewDidLayoutSubviews")
-        
         containerView.contextualFrame = self.view.bounds
         
         contentView.contextualFrame = containerView.bounds

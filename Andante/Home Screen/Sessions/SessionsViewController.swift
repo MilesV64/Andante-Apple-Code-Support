@@ -111,9 +111,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             fetchedObjectController.performFetch()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.sessionCalendarView.dayDidChange()
-        }
+        self.sessionCalendarView.setProfile(User.getActiveProfile())
         
     }
     
@@ -587,9 +585,13 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
     }
     
     override func didChangeProfile(profile: CDProfile) {
+        super.didChangeProfile(profile: profile)
+        
         if !didLoad {
             return
         }
+        
+        self.sessionCalendarView.setProfile(profile)
         
         if fetchedObjectController != nil {
             updateFetchRequest()

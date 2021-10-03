@@ -9,7 +9,7 @@
 import UIKit
 import Lottie
 
-class HeaderView: UIView {
+class HeaderView: UIView, PracticeDatabaseObserver {
     
     static var accessoryHeight: CGFloat = 72
     
@@ -19,7 +19,7 @@ class HeaderView: UIView {
     public var height: CGFloat = 124
     public var minHeight: CGFloat = 52
     
-    private let topView = UIView()
+    public let topView = UIView()
     public let botView = UIView()
     
     private let sep = Separator(position: .bottom)
@@ -29,7 +29,7 @@ class HeaderView: UIView {
     private let streakAnimation = AnimationView(name: "flame")
     private let streakLabel = UILabel()
     
-    private let profileView = ProfileImagePushButton()
+    public let profileView = ProfileImagePushButton()
     private let label = UILabel()
     
     public var profileButtonHandler: (()->Void)?
@@ -60,7 +60,6 @@ class HeaderView: UIView {
     }
     
     private func setFlameColor(_ color: UIColor) {
-        color.lottieColorValue
         self.streakAnimation.setValueProvider(
             ColorValueProvider(color.lottieColorValue),
             keypath: AnimationKeypath(keypath: "fire.Shape 1.Fill 1.Color"))
@@ -73,7 +72,7 @@ class HeaderView: UIView {
     private var lastStreak: Int = 0
     
     @objc func reloadStreak() {
-        let streak = PracticeDatabase.shared.currentStreak()
+        let streak = PracticeDatabase.shared.streak(for: User.getActiveProfile())
         self.lastStreak = streak
         streakLabel.text = "\(streak)"
         streakLabel.textColor = streak == 0 ? Colors.extraLightText : Colors.text
@@ -114,6 +113,8 @@ class HeaderView: UIView {
     
     init() {
         super.init(frame: .zero)
+        
+        PracticeDatabase.shared.addObserver(self)
                 
         backgroundColor = Colors.barColor
         
@@ -156,8 +157,25 @@ class HeaderView: UIView {
         addSubview(botView)
         addSubview(sep)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadStreak), name: PracticeDatabase.PracticeDatabaseStreakDidChangeNotification, object: nil)
-                
+    }
+    
+    // MARK: - PracticeDatabaseObserver
+    
+    func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase) {}
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeFor profile: CDProfile) {}
+    
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeTotalStreak streak: Int) {
+        if self.profile == nil {
+            self.reloadStreak()
+            print("reloading profile nil")
+        }
+    }
+    
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int) {
+        if profile == self.profile {
+            self.reloadStreak()
+            print("reloading profile not nil")
+        }
     }
     
     func setViewsForSizeClass() {
@@ -192,6 +210,12 @@ class HeaderView: UIView {
         fatalError()
     }
     
+    public var profileFrame: CGRect {
+        let profileSize: CGFloat = 42
+        return CGRect(x: Constants.smallMargin - 1, y: 4,
+                      width: profileSize, height: profileSize).integral
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -206,8 +230,11 @@ class HeaderView: UIView {
         layoutTopView()
         
         let profileSize: CGFloat = 42
-        profileView.frame = CGRect(x: Constants.smallMargin, y: 4,
-            width: profileSize, height: profileSize).integral
+
+        if profileView.superview == self.topView {
+            profileView.frame = CGRect(x: Constants.smallMargin - 1, y: 4,
+                width: profileSize, height: profileSize).integral
+        }
                 
         streakLabel.sizeToFit()
         let labelWidth = streakLabel.bounds.width

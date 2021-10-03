@@ -26,6 +26,22 @@ enum Stat {
     }
 }
 
+protocol PracticeDatabaseObserver: AnyObject {
+    
+    /// The practice database has changed
+    func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase)
+    
+    /// The practice database for the given profile has changed
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeFor profile: CDProfile)
+    
+    /// The streak for the given profile has changed
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int)
+    
+    /// The total streak has changed
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeTotalStreak streak: Int)
+    
+}
+
 class PracticeDatabase: NSObject {
     
     public static var PracticeDatabaseDidChangeNotification =
@@ -37,37 +53,55 @@ class PracticeDatabase: NSObject {
     
     public static var shared = PracticeDatabase()
     
-    public var currentProfile: CDProfile? { get {
-        return profile
-    }}
     
     //MARK: - Private attributes
     
-    private var profile: CDProfile?
-    private var controller: NSFetchedResultsController<CDSessionAttributes>?
+    private let controller: NSFetchedResultsController<CDSessionAttributes>
     
     private var sectionDictionary: [ Day : Int ] = [:]
-    private var streak = 0
+    private var streaks: [CDProfile : Int] = [:]
+    private var totalStreak: Int = 0
     
-    private var widgetController: NSFetchedResultsController<CDSessionAttributes>?
-        
     override init() {
-        super.init()
-        
         let request = CDSessionAttributes.fetchRequest() as NSFetchRequest<CDSessionAttributes>
         
         let sort = NSSortDescriptor(key: #keyPath(CDSessionAttributes.startTime), ascending: false)
         request.sortDescriptors = [sort]
         
-        widgetController = NSFetchedResultsController(
+        controller = NSFetchedResultsController(
             fetchRequest: request,
             managedObjectContext: DataManager.context,
-            sectionNameKeyPath: nil, cacheName: nil)
+            sectionNameKeyPath: #keyPath(CDSessionAttributes.session.day),
+            cacheName: nil)
         
-        widgetController?.delegate = self
+        super.init()
         
-        try? widgetController?.performFetch()
+        controller.delegate = self
+        try? controller.performFetch()
+        self.generateSectionDictionary()
         
+    }
+    
+    fileprivate class WeakDatabaseOberver {
+        private(set) weak var value: PracticeDatabaseObserver?
+        
+        init(value: PracticeDatabaseObserver?) {
+            self.value = value
+        }
+    }
+    
+    private var observers : [WeakDatabaseOberver] = []
+    
+    func addObserver(_ observer: PracticeDatabaseObserver) {
+        self.observers = self.observers.filter({ $0.value != nil }) // Trim
+        self.observers.append( WeakDatabaseOberver(value: observer)  ) // Append
+    }
+    
+    func removeObserver(_ observer: PracticeDatabaseObserver) {
+        self.observers = self.observers.filter({
+            guard let value = $0.value else { return false }
+            return !(value === observer)
+        })
     }
     
 }
@@ -75,49 +109,102 @@ class PracticeDatabase: NSObject {
 //MARK: - Public API
 extension PracticeDatabase {
     
-    func setProfile(_ profile: CDProfile?) {
-        guard profile != nil, profile != self.profile else { return }
-        
-        self.profile = profile
-        updateFetchRequest()
-    }
-    
     public func sessions(for day: Day) -> [CDSessionAttributes]? {
         if let section = sectionDictionary[day] {
-            if let sessions = controller?.sections?[section].objects as? [CDSessionAttributes] {
+            if let sessions = controller.sections?[section].objects as? [CDSessionAttributes] {
                 return sessions.isEmpty ? nil : sessions
             }
         }
         return nil
     }
     
-    public func sessions() -> [CDSessionAttributes] {
-        return controller?.fetchedObjects ?? []
+    public func sessions(for day: Day, profile: CDProfile?) -> [CDSessionAttributes]? {
+        if let section = sectionDictionary[day] {
+            if let sessions = controller.sections?[section].objects as? [CDSessionAttributes], !sessions.isEmpty {
+                if let profile = profile {
+                    return sessions.filter { $0.session?.profile == profile }
+                }
+                else {
+                    return sessions
+                }
+            }
+        }
+        return nil
     }
     
-    public func currentStreak() -> Int {
-        return self.streak
+    public func sessionExists(for day: Day) -> Bool {
+        return sectionDictionary[day] != nil
+    }
+    
+    public func sessionExists(for day: Day, profile: CDProfile) -> Bool {
+        if let section = sectionDictionary[day] {
+            if let sessions = controller.sections?[section].objects as? [CDSessionAttributes], !sessions.isEmpty {
+                for session in sessions {
+                    if session.session?.profile == profile {
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+        return false
+    }
+    
+    public func sessions() -> [CDSessionAttributes] {
+        return controller.fetchedObjects ?? []
+    }
+    
+    public func streak(for profile: CDProfile?) -> Int {
+        if let profile = profile {
+            return self.streaks[profile] ?? 0
+        }
+        return self.totalStreak
     }
     
     public func reloadStreak() {
-        var day = Day(date: Date())
-        var streak = 0
-        
-        //streak doesnt reset if you havent practiced yet today, but it does increase if you have
-        if sectionDictionary[day] != nil {
-            streak += 1
-        }
-        
-        day = day.previousDay()
-        while sectionDictionary[day] != nil {
-            streak += 1
+        print("reloading")
+        func getStreak(for profile: CDProfile?) -> Int {
+            var streak = 0
+            var day = Day(date: Date())
+            
+            func sessionExists(_ day: Day) -> Bool {
+                if let profile = profile {
+                    return self.sessionExists(for: day, profile: profile)
+                }
+                else {
+                    return self.sessionExists(for: day)
+                }
+            }
+            
+            //streak doesnt reset if you havent practiced yet today, but it does increase if you have
+            if sessionExists(day) {
+                streak = 1
+            }
+            
             day = day.previousDay()
+            
+            while sessionExists(day) {
+                streak += 1
+                
+                day = day.previousDay()
+            }
+            
+            return streak
         }
         
-        if streak != self.streak {
-            self.streak = streak
-            NotificationCenter.default.post(
-                name: PracticeDatabase.PracticeDatabaseStreakDidChangeNotification, object: nil)
+        let totalStreak = getStreak(for: nil)
+        if self.totalStreak != totalStreak {
+            self.totalStreak = totalStreak
+            self.observers.forEach { $0.value?.practiceDatabase(self, didChangeTotalStreak: totalStreak) }
+        }
+        
+        for profile in CDProfile.getAllProfiles(context: DataManager.context) {
+            let streak = getStreak(for: profile)
+            
+            if streak != self.streaks[profile] {
+                self.streaks[profile] = streak
+                self.observers.forEach { $0.value?.practiceDatabase(self, streakDidChangeFor: profile, streak: streak) }
+            }
         }
         
     }
@@ -125,66 +212,16 @@ extension PracticeDatabase {
 }
 
 //MARK: - Private API
-private extension PracticeDatabase {
+extension PracticeDatabase {
     
-    func fetchRequest(for profile: CDProfile) -> NSFetchRequest<CDSessionAttributes> {
-        let request = CDSessionAttributes.fetchRequest() as NSFetchRequest<CDSessionAttributes>
-        
-        let sort = NSSortDescriptor(key: #keyPath(CDSessionAttributes.startTime), ascending: false)
-        request.sortDescriptors = [sort]
-        
-        let predicate = NSPredicate(format: "session.profile == %@", profile)
-        request.predicate = predicate
-        
-        return request
-    }
-    
-    func performFetch() {
-        do {
-            try controller?.performFetch()
-        } catch {
-            print("PracticeDatabaseFetchController failed to perform fetch: \(error)")
-        }
-    }
-    
-    func createFetchedResultsController() {
-        guard let profile = self.profile else { return }
-        
-        self.controller = NSFetchedResultsController(
-            fetchRequest: self.fetchRequest(for: profile),
-            managedObjectContext: DataManager.context,
-            sectionNameKeyPath: #keyPath(CDSessionAttributes.session.day),
-            cacheName: nil)
-        
-        controller?.delegate = self
-
-    }
-    
-    func updateFetchRequest() {
-        guard let profile = self.profile else { return }
-        
-        if let controller = self.controller {
-            controller.fetchRequest.predicate = NSPredicate(format: "session.profile == %@", profile)
-        }
-        else {
-            createFetchedResultsController()
-        }
-                
-        performFetch()
-        
-        generateSectionDictionary()
-        
-        NotificationCenter.default.post(
-            name: PracticeDatabase.PracticeDatabaseDidChangeNotification, object: nil)
-        
-    }
-    
-    func generateSectionDictionary() {
+    private func generateSectionDictionary() {
         sectionDictionary = [:]
         
-        if let sections = controller?.sections {
+        if let sections = controller.sections {
             for (i, section) in sections.enumerated() {
-                sectionDictionary[Day(string: section.name)] = i
+                if section.name.isEmpty == false {
+                    sectionDictionary[Day(string: section.name)] = i
+                }
             }
         }
         
@@ -197,16 +234,13 @@ private extension PracticeDatabase {
 extension PracticeDatabase: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        if controller == widgetController {
-            WidgetDataManager.writeData()
-        }
-        else {
-            self.generateSectionDictionary()
-            
-            NotificationCenter.default.post(
-                name: PracticeDatabase.PracticeDatabaseDidChangeNotification, object: nil)
-        }
+        WidgetDataManager.writeData()
+        self.generateSectionDictionary()
         
+        self.observers.forEach { $0.value?.practiceDatabaseDidUpdate(self) }
+        
+        NotificationCenter.default.post(
+            name: PracticeDatabase.PracticeDatabaseDidChangeNotification, object: nil)
     }
     
     

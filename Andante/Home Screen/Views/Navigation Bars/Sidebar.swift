@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Sidebar: NavigationComponent, SidebarFoldersDelegate {
+class Sidebar: NavigationComponent, SidebarFoldersDelegate, PracticeDatabaseObserver {
     
     private let scrollView = CancelTouchScrollView()
     private let separator = UIView()
@@ -82,7 +82,7 @@ class Sidebar: NavigationComponent, SidebarFoldersDelegate {
         foldersView.delegate = self
         scrollView.addSubview(foldersView)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadStreak), name: PracticeDatabase.PracticeDatabaseStreakDidChangeNotification, object: nil)
+        PracticeDatabase.shared.addObserver(self)
         
         reloadData()
         
@@ -90,8 +90,18 @@ class Sidebar: NavigationComponent, SidebarFoldersDelegate {
         
     }
     
+    // MARK: - PracticeDatabaseObserver
+    
+    func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase) {}
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeFor profile: CDProfile) {}
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int) {}
+    
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeTotalStreak streak: Int) {
+        self.reloadStreak()
+    }
+    
     @objc func reloadStreak() {
-        let streak = PracticeDatabase.shared.currentStreak()
+        let streak = PracticeDatabase.shared.streak(for: User.getActiveProfile())
         streakView.setTitle("🔥 \(streak)", for: .normal)
         streakView.setTitleColor(streak == 0 ? Colors.lightText : Colors.text, for: .normal)
     }

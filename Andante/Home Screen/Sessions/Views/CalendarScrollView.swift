@@ -52,6 +52,8 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
         collectionView.delaysContentTouches = false
         self.addSubview(collectionView)
         
+        self.databaseDidUpdate()
+        
         NotificationCenter.default.addObserver(
             self, selector: #selector(databaseDidUpdate),
             name: PracticeDatabase.PracticeDatabaseDidChangeNotification, object: nil)
@@ -87,6 +89,10 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
             // Something went wrong, just reload to get back on track
             self.setStartDay()
         }
+    }
+    
+    public func setProfile(_ profile: CDProfile?) {
+        self.databaseDidUpdate()
     }
     
     @objc func databaseDidUpdate() {
@@ -148,7 +154,7 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
         
         let day = self.day(for: indexPath.row)
         
-        if let sessions = PracticeDatabase.shared.sessions(for: day) {
+        if let sessions = PracticeDatabase.shared.sessions(for: day, profile: User.getActiveProfile()) {
             cell.sessionCount = min(6, sessions.count)
         } else {
             cell.sessionCount = 0

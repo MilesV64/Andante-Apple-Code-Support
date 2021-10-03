@@ -364,6 +364,8 @@ class JournalViewController: MainViewController, JournalHeaderDelegate, UICollec
     }
     
     override func didChangeProfile(profile: CDProfile) {
+        super.didChangeProfile(profile: profile)
+        
         reloadData()
     }
         

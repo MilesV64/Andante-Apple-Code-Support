@@ -106,8 +106,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         handleVersionUpdates()
         
-        PracticeDatabase.shared.setProfile(User.getActiveProfile())
-        
         ProfileMonitor.shared.monitorProfiles()
         
         NotificationCenter.default.addObserver(self, selector: #selector(reloadWidget), name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)

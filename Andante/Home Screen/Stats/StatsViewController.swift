@@ -197,6 +197,8 @@ class StatsViewController: MainViewController {
     }
     
     override func didChangeProfile(profile: CDProfile) {
+        super.didChangeProfile(profile: profile)
+        
         setNeedsReload()
         monitorDailyGoal()
     }
@@ -218,8 +220,10 @@ class StatsViewController: MainViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        scrollView!.frame = self.view.bounds
-        
+        if scrollView!.frame != self.contentView.bounds {
+            scrollView!.frame = self.contentView.bounds
+        }
+
         if self.view.bounds.width > StatsViewController.compactBreakpoint {
             layoutRegular()
             totalsView.setCompact(false)
@@ -260,7 +264,10 @@ class StatsViewController: MainViewController {
             height: height)
         
         let safeAreaBottom: CGFloat = containerViewController.isSidebarEnabled ? view.safeAreaInsets.bottom : 0
-        scrollView!.contentSize.height = focusView.frame.maxY + 16 + safeAreaBottom
+        let contentHeight = focusView.frame.maxY + 16 + safeAreaBottom
+        if scrollView!.contentSize.height != contentHeight {
+            scrollView!.contentSize.height = contentHeight
+        }
     }
     
     private func layoutRegular() {

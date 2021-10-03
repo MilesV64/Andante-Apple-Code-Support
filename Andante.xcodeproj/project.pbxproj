@@ -18,6 +18,7 @@
 		02011FCA251F01AC00565F75 /* WidgetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02011FC9251F01AC00565F75 /* WidgetFileManager.swift */; };
 		02011FCF251F030E00565F75 /* WidgetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02011FC9251F01AC00565F75 /* WidgetFileManager.swift */; };
 		02011FD4251F030E00565F75 /* WidgetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02011FC9251F01AC00565F75 /* WidgetFileManager.swift */; };
+		02015BB62702C1A0003B2450 /* PulltoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02015BB52702C1A0003B2450 /* PulltoSettingsView.swift */; };
 		0201AF98253E6D150015CA51 /* EditSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201AF97253E6D150015CA51 /* EditSessionViewController.swift */; };
 		02078AF925C4D8C4009C6117 /* Synth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02078AF825C4D8C4009C6117 /* Synth.swift */; };
 		020B163D24D0C7DA004070EE /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020B163C24D0C7DA004070EE /* ProfileSettingsViewController.swift */; };
@@ -295,6 +296,7 @@
 		0200C3A024AC6F1400E787EC /* CenterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterPickerViewController.swift; sourceTree = "<group>"; };
 		0200C3A224AC745400E787EC /* CancelConfirmCenterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelConfirmCenterPickerViewController.swift; sourceTree = "<group>"; };
 		02011FC9251F01AC00565F75 /* WidgetFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetFileManager.swift; sourceTree = "<group>"; };
+		02015BB52702C1A0003B2450 /* PulltoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulltoSettingsView.swift; sourceTree = "<group>"; };
 		0201AF97253E6D150015CA51 /* EditSessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSessionViewController.swift; sourceTree = "<group>"; };
 		02078AE225C4BF03009C6117 /* WidgetProfileIntentUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetProfileIntentUI.entitlements; sourceTree = "<group>"; };
 		02078AF825C4D8C4009C6117 /* Synth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synth.swift; sourceTree = "<group>"; };
@@ -897,6 +899,7 @@
 			children = (
 				02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */,
 				02D52A04250C39C3005504EA /* SessionShareView.swift */,
+				02015BB52702C1A0003B2450 /* PulltoSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1565,6 +1568,7 @@
 				02AA3F9C250A01CA00EF19EA /* MoveSessionViewController.swift in Sources */,
 				0287616D24E0F13B00F568CA /* StatIconView.swift in Sources */,
 				0277EB1625EB86C8008C3CC9 /* DescriptionActionPopupViewController.swift in Sources */,
+				02015BB62702C1A0003B2450 /* PulltoSettingsView.swift in Sources */,
 				0284197A24F787E40040E394 /* MoodStatView.swift in Sources */,
 				0264773422E1420E002EA732 /* PickerAlertController.swift in Sources */,
 				0200C3A124AC6F1400E787EC /* CenterPickerViewController.swift in Sources */,

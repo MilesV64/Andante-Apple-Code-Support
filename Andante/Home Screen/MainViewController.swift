@@ -36,13 +36,18 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
     func pageReselected() {}
     func didAddSession(session: CDSession) {}
     func didDeleteSession(session: CDSession) {}
-    func didChangeProfile(profile: CDProfile) {}
     func dayDidChange() {}
     
     var containerViewController: AndanteViewController!
     var containerView = UIView()
     var contentView = UIView()
-    var scrollView: UIScrollView?
+    var scrollView: UIScrollView? {
+        didSet {
+            self.scrollViewDidLoad()
+        }
+    }
+    
+    private var pullToSettingsView = PullToSettingsView()
                 
     private var headerView: HeaderView!
     
@@ -92,8 +97,12 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
         headerView.profile = User.getActiveProfile()
         
         containerView.addSubview(headerView)
-                
+         
         didLoad = true
+    }
+    
+    func scrollViewDidLoad() {
+        self.scrollView?.addSubview(self.pullToSettingsView)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -104,24 +113,81 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
     private var firstLoad = true
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-                
+        
+        print("viewDidLayoutSubviews")
+        
         containerView.contextualFrame = self.view.bounds
         
         contentView.contextualFrame = containerView.bounds
         
         headerView.isSidebarLayout = containerViewController.isSidebarEnabled
         updateHeaderView()
-        
+
         if containerViewController.isSidebarEnabled {
-            scrollView?.scrollIndicatorInsets.bottom = 0
+            scrollView?.verticalScrollIndicatorInsets.bottom = 0
         } else {
-            scrollView?.scrollIndicatorInsets.bottom = -view.safeAreaInsets.bottom
+            scrollView?.verticalScrollIndicatorInsets.bottom = -view.safeAreaInsets.bottom
         }
-        
+
         if firstLoad {
             let topInset: CGFloat = headerView.height + self.view.safeAreaInsets.top + additionalTopInset
             scrollView?.setContentOffset(CGPoint(x: 0, y: -topInset), animated: false)
             firstLoad = false
+        }
+        
+    }
+    
+    private func layoutPullToSettingsView() {
+        if let scrollView = self.scrollView {
+            let maxY = -self.additionalTopInset
+            let minY = min(0, scrollView.contentOffset.y + scrollView.contentInset.top - self.additionalTopInset)
+            let height = maxY - minY
+            
+            let frame = CGRect(
+                x: -scrollView.contentInset.left, y: minY, width: scrollView.bounds.width, height: maxY - minY)
+            
+            if frame != self.pullToSettingsView.frame {
+                self.pullToSettingsView.frame = frame
+                self.pullToSettingsView.setProgress(max(0, min(1, height / 100)))
+            }
+            
+        }
+        
+        if self.headerView.profileView.superview != self.view {
+            if self.pullToSettingsView.progress >= 1 {
+                let convertedFrame = self.headerView.topView.convert(self.headerView.profileView.frame, to: self.view)
+                self.view.addSubview(self.headerView.profileView)
+                self.headerView.profileView.frame = convertedFrame
+
+                UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]) {
+
+                    let center = CGPoint(
+                        x: self.pullToSettingsView.bounds.midX,
+                        y: self.pullToSettingsView.bounds.maxY - 40 - self.pullToSettingsView.bounds.height * 0.1)
+                    self.headerView.profileView.center = self.pullToSettingsView.convert(center, to: self.view)
+
+                } completion: { _ in
+                    //
+                }
+            }
+        }
+        else {
+            if self.pullToSettingsView.progress < 1 {
+                self.headerView.profileView.frame = self.view.convert(self.headerView.profileView.frame, to: self.headerView.topView)
+                self.headerView.topView.addSubview(self.headerView.profileView)
+                
+                UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]) {
+                    self.headerView.profileView.frame = self.headerView.profileFrame
+                } completion: { _ in
+                    //
+                }
+            }
+            else {
+                let center = CGPoint(
+                    x: self.pullToSettingsView.bounds.midX,
+                    y: self.pullToSettingsView.bounds.maxY - 40 - self.pullToSettingsView.bounds.height * 0.1)
+                self.headerView.profileView.center = self.pullToSettingsView.convert(center, to: self.view)
+            }
         }
         
     }
@@ -171,9 +237,16 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
     
     func didScroll(scrollView: UIScrollView) {
         updateHeaderView()
+        self.layoutPullToSettingsView()
     }
     
     func willEndScroll(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        if self.pullToSettingsView.progress >= 1 {
+            self.pullToSettingsView.didPullToOpenSettings()
+            let settingsVC = SettingsContainerViewController()
+            self.containerViewController.presentModal(settingsVC, animated: true, completion: nil)
+        }
         
         if containerViewController.isSidebarEnabled || isBotViewFocused {
             return
@@ -267,9 +340,9 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
 
     }
     
-    public func reloadHeader() {
-        if didLoad {
-            headerView.profile = User.getActiveProfile()
+    public func didChangeProfile(profile: CDProfile) {
+        if self.didLoad {
+            self.headerView.profile = profile
         }
     }
     
@@ -422,7 +495,7 @@ class NavButton: UIView {
 
 class ProfileImagePushButton: PushButton {
     class var bgColor: UIColor {
-        return Colors.dynamicColor(light: UIColor("#F2F2F7"), dark: Colors.lightColor)
+        return Colors.dynamicColor(light: Colors.lightColor, dark: Colors.lightColor)
     }
     
     public var profileImg: ProfileImageView!

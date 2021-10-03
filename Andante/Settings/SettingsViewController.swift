@@ -282,7 +282,7 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate {
         
     }
     
-    public func changeProfile(to profile: CDProfile) {
+    public func changeProfile(to profile: CDProfile?) {
         User.setActiveProfile(profile)
         
         if let container = self.presentingViewController as? AndanteViewController {
@@ -537,19 +537,25 @@ class SettingsHeaderView: UIView {
         didSet {
             
             cancellables.removeAll()
-            profile?.publisher(for: \.name).sink {
-                [weak self] name in
-                guard let self = self else { return }
-                self.activeProfileLabel.titleLabel.text = name
-                self.setNeedsLayout()
-            }.store(in: &cancellables)
-            
-            profile?.publisher(for: \.sessions).sink {
-                [weak self] sessions in
-                guard let self = self else { return }
-                self.activeProfileLabel.detailLabel.text = Formatter.formatSessionCount(sessions?.count)
-                self.setNeedsLayout()
-            }.store(in: &cancellables)
+            if let profile = profile {
+                profile.publisher(for: \.name).sink {
+                    [weak self] name in
+                    guard let self = self else { return }
+                    self.activeProfileLabel.titleLabel.text = name
+                    self.setNeedsLayout()
+                }.store(in: &cancellables)
+                
+                profile.publisher(for: \.sessions).sink {
+                    [weak self] sessions in
+                    guard let self = self else { return }
+                    self.activeProfileLabel.detailLabel.text = Formatter.formatSessionCount(sessions?.count)
+                    self.setNeedsLayout()
+                }.store(in: &cancellables)
+            }
+            else {
+                self.activeProfileLabel.titleLabel.text = "All Profiles"
+                self.activeProfileLabel.detailLabel.text = Formatter.formatSessionCount(PracticeDatabase.shared.sessions().count)
+            }
             
             activeProfileIcon.profile = profile
             
@@ -561,16 +567,16 @@ class SettingsHeaderView: UIView {
         
         self.backgroundColor = Colors.foregroundColor
         
-        let profile = User.getActiveProfile()
+        defer {
+            self.profile = User.getActiveProfile()
+        }
         
         activeProfileIcon.profile = profile
         activeProfileIcon.inset = 14
         self.addSubview(activeProfileIcon)
         
-        activeProfileLabel.titleLabel.text = profile?.name
         activeProfileLabel.titleLabel.textColor = Colors.text
         activeProfileLabel.titleLabel.font = Fonts.bold.withSize(21)
-        activeProfileLabel.detailLabel.text = Formatter.formatSessionCount(profile?.sessions?.count)
         activeProfileLabel.detailLabel.textColor = Colors.lightText
         activeProfileLabel.detailLabel.font = Fonts.medium.withSize(15)
         activeProfileLabel.padding = 6

@@ -123,9 +123,11 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
     }
     
     private func updateFetchRequest() {
-        guard let profile = User.getActiveProfile() else { return }
+        var predicates: [NSPredicate] = []
         
-        var predicates: [NSPredicate] = [NSPredicate(format: "profile == %@", profile)]
+        if let profile = User.getActiveProfile() {
+            predicates.append(NSPredicate(format: "profile == %@", profile))
+        }
                 
         if filters.contains(.favorited) {
             predicates.append(NSPredicate(format: "isFavorited == TRUE"))
@@ -584,7 +586,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         
     }
     
-    override func didChangeProfile(profile: CDProfile) {
+    override func didChangeProfile(profile: CDProfile?) {
         super.didChangeProfile(profile: profile)
         
         if !didLoad {

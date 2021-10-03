@@ -196,7 +196,7 @@ class StatsViewController: MainViewController {
         
     }
     
-    override func didChangeProfile(profile: CDProfile) {
+    override func didChangeProfile(profile: CDProfile?) {
         super.didChangeProfile(profile: profile)
         
         setNeedsReload()

@@ -23,7 +23,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
     
     public var useNewProfileButton = true
     public var newProfileAction: (()->())?
-    public var action: ((CDProfile)->())?
+    public var action: ((CDProfile?)->())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +61,12 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4))
         contentView.addSubview(tableView)
         
+        self.allProfilesCellView.setChecked(self.selectedProfile == nil)
         self.allProfilesCellView.margin = 28
+        self.allProfilesCellView.action = { [weak self] in
+            self?.action?(nil)
+            self?.close()
+        }
         tableView.tableHeaderView?.addSubview(self.allProfilesCellView)
         
         if useNewProfileButton {

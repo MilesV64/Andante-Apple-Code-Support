@@ -716,8 +716,6 @@ extension AndanteViewController {
     }
     
     public func didChangeProfile(_ profile: CDProfile?) {
-        guard let profile = profile else { return }
-        
         sidebar?.reloadData()
         
         for vc in self.viewControllers {

@@ -131,7 +131,7 @@ class NewReminderViewController: UIViewController {
                 [weak self] profile in
                 guard let self = self else { return }
                 self.profile = profile
-                self.profileLabel.text = profile.name
+                self.profileLabel.text = profile?.name ?? "All Profiles"
             }
             
             self.presentPopupViewController(vc)

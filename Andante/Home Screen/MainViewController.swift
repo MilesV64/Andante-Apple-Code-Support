@@ -338,7 +338,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
 
     }
     
-    public func didChangeProfile(profile: CDProfile) {
+    public func didChangeProfile(profile: CDProfile?) {
         if self.didLoad {
             self.headerView.profile = profile
         }

@@ -49,9 +49,7 @@ class User {
     public static func setActiveProfile(_ profile: CDProfile?) {
         User.shared.activeProfile = profile
         
-        if let profile = profile {
-            UserDefaults.standard.set(profile.uuid, forKey: "activeProfile")
-        }
+        UserDefaults.standard.set(profile?.uuid ?? "", forKey: "activeProfile")
     }
     
     public static func getActiveProfile() -> CDProfile? {

@@ -363,7 +363,7 @@ class JournalViewController: MainViewController, JournalHeaderDelegate, UICollec
         willEndScroll(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
     }
     
-    override func didChangeProfile(profile: CDProfile) {
+    override func didChangeProfile(profile: CDProfile?) {
         super.didChangeProfile(profile: profile)
         
         reloadData()

@@ -87,8 +87,8 @@ class ProfileImageView: AndanteImageView {
     
     public var profile: CDProfile? {
         didSet {
+            cancellables.removeAll()
             if let profile = profile {
-                cancellables.removeAll()
                 profile.publisher(for: \.iconName).sink(receiveValue: {
                     [weak self] (iconName) in
                     guard let self = self, let iconName = iconName else { return }
@@ -97,7 +97,10 @@ class ProfileImageView: AndanteImageView {
                     self.setResponsiveImage(iconName)
                     
                 }).store(in: &cancellables)
-                
+            }
+            else {
+                // all profiles
+                self.image = nil
             }
         }
     }

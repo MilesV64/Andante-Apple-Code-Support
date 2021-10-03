@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import StoreKit
 
 @objc(CDAskForRatingTracker)
 public class CDAskForRatingTracker: NSManagedObject {
@@ -45,7 +46,7 @@ public class CDAskForRatingTracker: NSManagedObject {
             print("AskForRatingTracker: Logging session. Sessions: \(instance.sessions), Unique Days: \(instance.uniqueDays)")
             
             // No need to update if it's already past the threshold
-            guard instance.sessions < 10 || instance.uniqueDays < 3 else { return }
+            guard instance.sessions < Self.MinimumSessionsToAsk || instance.uniqueDays < Self.MinimumDaysToAsk else { return }
             
             instance.sessions += 1
             
@@ -75,7 +76,7 @@ public class CDAskForRatingTracker: NSManagedObject {
         }
     }
     
-    public static func shouldAskForRating() -> Bool {
+    private static func shouldAskForRating() -> Bool {
         guard let instance = Self.getInstance() else { return false }
         
         if instance.sessions >= Self.MinimumSessionsToAsk, instance.uniqueDays >= Self.MinimumDaysToAsk {
@@ -93,6 +94,12 @@ public class CDAskForRatingTracker: NSManagedObject {
             return false
         }
         
+    }
+    
+    public static func askForRating() {
+        if Self.shouldAskForRating() {
+            SKStoreReviewController.requestReview()
+        }
     }
 
 }

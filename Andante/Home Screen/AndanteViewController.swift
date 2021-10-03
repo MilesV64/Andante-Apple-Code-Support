@@ -710,9 +710,7 @@ extension AndanteViewController {
         
         // Ask for rating
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if CDAskForRatingTracker.shouldAskForRating() {
-                SKStoreReviewController.requestReview()
-            }
+            CDAskForRatingTracker.askForRating()
         }
         
     }
@@ -720,12 +718,9 @@ extension AndanteViewController {
     public func didChangeProfile(_ profile: CDProfile?) {
         guard let profile = profile else { return }
         
-        PracticeDatabase.shared.setProfile(profile)
-        
         sidebar?.reloadData()
         
         for vc in self.viewControllers {
-            vc.reloadHeader()
             vc.didChangeProfile(profile: profile)
             if vc == self.activeViewController {
                 vc.viewWillAppear(false)

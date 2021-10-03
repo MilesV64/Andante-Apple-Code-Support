@@ -11,7 +11,7 @@ import CoreData
 
 class JournalFoldersViewController: UIViewController {
         
-    public let header = ModalViewHeader(title: "Folders")
+    public let header = FloatingHeaderView("Folders")
     
     public let tableView = UITableView()
     
@@ -51,10 +51,7 @@ class JournalFoldersViewController: UIViewController {
         
         self.view.addSubview(tableView)
         
-        header.showsHandle = true
-        header.showsSeparator = false
-        header.backgroundColor = Colors.backgroundColor
-        
+        header.backButton.isHidden = true
         self.view.addSubview(header)
         
         newFolderButton.action = {
@@ -98,12 +95,11 @@ class JournalFoldersViewController: UIViewController {
         self.tableView.layoutMargins.left = Constants.smallMargin
         self.tableView.layoutMargins.right = Constants.smallMargin
         
-        header.sizeToFit()
+        header.frame = CGRect(
+            x: 0, y: 0, width: self.view.bounds.width, height: FloatingHeaderView.height)
         newFolderButton.sizeToFit()
         
         header.bounds.size.width = self.view.bounds.width
-        
-        header.frame.origin = CGPoint(x: 0, y: 0)
         
         newFolderButton.bounds.size.width = self.view.bounds.width
         newFolderButton.frame.origin.x = 0
@@ -147,6 +143,11 @@ extension JournalFoldersViewController: UITableViewDelegate {
         let folder = fetchedObjectController.controller.object(at: indexPath)
         self.action?(folder)
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset.y + scrollView.adjustedContentInset.top
+        self.header.didScroll(offset)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

@@ -59,7 +59,7 @@ class NewReminderViewController: UIViewController {
             headerView.title = "Edit Reminder"
             
             deleteButton = PushButton()
-            deleteButton?.cornerRadius = 12
+            deleteButton?.cornerRadius = 25
             deleteButton?.backgroundColor = Colors.lightColor
             deleteButton?.setTitle("Delete Reminder", color: Colors.red, font: Fonts.medium.withSize(17))
             deleteButton?.action = {
@@ -93,6 +93,8 @@ class NewReminderViewController: UIViewController {
             self.save()
         }
         
+        headerView.headerSeparator.insetToMargins()
+        
         view.addSubview(headerView)
         
         datePicker.datePickerMode = .time
@@ -100,11 +102,12 @@ class NewReminderViewController: UIViewController {
             datePicker.preferredDatePickerStyle = .wheels
         }
         
+        datePickerView.insetToMargins()
         datePickerView.addSubview(datePicker)
         view.addSubview(datePickerView)
         
         profilePickerView.contentHorizontalAlignment = .left
-        profilePickerView.setTitle("Profile", color: Colors.text, font: Fonts.semibold.withSize(17))
+        profilePickerView.setTitle("Profile", color: Colors.text, font: Fonts.medium.withSize(17))
         profilePickerView.highlightAction = {
             [weak self] highlighted in
             guard let self = self else { return }
@@ -134,6 +137,7 @@ class NewReminderViewController: UIViewController {
             self.presentPopupViewController(vc)
         }
         
+        profilePickerSeparator.insetToMargins()
         profilePickerView.addSubview(profilePickerSeparator)
         
         profileLabel.text = profile?.name ?? ""
@@ -145,7 +149,7 @@ class NewReminderViewController: UIViewController {
         view.addSubview(profilePickerView)
         
         repeatLabel.text = "Repeat"
-        repeatLabel.font = Fonts.semibold.withSize(17)
+        repeatLabel.font = Fonts.medium.withSize(17)
         repeatLabel.textColor = Colors.text
         repeatView.addSubview(repeatLabel)
         

@@ -29,7 +29,7 @@ class SiriShortcutsViewController: SettingsDetailViewController, UITableViewDele
         tableView.delegate = self
         tableView.rowHeight = 84
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 10))
-        self.view.addSubview(tableView)
+        self.view.insertSubview(self.tableView, belowSubview: self.headerView)
         
         let request = CDProfile.fetchRequest() as NSFetchRequest<CDProfile>
         request.sortDescriptors = [NSSortDescriptor(key: #keyPath(CDProfile.creationDate), ascending: true)]

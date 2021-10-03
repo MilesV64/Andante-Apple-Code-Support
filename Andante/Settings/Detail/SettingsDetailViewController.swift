@@ -159,8 +159,65 @@ class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewD
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset.y + scrollView.adjustedContentInset.top
-        self.headerBG.alpha = offset / 10
+        self.headerBG.alpha = offset / 12
     }
     
 }
 
+class FloatingHeaderView: UIView {
+    
+    public static let height: CGFloat = 80
+    
+    private let headerBG = Separator(position: .bottom)
+    
+    let backButton = Button("chevron.left")
+    let titleLabel = UILabel()
+    let handleView = HandleView()
+    
+    init(_ title: String) {
+        super.init(frame: .zero)
+        
+        self.backgroundColor = Colors.backgroundColor
+        self.addSubview(headerBG)
+        
+        self.headerBG.backgroundColor = Colors.foregroundColor
+        self.headerBG.inset = .zero
+        self.headerBG.setBarShadow()
+        self.headerBG.alpha = 0
+        self.addSubview(headerBG)
+        
+        titleLabel.text = title
+        titleLabel.textColor = Colors.text
+        titleLabel.font = Fonts.semibold.withSize(17)
+        titleLabel.textAlignment = .center
+        self.addSubview(titleLabel)
+        
+        backButton.contentHorizontalAlignment = .left
+        backButton.contentEdgeInsets.left = Constants.smallMargin - 1
+        self.addSubview(backButton)
+        
+        self.addSubview(handleView)
+    }
+    
+    public func didScroll(_ scrollOffset: CGFloat) {
+        self.headerBG.alpha = scrollOffset / 12
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        headerBG.frame = self.bounds
+        
+        backButton.frame = CGRect(x: 5, y: 12, width: 50, height: 70)
+        titleLabel.frame = CGRect(x: 50, y: 10, width: self.bounds.width - 100, height: 70)
+        
+        let height = handleView.sizeThatFits(self.bounds.size).height
+        handleView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}

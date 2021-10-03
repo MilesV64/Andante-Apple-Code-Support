@@ -15,7 +15,7 @@ class ModalViewHeader: UIView {
     private let doneButton = UIButton(type: .system)
     private let cancelButton = UIButton(type: .system)
     
-    private let headerSeparator = Separator(position: .bottom)
+    let headerSeparator = Separator(position: .bottom)
     private let handleView = HandleView()
     
     public var doneButtonAction: (()->Void)?

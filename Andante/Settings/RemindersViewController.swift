@@ -11,11 +11,7 @@ import CoreData
 import UIKit
 import os.log
 
-class RemindersViewController: ChildTransitionViewController {
-    
-    private let headerView = UIView()
-    private let backButton = UIButton(type: .system)
-    private let titleLabel = UILabel()
+class RemindersViewController: SettingsDetailViewController {
     
     let newReminderButton = BottomActionButton(title: "New Reminder")
     
@@ -48,21 +44,7 @@ class RemindersViewController: ChildTransitionViewController {
         fetchController.delegate = self
         fetchController.performFetch()
         
-        headerView.backgroundColor = Colors.backgroundColor
-        self.view.addSubview(headerView)
-        
-        titleLabel.text = "Practice Reminders"
-        titleLabel.textColor = Colors.text
-        titleLabel.font = Fonts.semibold.withSize(17)
-        titleLabel.textAlignment = .center
-        headerView.addSubview(titleLabel)
-        
-        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withRenderingMode(.alwaysTemplate), for: .normal)
-        backButton.tintColor = Colors.text
-        backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
-        backButton.contentHorizontalAlignment = .left
-        backButton.contentEdgeInsets.left = Constants.smallMargin - 1
-        headerView.addSubview(backButton)
+        self.title = "Practice Reminders"
         
         newReminderButton.backgroundColor = Colors.backgroundColor
         newReminderButton.style = .floating
@@ -82,7 +64,7 @@ class RemindersViewController: ChildTransitionViewController {
         tableView.register(ReminderCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.tableFooterView = UIView()
-        view.addSubview(tableView)
+        view.insertSubview(tableView, belowSubview: headerView)
         
     }
     
@@ -189,23 +171,13 @@ class RemindersViewController: ChildTransitionViewController {
         self.presentModal(vc, animated: true, completion: nil)
     }
     
-    @objc func didTapBack() {
-        self.close()
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        headerView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 66)
-        
-        backButton.frame = CGRect(x: 0, y: 6, width: 50, height: 60)
-        titleLabel.frame = CGRect(x: 50, y: 6, width: headerView.bounds.width - 100, height: 60)
         
         let buttonSize = newReminderButton.sizeThatFits(self.view.bounds.size)
         newReminderButton.frame = CGRect(
             x: 0, y: view.bounds.maxY - buttonSize.height,
             width: buttonSize.width, height: buttonSize.height)
-        
         
         emptyStateView?.sizeToFit()
         emptyStateView?.center = CGPoint(
@@ -274,7 +246,7 @@ extension RemindersViewController: UITableViewDelegate, ReminderCellDelegate, Fe
     
 }
 
-protocol ReminderCellDelegate: class {
+protocol ReminderCellDelegate: AnyObject {
     func reminderCellDidToggleSwitch(_ cell: ReminderCell, isOn: Bool)
 }
 

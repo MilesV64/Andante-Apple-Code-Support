@@ -550,9 +550,9 @@ func isSmallScreen() -> Bool {
 extension UIView {
     func setButtonShadow(floating: Bool = false) {
         if floating {
-            self.setShadow(radius: 10, yOffset: 5, opacity: 0.16, color: Colors.orange)
+            self.setShadow(radius: 10, yOffset: 5, opacity: 0.1)
         } else {
-            self.setShadow(radius: 8, yOffset: 4, opacity: 0.12, color: Colors.orange)
+            self.setShadow(radius: 8, yOffset: 4, opacity: 0.06)
         }
     }
 }

@@ -274,7 +274,7 @@ fileprivate class DayCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        bgView.roundCorners(2)
+        bgView.roundCorners(3)
         self.addSubview(bgView)
         
         label.textColor = Colors.text
@@ -318,7 +318,7 @@ fileprivate class DayCell: UICollectionViewCell {
         super.layoutSubviews()
         
         label.frame = self.bounds
-        bgView.frame = self.bounds.insetBy(dx: 1, dy: 1)
+        bgView.frame = self.bounds.insetBy(dx: 2, dy: 2)
         
     }
 }

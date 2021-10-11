@@ -45,6 +45,8 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
     private var emptyStateView: SessionsEmptyStateView?
     
     public var fetchedObjectController: FetchedObjectCollectionViewController<CDSession>!
+    
+    private var isChangingProfile = false
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -165,15 +167,15 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         
     }
     
-    private func loadSavedData() {
-        guard let profile = User.getActiveProfile() else { return }
-        
+    private func loadSavedData() {        
         let request = CDSession.fetchRequest() as NSFetchRequest<CDSession>
         let sort = NSSortDescriptor(key: #keyPath(CDSession.d_startTime), ascending: false)
         request.sortDescriptors = [sort]
         request.fetchBatchSize = 20
         
-        request.predicate = NSPredicate(format: "profile == %@", profile)
+        if let profile = User.getActiveProfile() {
+            request.predicate = NSPredicate(format: "profile == %@", profile)
+        }
         
         fetchedObjectController = FetchedObjectCollectionViewController(
             collectionView: collectionView,
@@ -264,6 +266,10 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             collectionView.isScrollEnabled = true
             
         }
+    }
+    
+    func fetchedObjectControllerShouldAnimateUpdate(snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>, oldSnapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>) -> Bool {
+        return self.isChangingProfile == false
     }
     
     func setCalendarHidden(_ hidden: Bool) {
@@ -593,14 +599,29 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             return
         }
         
-        self.sessionCalendarView.setProfile(profile)
-        
-        if fetchedObjectController != nil {
-            updateFetchRequest()
-        } else {
-            loadSavedData()
-            fetchedObjectController.performFetch()
+        UIView.animate(withDuration: 0.1) {
+            self.collectionView.alpha = 0
+        } completion: { _ in
+            
+            self.isChangingProfile = true
+            
+            self.sessionCalendarView.setProfile(profile)
+            
+            if self.fetchedObjectController != nil {
+                self.updateFetchRequest()
+            } else {
+                self.loadSavedData()
+                self.fetchedObjectController.performFetch()
+            }
+            
+            UIView.animate(withDuration: 0.5) {
+                self.collectionView.alpha = 1
+            }
+            
         }
+
+        
+        
               
     }
     

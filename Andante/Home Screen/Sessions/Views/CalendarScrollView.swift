@@ -96,15 +96,17 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     
     @objc func databaseDidUpdate() {
-        guard let profile = User.getActiveProfile() else { return }
+        let profile = User.getActiveProfile()
         
-        if lastProfile == profile {
+        if profile != nil, lastProfile == profile {
             collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
         }
         else {
             lastProfile = profile
             setStartDay()
         }
+        
+        collectionView.scrollToItem(at: IndexPath(row: self.daysToDisplay-1, section: 0), at: .left, animated: false)
         
     }
     

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class LaunchView: UIView, NSFetchedResultsControllerDelegate {
+class LaunchView: UIView {
     
     private let launchView: UIView
     
@@ -17,7 +17,9 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
     private var loadingLabel: UILabel?
     
     private var checkCloudDataCompletion: ((Bool)->())?
-    private var didFindData = false
+    
+    private var didFindAnyData = false
+    private var didFindProfileData = false
     
     init() {
         
@@ -29,35 +31,36 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
         
     }
     
-    private var checkDataFRC: NSFetchedResultsController<CDProfile>?
     public func checkForCloudData(_ completion: ((Bool)->())?) {
-        showLoadingView(showLabel: false) {
-            [weak self] in
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.practiceDatabaseDidUpdate),
+            name: PracticeDatabase.PracticeDatabaseDidChangeNotification,
+            object: nil
+        )
+        
+        showLoadingView(showLabel: false) { [weak self] in
             guard let self = self else { return }
             
-            let request = CDProfile.fetchRequest() as NSFetchRequest<CDProfile>
-            request.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
             self.checkCloudDataCompletion = completion
-            
-            self.checkDataFRC = NSFetchedResultsController(
-                fetchRequest: request,
-                managedObjectContext: DataManager.context,
-                sectionNameKeyPath: nil,
-                cacheName: nil)
-            
-            self.checkDataFRC?.delegate = self
-            do {
-                try self.checkDataFRC?.performFetch()
-            }
-            catch {
-                print("Error performing fetch for checking data: \(error)")
-            }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                [weak self] in
-                guard let self = self, self.didFindData == false else { return }
-                print("did not find in 2 seconds")
-                self.checkDataFRC = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                guard let self = self, self.didFindAnyData == false else { return }
+                print("LaunchView: Did not find any data in 3 seconds")
+                
+                completion?(false)
+                UIView.animate(withDuration: 0.25) {
+                    self.loadingIndicator?.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+                    self.loadingIndicator?.alpha = 0
+                }
+                self.checkCloudDataCompletion = nil
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+                guard let self = self, self.didFindProfileData == false else { return }
+                print("LaunchView: Did not find any profile data in 10 seconds")
+                
                 completion?(false)
                 UIView.animate(withDuration: 0.25) {
                     self.loadingIndicator?.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
@@ -69,15 +72,24 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+    @objc func practiceDatabaseDidUpdate() {
+        guard !self.didFindProfileData else { return }
         
-        if snapshot.numberOfItems > 0 {
-            didFindData = true
-            checkCloudDataCompletion?(true)
-            self.checkCloudDataCompletion = nil
-            self.checkDataFRC = nil
+        if let session = PracticeDatabase.shared.sessions().first {
+            
+            if self.didFindAnyData == false {
+                print("LaunchView: Found iCloud data")
+                self.didFindAnyData = true
+            }
+            
+            if session.session?.profile != nil {
+                print("LaunchView: Found profile data")
+                self.didFindProfileData = true
+                self.checkCloudDataCompletion?(true)
+                self.checkCloudDataCompletion = nil
+            }
+            
         }
-        
     }
 
     private func showLoadingView(showLabel: Bool = true, _ completion: (()->())?) {

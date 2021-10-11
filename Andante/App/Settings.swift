@@ -39,7 +39,6 @@ class Settings {
             return dateFormat.firstIndex(of: "a") == nil
         }
     }
-    
   
 }
 

@@ -26,19 +26,19 @@ enum Stat {
     }
 }
 
-protocol PracticeDatabaseObserver: AnyObject {
+@objc protocol PracticeDatabaseObserver: AnyObject {
     
     /// The practice database has changed
-    func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase)
+    @objc optional func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase)
     
     /// The practice database for the given profile has changed
-    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeFor profile: CDProfile)
+    @objc optional func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeFor profile: CDProfile)
     
     /// The streak for the given profile has changed
-    func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int)
+    @objc optional func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int)
     
     /// The total streak has changed
-    func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeTotalStreak streak: Int)
+    @objc optional func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeTotalStreak streak: Int)
     
 }
 
@@ -162,7 +162,6 @@ extension PracticeDatabase {
     }
     
     public func reloadStreak() {
-        print("reloading")
         func getStreak(for profile: CDProfile?) -> Int {
             var streak = 0
             var day = Day(date: Date())
@@ -195,7 +194,7 @@ extension PracticeDatabase {
         let totalStreak = getStreak(for: nil)
         if self.totalStreak != totalStreak {
             self.totalStreak = totalStreak
-            self.observers.forEach { $0.value?.practiceDatabase(self, didChangeTotalStreak: totalStreak) }
+            self.observers.forEach { $0.value?.practiceDatabase?(self, didChangeTotalStreak: totalStreak) }
         }
         
         for profile in CDProfile.getAllProfiles(context: DataManager.context) {
@@ -203,7 +202,7 @@ extension PracticeDatabase {
             
             if streak != self.streaks[profile] {
                 self.streaks[profile] = streak
-                self.observers.forEach { $0.value?.practiceDatabase(self, streakDidChangeFor: profile, streak: streak) }
+                self.observers.forEach { $0.value?.practiceDatabase?(self, streakDidChangeFor: profile, streak: streak) }
             }
         }
         
@@ -237,7 +236,7 @@ extension PracticeDatabase: NSFetchedResultsControllerDelegate {
         WidgetDataManager.writeData()
         self.generateSectionDictionary()
         
-        self.observers.forEach { $0.value?.practiceDatabaseDidUpdate(self) }
+        self.observers.forEach { $0.value?.practiceDatabaseDidUpdate?(self) }
         
         NotificationCenter.default.post(
             name: PracticeDatabase.PracticeDatabaseDidChangeNotification, object: nil)

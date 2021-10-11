@@ -21,6 +21,9 @@ class Settings {
     
     @Setting(key: "PracticeTimer", defaultValue: 15)
     static var practiceTimerMinutes: Int
+    
+    @Setting(key: "MetronomeBPM", defaultValue: 80)
+    static var metronomeBPM: Int
 
     @EnumSetting(JournalViewController.EntryLayout.self, key: "JournalLayout", defaultValue: .list)
     static var journalLayout: JournalViewController.EntryLayout

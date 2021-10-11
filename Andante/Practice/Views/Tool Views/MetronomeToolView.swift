@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-protocol MetronomeToolViewDelegate: class {
+protocol MetronomeToolViewDelegate: AnyObject {
     func metronomeDidTick()
 }
 
@@ -23,13 +23,9 @@ class MetronomeToolView: PracticeToolView, MetronomeDelegate {
     private let bpmLabel = UILabel()
     
     private var bpm: Int = 0
-    private var bpmInterval: CFTimeInterval = 0
     
     private let slider = UISlider()
     private let selectionFeedback = UISelectionFeedbackGenerator()
-    
-    private var timer: Timer?
-    private var lastTick: CFAbsoluteTime?
     
     private let stepper = Stepper()
     
@@ -38,7 +34,7 @@ class MetronomeToolView: PracticeToolView, MetronomeDelegate {
         
         metronome.delegate = self
         
-        setBPM(80)
+        setBPM(Settings.metronomeBPM)
         
         label.textColor = PracticeColors.text
         label.font = Fonts.regular.withSize(18)
@@ -73,7 +69,6 @@ class MetronomeToolView: PracticeToolView, MetronomeDelegate {
     
     override func show(delay: TimeInterval = 0) {
         super.show(delay: delay)
-        //self.start()
         
         metronome.setTempo(to: bpm)
         try? metronome.start()
@@ -81,53 +76,12 @@ class MetronomeToolView: PracticeToolView, MetronomeDelegate {
     
     override func hide(delay: TimeInterval = 0) {
         super.hide(delay: delay)
-        //self.stop()
         
         metronome.stop()
     }
     
-    private func start() {
-        lastTick = nil
-        timer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true, block: {
-            [weak self] _ in
-            guard let self = self else { return }
-            self.timerDidFire()
-        })
-        RunLoop.current.add(timer!, forMode: .common)
-    }
-    
-    private func stop() {
-        timer?.invalidate()
-        timer = nil
-        lastTick = nil
-    }
-    
     func metronomeTicking(_ metronome: Metronome, currentTick: Int) {
         delegate?.metronomeDidTick()
-    }
-    
-    private var count: Double = 0
-    private var avg: CFAbsoluteTime = 0
-    private func timerDidFire() {
-        if let lastTick = self.lastTick {
-            let time = CFAbsoluteTimeGetCurrent()
-            
-            let elapsedTime = time - lastTick
-            if (abs(elapsedTime - bpmInterval) < 0.008) || (elapsedTime >= bpmInterval) {
-                delegate?.metronomeDidTick()
-                self.lastTick? += bpmInterval
-                
-                let newVal = abs(elapsedTime - bpmInterval)
-                avg = (avg*count + newVal) / (count + 1)
-                count += 1
-                print(count, avg - bpmInterval)
-            }
-            
-        }
-        else {
-            // subtract some time to make it start sooner
-            lastTick = CFAbsoluteTimeGetCurrent()
-        }
     }
     
     @objc func sliderDidChange() {
@@ -141,11 +95,11 @@ class MetronomeToolView: PracticeToolView, MetronomeDelegate {
     
     private func setBPM(_ value: Int) {
         self.bpm = value
-        self.bpmInterval = 60/Double(bpm)
-        avg = 0
-        count = 0
+        
         metronome.setTempo(to: value)
         setLabelText()
+        
+        Settings.metronomeBPM = value
     }
     
     private func setLabelText() {

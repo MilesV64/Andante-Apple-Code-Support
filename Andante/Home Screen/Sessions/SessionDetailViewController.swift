@@ -155,6 +155,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
         
         topView.color = Colors.barSeparator
         topView.position = .bottom
+        topView.insetToMargins()
         topView.alpha = 0
         self.view.addSubview(topView)
         

@@ -46,7 +46,7 @@ class PracticeToolButton: UIView {
         button.adjustsImageWhenHighlighted = false
         button.touchMargin = 8
         
-        button.imageEdgeInsets = UIEdgeInsets(12)
+        button.imageEdgeInsets = UIEdgeInsets(13)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
         

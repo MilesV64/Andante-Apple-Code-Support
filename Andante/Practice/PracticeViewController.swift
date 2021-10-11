@@ -119,9 +119,9 @@ class PracticeViewController: PracticeAnimationViewController {
     private lazy var timerLabelOutline: UIView = {
         let view = UIView()
         view.layer.borderColor = Colors.dynamicColor(
-            light: Colors.white.withAlphaComponent(0.25),
+            light: Colors.white.withAlphaComponent(0.23),
             dark: Colors.barSeparator).cgColor
-        view.layer.borderWidth = 1.5
+        view.layer.borderWidth = 2
         return view
     }()
         
@@ -419,12 +419,12 @@ private extension PracticeViewController {
         self.practiceView.addSubview(recordButton)
         
         doneButton.addTarget(self, action: #selector(didTapDone), for: .touchUpInside)
-        doneButton.setTitle("Done", color: PracticeColors.background, font: Fonts.semibold.withSize(16))
+        doneButton.setTitle("Done", color: PracticeColors.background, font: Fonts.bold.withSize(15))
         doneButton.backgroundColor = PracticeColors.selectedToolButtonBG
         self.practiceView.addSubview(doneButton)
         
         cancelButton.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
-        cancelButton.setTitle("Cancel", color: Colors.white, font: Fonts.regular.withSize(16))
+        cancelButton.setTitle("Cancel", color: Colors.white, font: Fonts.medium.withSize(15))
         cancelButton.backgroundColor = PracticeColors.unselectedToolButtonBG
         self.practiceView.addSubview(cancelButton)
         
@@ -660,11 +660,14 @@ private extension PracticeViewController {
     
     func layoutTools() {
         
-        let buttonSize: CGFloat = 50
-        let spacing: CGFloat = isSmallScreen() ? 12 : 16
-        let totalWidth: CGFloat = buttonSize*5 + spacing*4
+        let totalWidth = min(self.view.bounds.width - 60, 330)
+        let spacing: CGFloat = isSmallScreen() ? 10 : 12
+        
+        let buttonSize = (totalWidth - (spacing*4))/5
+
         let minX: CGFloat = self.view.bounds.midX - totalWidth/2
-        let minY: CGFloat = self.view.bounds.maxY - self.view.safeAreaInsets.bottom - CGFloat(isSmallScreen() ? 28 : 40) - buttonSize
+        let minY: CGFloat = self.view.bounds.maxY - self.view.safeAreaInsets.bottom - CGFloat(isSmallScreen() ? 16 : 20) - buttonSize
+        
         for (i, button) in [journalButton, tunerButton, timerButton, metronomeButton, recordButton].enumerated() {
             let extra: CGFloat = CGFloat(i)*(buttonSize+spacing)
             button.contextualFrame = CGRect(

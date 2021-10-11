@@ -127,7 +127,7 @@ class Tabbar: NavigationComponent {
             label.isUserInteractionEnabled = false
             self.addSubview(label)
             
-            longPressGesture.minimumPressDuration = 0.5
+            longPressGesture.minimumPressDuration = 0.35
             longPressGesture.addTarget(self, action: #selector(didLongPress(_:)))
             self.addGestureRecognizer(longPressGesture)
             

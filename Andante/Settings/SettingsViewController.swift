@@ -10,10 +10,6 @@ import UIKit
 import MessageUI
 import Combine
 
-let WeekStartDidChangeNotification = "WeekStartDidChange"
-let AppearanceDidChangeNotification = "AppearanceDidChange"
-let SessionsShouldReloadAttributesNotification = "SessionsShouldReloadAttributes"
-
 class SettingsViewController: UIViewController, UIScrollViewDelegate {
     
     private let headerView = SettingsHeaderView()

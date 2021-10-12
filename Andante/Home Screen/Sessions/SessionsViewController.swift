@@ -40,8 +40,6 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             
     private let visibleDateView = VisibleDateView()
         
-    private var isDisplayingStandardTime: Bool!
-    
     private var emptyStateView: SessionsEmptyStateView?
     
     public var fetchedObjectController: FetchedObjectCollectionViewController<CDSession>!
@@ -54,8 +52,6 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         self.title = "Andante"
         
         view.backgroundColor = Colors.backgroundColor
-        
-        isDisplayingStandardTime = Settings.standardTime
         
         layout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionView.ScrollDirection.vertical
@@ -292,21 +288,12 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         sessionCalendarDetailViewController?.close()
     }
 
-    private func reloadTimeFormat() {
-        if Settings.standardTime != isDisplayingStandardTime {
-            isDisplayingStandardTime = Settings.standardTime
-            collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
-        }
-    }
-    
     @objc func willEnterForeground() {
-        reloadTimeFormat()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        reloadTimeFormat()
         
     }
     

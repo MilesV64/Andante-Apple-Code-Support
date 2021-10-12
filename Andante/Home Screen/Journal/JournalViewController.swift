@@ -16,7 +16,7 @@ class JournalViewController: MainViewController, JournalHeaderDelegate, UICollec
     var gridLayout: UICollectionViewFlowLayout!
     var collectionView: UICollectionView!
     
-    enum EntryLayout {
+    enum EntryLayout: Int {
         case grid, list
     }
     

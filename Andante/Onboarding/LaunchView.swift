@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class LaunchView: UIView {
+class LaunchView: UIView, NSFetchedResultsControllerDelegate {
     
     private let launchView: UIView
     
@@ -21,6 +21,8 @@ class LaunchView: UIView {
     private var didFindAnyData = false
     private var didFindProfileData = false
     
+    private var checkDataFRC: NSFetchedResultsController<CDProfile>?
+    
     init() {
         
         launchView = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()!.view!
@@ -30,6 +32,7 @@ class LaunchView: UIView {
         addSubview(launchView)
         
     }
+    
     
     public func checkForCloudData(_ completion: ((Bool)->())?) {
         
@@ -44,7 +47,25 @@ class LaunchView: UIView {
             guard let self = self else { return }
             
             self.checkCloudDataCompletion = completion
-
+            
+            let request = CDProfile.fetchRequest() as NSFetchRequest<CDProfile>
+            request.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            
+            self.checkDataFRC = NSFetchedResultsController(
+                fetchRequest: request,
+                managedObjectContext: DataManager.context,
+                sectionNameKeyPath: nil,
+                cacheName: nil)
+            
+            self.checkDataFRC?.delegate = self
+            
+            do {
+                try self.checkDataFRC?.performFetch()
+            }
+            catch {
+                print("Error performing fetch for checking data: \(error)")
+            }
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                 guard let self = self, self.didFindAnyData == false else { return }
                 print("LaunchView: Did not find any data in 3 seconds")
@@ -72,6 +93,18 @@ class LaunchView: UIView {
         }
     }
     
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        guard !self.didFindProfileData else { return }
+        
+        if (controller.fetchedObjects as? [CDProfile])?.first != nil {
+            print("LaunchView: Found profile data")
+            self.didFindProfileData = true
+            self.checkCloudDataCompletion?(true)
+            self.checkCloudDataCompletion = nil
+        }
+        
+    }
+    
     @objc func practiceDatabaseDidUpdate() {
         guard !self.didFindProfileData else { return }
         
@@ -83,7 +116,7 @@ class LaunchView: UIView {
             }
             
             if session.session?.profile != nil {
-                print("LaunchView: Found profile data")
+                print("LaunchView: Found profile data via CDSessionAttributes")
                 self.didFindProfileData = true
                 self.checkCloudDataCompletion?(true)
                 self.checkCloudDataCompletion = nil

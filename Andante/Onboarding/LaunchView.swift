@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class LaunchView: UIView, NSFetchedResultsControllerDelegate {
+class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseObserver {
     
     private let launchView: UIView
     
@@ -36,17 +36,12 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
     
     public func checkForCloudData(_ completion: ((Bool)->())?) {
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.practiceDatabaseDidUpdate),
-            name: PracticeDatabase.PracticeDatabaseDidChangeNotification,
-            object: nil
-        )
-        
         showLoadingView(showLabel: false) { [weak self] in
             guard let self = self else { return }
             
             self.checkCloudDataCompletion = completion
+            
+            PracticeDatabase.shared.addObserver(self)
             
             let request = CDProfile.fetchRequest() as NSFetchRequest<CDProfile>
             request.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
@@ -105,10 +100,10 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
         
     }
     
-    @objc func practiceDatabaseDidUpdate() {
+    func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase) {
         guard !self.didFindProfileData else { return }
         
-        if let session = PracticeDatabase.shared.sessions().first {
+        if let session = practiceDatabase.sessions().first {
             
             if self.didFindAnyData == false {
                 print("LaunchView: Found iCloud data")
@@ -124,7 +119,7 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
             
         }
     }
-
+    
     private func showLoadingView(showLabel: Bool = true, _ completion: (()->())?) {
         loadingIndicator = UIActivityIndicatorView()
         loadingIndicator!.color = Colors.white

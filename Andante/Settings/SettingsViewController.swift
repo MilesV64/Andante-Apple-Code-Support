@@ -443,8 +443,7 @@ extension SettingsViewController: MFMailComposeViewControllerDelegate {
     
     func handleExport() {
         if Settings.isPremium {
-            let vc = ExportDataViewController()
-            self.presentModal(vc, animated: true, completion: nil)
+            self.addChildTransitionController(ExportDataViewController())
         }
         else {
             showPremiumController()

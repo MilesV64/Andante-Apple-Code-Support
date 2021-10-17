@@ -9,9 +9,8 @@
 import UIKit
 import CoreData
 
-class ExportDataViewController: UIViewController {
+class ExportDataViewController: SettingsDetailViewController {
     
-    private let header = ModalViewHeader()
     private let button = BottomActionButton(title: "Export Data")
     
     private let titleLabel = UILabel()
@@ -33,22 +32,12 @@ class ExportDataViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = Colors.backgroundColor
+        self.title = nil
         
-        self.view.addSubview(header)
-        header.showsSeparator = false
-        header.showsHandle = false
-        header.showsCancelButton = true
-        header.cancelButtonAction = {
-            [weak self] in
-            guard let self = self else { return }
-            self.didCancelExport = true
-            self.dismiss(animated: true, completion: nil)
-        }
-        header.backgroundColor = .clear
+        self.backgroundColor = Colors.foregroundColor
+        self.scrollView.alwaysBounceVertical = false
         
         button.color = .clear
-        button.style = .floating
         button.action = {
             [weak self] in
             guard let self = self else { return }
@@ -56,17 +45,17 @@ class ExportDataViewController: UIViewController {
         }
         activityIndicator.color = Colors.white
         button.button.addSubview(activityIndicator)
-        self.view.addSubview(button)
+        self.scrollView.addSubview(button)
         
         titleLabel.textColor = Colors.text
-        titleLabel.font = Fonts.bold.withSize(33)
+        titleLabel.font = Fonts.bold.withSize(27)
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
-        titleLabel.text = "Export Practice\nData"
-        self.view.addSubview(titleLabel)
+        titleLabel.text = "Export Practice Data"
+        self.scrollView.addSubview(titleLabel)
         
         descriptionView.textColor = Colors.lightText
-        descriptionView.font = Fonts.regular.withSize(19)
+        descriptionView.font = Fonts.regular.withSize(18)
         descriptionView.text = "Export your practice sessions as a .csv file so you can manipulate, analyze, and visualize your data however you want."
         descriptionView.textContainerInset.left = Constants.margin
         descriptionView.textContainerInset.right = Constants.margin
@@ -74,7 +63,7 @@ class ExportDataViewController: UIViewController {
         descriptionView.isEditable = false
         descriptionView.isScrollEnabled = false
         descriptionView.backgroundColor = .clear
-        self.view.addSubview(descriptionView)
+        self.scrollView.addSubview(descriptionView)
                 
         profileView.profile = User.getActiveProfile()
         profileView.bgView.backgroundColor = .clear
@@ -121,27 +110,23 @@ class ExportDataViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        header.sizeToFit()
-        header.bounds.size.width = self.view.bounds.width
-        header.frame.origin = .zero
-        
         titleLabel.sizeToFit()
         let titleHeight = titleLabel.sizeThatFits(CGSize(width: view.bounds.width - Constants.margin*2, height: .infinity)).height
         titleLabel.center = CGPoint(
-            x: self.view.bounds.midX, y: header.frame.maxY + 60)
+            x: self.scrollView.bounds.midX, y: 40)
         titleLabel.bounds.size = CGSize(width: view.bounds.width - Constants.margin * 2, height: titleHeight)
         
         let height = descriptionView.sizeThatFits(CGSize(width: view.bounds.width, height: .infinity)).height
         descriptionView.frame = CGRect(
             x: 0, y: titleLabel.frame.maxY + 8,
-            width: view.bounds.width,
+            width: scrollView.bounds.width,
             height: height)
         
         let itemHeight: CGFloat = 54
         optionsView.frame = CGRect(
             x:  Constants.smallMargin,
             y: descriptionView.frame.maxY + 28,
-            width: view.bounds.width - Constants.smallMargin*2, height: itemHeight*2)
+            width: scrollView.bounds.width - Constants.smallMargin*2, height: itemHeight*2)
         
         profileView.frame = CGRect(
             x: 0, y: 0, width: optionsView.bounds.width, height: itemHeight)
@@ -161,7 +146,7 @@ class ExportDataViewController: UIViewController {
         
         button.sizeToFit()
         button.bounds.size.width = view.bounds.width
-        let minY = self.view.bounds.maxY - button.bounds.height
+        let minY = self.scrollView.bounds.maxY - button.bounds.height
         button.frame.origin = CGPoint(
             x: 0, y: minY)
         

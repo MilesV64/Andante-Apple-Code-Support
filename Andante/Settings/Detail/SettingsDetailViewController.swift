@@ -11,11 +11,12 @@ import UIKit
 class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewDelegate {
     
     public let headerView = UIView()
+    public let scrollView = UIScrollView()
+
     private let headerBG = Separator(position: .bottom)
     private let backButton = Button("chevron.left")
     private let titleLabel = UILabel()
     
-    private let scrollView = UIScrollView()
     
     public var items: [SettingsDetailItem] = []
     private var itemHeight: CGFloat = 66
@@ -49,9 +50,8 @@ class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewD
         scrollView.showsVerticalScrollIndicator = false
         scrollView.delegate = self
         self.view.addSubview(scrollView)
-
         
-        headerView.backgroundColor = Colors.backgroundColor
+        headerView.backgroundColor = .clear
         self.view.addSubview(headerView)
         
         self.headerBG.backgroundColor = Colors.foregroundColor
@@ -153,7 +153,10 @@ class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewD
             minY = item.frame.maxY
         }
         
-        scrollView.contentSize.height = CGFloat(items.count)*itemHeight + headerView.bounds.height
+        scrollView.contentSize.height = max(
+            scrollView.bounds.height - headerView.bounds.height,
+            CGFloat(items.count)*itemHeight + headerView.bounds.height
+        )
         
     }
     

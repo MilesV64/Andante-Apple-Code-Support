@@ -104,8 +104,18 @@ class AppTweaksViewController: UITableViewController {
                         Settings.didTryTuner = false
                     }
                 ),
+            ],
+            [
+                AppTweakSelectCell(
+                    title: "Test Onboarding",
+                    action: {
+                        let vc = OnboardingViewController()
+                        vc.isForTesting = true
+                        vc.modalPresentationStyle = .overFullScreen
+                        self.present(vc, animated: true, completion: nil)
+                    }
+                ),
             ]
-            
         ]
         
         self.tableView.dataSource = self

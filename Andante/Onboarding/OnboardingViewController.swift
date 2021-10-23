@@ -35,7 +35,10 @@ class OnboardingViewController: UIViewController {
 
     private var phase = 0
     
-    private let backButton = UIButton(type: .system)
+    private let backButton = Button("chevron.left")
+    
+    /// If true, does not save the newly created profile
+    public var isForTesting: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,8 +82,6 @@ class OnboardingViewController: UIViewController {
         self.view.addSubview(button)
         
         backButton.alpha = 0
-        backButton.setImage(UIImage(name: "chevron.left", pointSize: 16, weight: .bold), for: .normal)
-        backButton.tintColor = Colors.text
         backButton.contentHorizontalAlignment = .left
         backButton.contentEdgeInsets.left = Constants.smallMargin
         backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
@@ -230,33 +231,49 @@ class OnboardingViewController: UIViewController {
         else if phase == 2 {
             phase = 3
             
-            let profile = CDProfile(context: DataManager.context)
-            DataManager.obtainPermanentID(for: profile)
-            profile.name = nameView.name
-            profile.iconName = iconName
-            CDProfile.saveProfile(profile)
-            User.setActiveProfile(profile)
-            User.reloadData()
-            
-            DataManager.saveContext()
-            
-            if let container = self.presentingViewController as? AndanteViewController {
-                container.didChangeProfile(profile)
-                container.animate()
+            if self.isForTesting {
+                self.dismiss(animated: true, completion: nil)
+                
+                self.navigationController?.transitionCoordinator?.animate(alongsideTransition: { context in
+                    // animations
+                }, completion: { context in
+                    // completion
+                })
+                
             }
-            
+            else {
+                let profile = CDProfile(context: DataManager.context)
+                DataManager.obtainPermanentID(for: profile)
+                profile.name = nameView.name
+                profile.iconName = iconName
+                CDProfile.saveProfile(profile)
+                User.setActiveProfile(profile)
+                User.reloadData()
+                
+                DataManager.saveContext()
+                
+                if let container = self.presentingViewController as? AndanteViewController {
+                    container.didChangeProfile(profile)
+                    container.animate()
+                }
+                
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        if flag {
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
                 self.view.alpha = 0
-                self.button.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                self.view.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
             } completion: { (complete) in
-                self.dismiss(animated: false, completion: nil)
+                super.dismiss(animated: false, completion: nil)
             }
-
-            
-            
-            
         }
-        
+        else {
+            super.dismiss(animated: false, completion: nil)
+        }
     }
     
     @objc func adjustForKeyboard(notification: Notification) {
@@ -289,6 +306,7 @@ class OnboardingViewController: UIViewController {
         let frame = self.view.bounds.inset(by: self.view.safeAreaInsets).inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0))
         
         let buttonSize = CGSize(width: self.view.bounds.width - margin*2, height: 50)
+        button.cornerRadius = 25
         
         backButton.frame = CGRect(
             x: 0, y: self.view.safeAreaInsets.top,
@@ -301,37 +319,23 @@ class OnboardingViewController: UIViewController {
         nameView.keyboardHeight = keyboardHeight
         nameView.contextualFrame = frame
         
-        var phase2offset: CGFloat = 16
-        if frame.height > 700 {
-            phase2offset = frame.height*0.04
+        var bottomOffset: CGFloat = 16
+        if frame.height > 820 {
+            bottomOffset = frame.height*0.04
         }
         
         iconView.contextualFrame = CGRect(
             from: CGPoint(x: 0, y: self.view.safeAreaInsets.top),
-            to: CGPoint(x: self.view.bounds.maxX, y: self.view.bounds.maxY - self.view.safeAreaInsets.bottom - 16 - buttonSize.height - phase2offset))
+            to: CGPoint(x: self.view.bounds.maxX, y: self.view.bounds.maxY - self.view.safeAreaInsets.bottom - 16 - buttonSize.height - bottomOffset))
         
         iconView.margin = margin
                 
         if keyboardHeight == 0 {
-            if phase >= 2 {
-                button.contextualFrame = CGRect(
-                    x: frame.midX - buttonSize.width/2,
-                    y: self.view.bounds.maxY - buttonSize.height - self.view.safeAreaInsets.bottom - phase2offset,
-                    width: buttonSize.width,
-                    height: buttonSize.height)
-            }
-            else {
-                var offset: CGFloat = 0
-                if frame.height > 700 {
-                    offset = frame.height*0.05
-                }
-                button.contextualFrame = CGRect(
-                    x: frame.midX - buttonSize.width/2,
-                    y: frame.maxY - buttonSize.height - offset,
-                    width: buttonSize.width,
-                    height: buttonSize.height)
-            }
-            
+            button.contextualFrame = CGRect(
+                x: frame.midX - buttonSize.width/2,
+                y: self.view.bounds.maxY - self.view.safeAreaInsets.bottom - buttonSize.height - bottomOffset,
+                width: buttonSize.width,
+                height: buttonSize.height)
         }
         else {
             button.contextualFrame = CGRect(
@@ -529,7 +533,7 @@ class InitialView: UIView {
     }
 }
 
-protocol ProfileNameViewDelegate: class {
+protocol ProfileNameViewDelegate: AnyObject {
     func nameDidBecomeValid()
     func nameDidBecomeInvalid()
 }
@@ -553,22 +557,23 @@ class ProfileNameView: UIView, UITextFieldDelegate {
     init() {
         super.init(frame: .zero)
         
-        let attStr = NSMutableAttributedString(string: "What are you\n", font: Fonts.bold.withSize(38), color: Colors.text)
-        attStr.append(NSAttributedString(string: "practicing?", font: Fonts.heavy.withSize(38), color: Colors.orange))
+        let attStr = NSMutableAttributedString(string: "What are you\n", font: Fonts.bold.withSize(32), color: Colors.text)
+        attStr.append(NSAttributedString(string: "practicing?", font: Fonts.heavy.withSize(32), color: Colors.orange))
         titleLabel.attributedText = attStr
         titleLabel.numberOfLines = 2
         titleLabel.textAlignment = .center
         self.addSubview(titleLabel)
         
+        textField.tintColor = Colors.orange
         textField.textColor = Colors.text
-        textField.font = Fonts.medium.withSize(18)
+        textField.font = Fonts.medium.withSize(28)
         textField.textAlignment = .center
         textField.attributedPlaceholder = NSAttributedString(string: "e.g. Piano, Guitar", attributes: [
             .foregroundColor : Colors.extraLightText
         ])
-        textField.layer.borderColor = Colors.lightColor.cgColor
-        textField.layer.borderWidth = 2
-        textField.roundCorners(12)
+//        textField.layer.borderColor = Colors.lightColor.cgColor
+//        textField.layer.borderWidth = 2
+//        textField.roundCorners(12)
         textField.setPadding(Constants.margin)
         textField.returnKeyType = .done
         textField.addTarget(self, action: #selector(textDidUpdate), for: .editingChanged)

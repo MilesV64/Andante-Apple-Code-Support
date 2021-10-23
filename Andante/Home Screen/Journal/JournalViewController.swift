@@ -404,7 +404,7 @@ extension JournalViewController: EntryViewControllerDelegate {
     
     func entryViewControllerWillDissapear(_ viewController: EntryViewController, entry: CDJournalEntry?, attributedText: NSAttributedString) {
         
-        if let lastEdit = viewController.lastEdit {
+        if viewController.lastEdit != nil {
             entry?.saveAttrText(attributedText)
             DataManager.saveContext()
         }
@@ -567,7 +567,7 @@ extension JournalViewController: UICollectionViewDragDelegate, UICollectionViewD
 
 
 
-protocol JournalCellDelegate: class {
+protocol JournalCellDelegate: AnyObject {
     func journalCellDidTapOptions(journalCell: JournalCell, indexPath: IndexPath, relativePoint: CGPoint)
 }
 
@@ -627,27 +627,15 @@ class JournalCell: UICollectionViewCell {
     
     public var entry: CDJournalEntry? {
         didSet {
-            cancellables.removeAll()
-            if let entry = entry {
+            if let entry = entry, entry.objectID != oldValue?.objectID {
+                cancellables.removeAll()
                 
-                let entryID = entry.objectID
-                let context = DataManager.backgroundContext
+                self.textView.attributedText = entry.attributedText(layout: self.layout)
                 
-                DispatchQueue.global(qos: .background).async {
-                    if let backgroundEntry = try? context.existingObject(with: entryID) as? CDJournalEntry {
-                        let attText = backgroundEntry.attributedText(layout: self.layout)
-                        DispatchQueue.main.async {
-                            self.textView.attributedText = attText
-                        }
-                    }
-                }
-                
-                entry.objectWillChange.sink {
-                    [weak self] _ in
+                entry.objectWillChange.sink { [weak self] _ in
                     guard let self = self else { return }
                     self.textView.attributedText = entry.attributedText(layout: self.layout)
                 }.store(in: &cancellables)
-                
             }
         }
     }
@@ -685,7 +673,7 @@ class JournalCell: UICollectionViewCell {
     
 }
 
-fileprivate protocol JournalHeaderDelegate: class {
+fileprivate protocol JournalHeaderDelegate: AnyObject {
     func didTapJournalHeader()
     func journalHeaderDidTapOptions()
     func journalHeader(didReceiveCellAt indexPath: IndexPath)

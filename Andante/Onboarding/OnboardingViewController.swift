@@ -253,8 +253,6 @@ class OnboardingViewController: UIViewController {
             }
 
             
-            
-            
         }
         
     }

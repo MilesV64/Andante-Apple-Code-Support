@@ -9,6 +9,8 @@
 import UIKit
 import Combine
 
+// MARK: - Andnate Cell View
+
 class AndanteCellView: UIView {
     
     static let height: CGFloat = 60
@@ -128,7 +130,7 @@ class AndanteCellView: UIView {
     }
     
     
-    // - Init
+    // MARK: - Init
     
     init() {
         super.init(frame: .zero)
@@ -242,7 +244,7 @@ class AndanteCellView: UIView {
         
     }
     
-    // - Layout
+    // MARK: - Layout
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -282,14 +284,14 @@ class AndanteCellView: UIView {
         
     }
     
-    
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-        
 }
+
+
+//MARK: - Andante TableView Cell
 
 class AndanteTableViewCell: UITableViewCell {
     
@@ -315,105 +317,3 @@ class AndanteTableViewCell: UITableViewCell {
     
 }
 
-
-// MARK: - Checkmark Cell
-
-class CheckmarkCellView: AndanteCellView {
-    
-    private let checkmarkBG = UIView()
-    private var checkmarkImageView: UIImageView?
-    
-    override var accessoryView: UIView? {
-        return self.checkmarkBG
-    }
-    
-    private(set) var isChecked: Bool = false
-    
-    public func setChecked(_ checked: Bool, animated: Bool = true) {
-        guard checked != self.isChecked else { return }
-        self.isChecked = checked
-        
-        if checked {
-            let checkmarkImageView = UIImageView(image: UIImage(name: "checkmark", pointSize: 11, weight: .bold)?.withRenderingMode(.alwaysTemplate))
-            checkmarkImageView.sizeToFit()
-            checkmarkImageView.center = self.checkmarkBG.bounds.center
-            checkmarkImageView.tintColor = .white
-            self.checkmarkImageView = checkmarkImageView
-            self.checkmarkBG.addSubview(checkmarkImageView)
-            self.checkmarkBG.backgroundColor = Colors.orange
-        }
-        else {
-            self.checkmarkImageView?.removeFromSuperview()
-            self.checkmarkImageView = nil
-            self.checkmarkBG.backgroundColor = Colors.lightColor
-        }
-        
-    }
-    
-    override func sharedInit() {
-        super.sharedInit()
-        
-        self.checkmarkBG.backgroundColor = Colors.lightColor
-        self.checkmarkBG.bounds.size = CGSize(24)
-        self.checkmarkBG.roundCorners(12, prefersContinuous: false)
-        
-    }
-    
-}
-
-class CheckmarkTableViewCell: UITableViewCell {
-    
-    let checkmarkCellView = CheckmarkCellView()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .none
-        self.backgroundColor = .clear
-        self.addSubview(self.checkmarkCellView)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.checkmarkCellView.frame = self.bounds
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
-// MARK: - Andante Cell Header View
-
-class AndanteCellHeaderView: UIView {
-    
-    static let height: CGFloat = 46 //22 + 8 + 16
-    let label = UILabel()
-    
-    public var margin: CGFloat = Constants.margin
-    
-    init(title: String) {
-        super.init(frame: .zero)
-        
-        label.text = title.uppercased()
-        label.textColor = Colors.lightText
-        label.font = Fonts.semibold.withSize(13)
-        addSubview(label)
-        
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        label.frame = CGRect(
-            x: margin, y: 22,
-            width: bounds.width - margin*2,
-            height: 16)
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}

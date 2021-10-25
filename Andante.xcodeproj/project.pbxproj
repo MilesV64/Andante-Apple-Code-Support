@@ -214,6 +214,10 @@
 		02DA80F72561368B003A6AB6 /* UserVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DA80F62561368B003A6AB6 /* UserVersion.swift */; };
 		02DA80FD2561F51A003A6AB6 /* CenterLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DA80FC2561F51A003A6AB6 /* CenterLoadingController.swift */; };
 		02DD115A24D01E6B009CB1DF /* SettingsDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD115924D01E6B009CB1DF /* SettingsDetailViews.swift */; };
+		02DD92BC27263FC1006BB32E /* CheckmarkCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92BB27263FC1006BB32E /* CheckmarkCellView.swift */; };
+		02DD92BE27263FE0006BB32E /* AndanteCellHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92BD27263FE0006BB32E /* AndanteCellHeaderView.swift */; };
+		02DD92C02726401B006BB32E /* ToggleCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92BF2726401B006BB32E /* ToggleCellView.swift */; };
+		02DD92C227264085006BB32E /* DetailLabelCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92C127264085006BB32E /* DetailLabelCellView.swift */; };
 		02DE16122369195600CE7843 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DE16112369195600CE7843 /* MainViewController.swift */; };
 		02DE9843252547070006C10E /* TutorialAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DE9842252547070006C10E /* TutorialAlert.swift */; };
 		02DF2360251EAE4B009490B4 /* WidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DF235F251EAE4B009490B4 /* WidgetContent.swift */; };
@@ -498,6 +502,10 @@
 		02DA80F62561368B003A6AB6 /* UserVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVersion.swift; sourceTree = "<group>"; };
 		02DA80FC2561F51A003A6AB6 /* CenterLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterLoadingController.swift; sourceTree = "<group>"; };
 		02DD115924D01E6B009CB1DF /* SettingsDetailViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDetailViews.swift; sourceTree = "<group>"; };
+		02DD92BB27263FC1006BB32E /* CheckmarkCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckmarkCellView.swift; sourceTree = "<group>"; };
+		02DD92BD27263FE0006BB32E /* AndanteCellHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndanteCellHeaderView.swift; sourceTree = "<group>"; };
+		02DD92BF2726401B006BB32E /* ToggleCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCellView.swift; sourceTree = "<group>"; };
+		02DD92C127264085006BB32E /* DetailLabelCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLabelCellView.swift; sourceTree = "<group>"; };
 		02DE16112369195600CE7843 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		02DE9842252547070006C10E /* TutorialAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialAlert.swift; sourceTree = "<group>"; };
 		02DF235F251EAE4B009490B4 /* WidgetContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetContent.swift; sourceTree = "<group>"; };
@@ -658,8 +666,8 @@
 		025957EF22E68F0800CD2E2D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				02DD92BA27263FA9006BB32E /* Andante Cells */,
 				025957FB22E7A1DF00CD2E2D /* PracticeSessionsCell.swift */,
-				02C9B90326F2FB2F00379A31 /* AndanteCellView.swift */,
 				0222F16B24C794580070E638 /* LongPressActionCell.swift */,
 			);
 			path = Cells;
@@ -1143,6 +1151,18 @@
 			path = Detail;
 			sourceTree = "<group>";
 		};
+		02DD92BA27263FA9006BB32E /* Andante Cells */ = {
+			isa = PBXGroup;
+			children = (
+				02C9B90326F2FB2F00379A31 /* AndanteCellView.swift */,
+				02DD92BD27263FE0006BB32E /* AndanteCellHeaderView.swift */,
+				02DD92BB27263FC1006BB32E /* CheckmarkCellView.swift */,
+				02DD92BF2726401B006BB32E /* ToggleCellView.swift */,
+				02DD92C127264085006BB32E /* DetailLabelCellView.swift */,
+			);
+			path = "Andante Cells";
+			sourceTree = "<group>";
+		};
 		02DE15F82361431300CE7843 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -1429,6 +1449,7 @@
 				021012B625FD92CD00C4F340 /* Layout.swift in Sources */,
 				0200C39E24AC614700E787EC /* BackgroundLabel.swift in Sources */,
 				027F351324B3C5D7002674EC /* CalendarGoalView.swift in Sources */,
+				02DD92C02726401B006BB32E /* ToggleCellView.swift in Sources */,
 				02D9D12F24C3DD090019D36C /* NewFolderCenterAlertController.swift in Sources */,
 				02B2E2B025DF5A68006CBBD5 /* PopupViewAreYouSureView.swift in Sources */,
 				026476E922DBF5EA002EA732 /* Colors.swift in Sources */,
@@ -1452,6 +1473,7 @@
 				0222F16C24C794580070E638 /* LongPressActionCell.swift in Sources */,
 				02C083D1254FF173006D9DA0 /* Tabbar.swift in Sources */,
 				0201AF98253E6D150015CA51 /* EditSessionViewController.swift in Sources */,
+				02DD92BE27263FE0006BB32E /* AndanteCellHeaderView.swift in Sources */,
 				02E99D8E261A88AE00EDCA52 /* TextEditorBlock.swift in Sources */,
 				0200C39724AC2A9000E787EC /* ManualSessionViewController.swift in Sources */,
 				02A2DB4724CD34F3002E0760 /* PracticeToolView.swift in Sources */,
@@ -1473,6 +1495,7 @@
 				024A914F2565026A003A44B2 /* Tuner.swift in Sources */,
 				024E4D7B25D0E5050083E653 /* CDProfile+CoreDataClass.swift in Sources */,
 				02401BEC24F46D1700608B20 /* StatDataSource.swift in Sources */,
+				02DD92C227264085006BB32E /* DetailLabelCellView.swift in Sources */,
 				026476E422DBF56E002EA732 /* Helpers.swift in Sources */,
 				02B4924222FD071A00F8AFEE /* HPRecorder.swift in Sources */,
 				02BBB95725E4B5B600A10A3D /* AreYouSurePopupViewController.swift in Sources */,
@@ -1587,6 +1610,7 @@
 				02B4923D22FD06E500F8AFEE /* RecordingsManager.swift in Sources */,
 				024E4D9925D0E5B00083E653 /* DataManager.swift in Sources */,
 				027F351724B3DA94002674EC /* HandleView.swift in Sources */,
+				02DD92BC27263FC1006BB32E /* CheckmarkCellView.swift in Sources */,
 				02B2E2AA25DF5876006CBBD5 /* TransitionPopupViewController.swift in Sources */,
 				026ED7EC24830B0E00DFA9F5 /* DescriptionActionAlertController.swift in Sources */,
 				0200C39C24AC382100E787EC /* CalendarPickerCell.swift in Sources */,
@@ -1853,7 +1877,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-                MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1879,7 +1903,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-                MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntentUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1906,7 +1930,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-                MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntentUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1932,7 +1956,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-                MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntent";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1959,7 +1983,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-                MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntent";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1987,7 +2011,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-                MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.AndanteWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2016,7 +2040,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-                MARKETING_VERSION = 3.4;
+				MARKETING_VERSION = 3.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.AndanteWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

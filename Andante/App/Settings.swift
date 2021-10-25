@@ -13,6 +13,9 @@ class Settings {
     @Setting(key: "Premium", defaultValue: false)
     static var isPremium: Bool
     
+    @Setting(key: "includeTitleInExport", defaultValue: false)
+    static var includeTitleInExport: Bool
+    
     @Setting(key: "includeNotesInExport", defaultValue: false)
     static var includeNotesInExport: Bool
     

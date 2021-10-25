@@ -294,7 +294,7 @@ class TransitionViewController: UIViewController {
     
     public func close(animated: Bool = true, completion: (()->Void)? = nil) {
         self.view.transform = CGAffineTransform(translationX: self.identityTransform, y: 0)
-        self.presentingView?.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
+        self.presentingView?.transform = CGAffineTransform(translationX: -self.parentTransform, y: 0)
         if animated {
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
                 self.view.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)

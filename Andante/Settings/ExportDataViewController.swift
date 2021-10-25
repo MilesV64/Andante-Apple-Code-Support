@@ -16,18 +16,24 @@ class ExportDataViewController: SettingsDetailViewController {
     private let titleLabel = UILabel()
     private let descriptionView = UITextView()
     
-    private let optionsView = MaskedShadowView()
-    private let profileView = ProfileOptionPickerView()
-    private let notesToggleLabel = UILabel()
-    private let separator = Separator()
-    private let notesToggle = UISwitch()
+    private let profileCellView = DetailLabelCellView()
     
+    private let titleCellView = ToggleCellView(
+        title: "Include Titles",
+        icon: "tag.fill",
+        iconColor: Colors.sessionsColor
+    )
+    
+    private let notesCellView = ToggleCellView(
+        title: "Include Notes",
+        icon: "doc.plaintext.fill",
+        iconColor: Colors.lightBlue
+    )
+        
     private let activityIndicator = UIActivityIndicatorView()
     
     private var isExporting = false
     private var didCancelExport = false
-    
-    private var phase = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +43,7 @@ class ExportDataViewController: SettingsDetailViewController {
         self.backgroundColor = Colors.foregroundColor
         self.scrollView.alwaysBounceVertical = false
         
+        button.margin = 24
         button.color = .clear
         button.action = {
             [weak self] in
@@ -65,46 +72,43 @@ class ExportDataViewController: SettingsDetailViewController {
         descriptionView.backgroundColor = .clear
         self.scrollView.addSubview(descriptionView)
                 
-        profileView.profile = User.getActiveProfile()
-        profileView.bgView.backgroundColor = .clear
-        profileView.margin = 0
-        profileView.selectHandler = {
-            [weak self] in
+        profileCellView.profile = User.getActiveProfile()
+        profileCellView.alternateProfileTitle = "Profile"
+        profileCellView.detailText = User.getActiveProfile()?.name ?? "All Profiles"
+        
+        profileCellView.action = { [weak self] in
             guard let self = self, self.isExporting == false else { return }
             
             let vc = ProfilesPopupViewController()
-            vc.selectedProfile = self.profileView.profile
+            vc.selectedProfile = self.profileCellView.profile
             vc.useNewProfileButton = false
             vc.action = {
                 [weak self] profile in
                 guard let self = self else { return }
-                self.profileView.profile = profile
+                self.profileCellView.profile = profile
+                self.profileCellView.detailText = profile?.name ?? "All Profiles"
             }
             
             self.presentPopupViewController(vc)
             
         }
+        self.scrollView.addSubview(self.profileCellView)
         
-        separator.inset = UIEdgeInsets(l: Constants.margin)
-        separator.position = .top
+        titleCellView.isOn = Settings.includeTitleInExport
+        titleCellView.toggleAction = { isOn in
+            Settings.includeTitleInExport = isOn
+        }
+        self.scrollView.addSubview(self.titleCellView)
         
-        notesToggleLabel.text = "Include Notes"
-        notesToggleLabel.textColor = Colors.text
-        notesToggleLabel.font = Fonts.medium.withSize(16)
+        notesCellView.isOn = Settings.includeNotesInExport
+        notesCellView.toggleAction = { isOn in
+            Settings.includeNotesInExport = isOn
+        }
+        self.scrollView.addSubview(self.notesCellView)
         
-        notesToggle.onTintColor = Colors.green
-        notesToggle.isOn = Settings.includeNotesInExport
-        notesToggle.addTarget(self, action: #selector(didToggleInludeNotes), for: .touchUpInside)
-
-        optionsView.addSubview(profileView)
-        optionsView.addSubview(separator)
-        optionsView.addSubview(notesToggleLabel)
-        optionsView.addSubview(notesToggle)
-        self.view.addSubview(optionsView)
-    }
-    
-    @objc func didToggleInludeNotes() {
-        Settings.includeNotesInExport = notesToggle.isOn
+        [profileCellView, titleCellView, notesCellView].forEach {
+            $0.margin = CGFloat(28)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -122,33 +126,23 @@ class ExportDataViewController: SettingsDetailViewController {
             width: scrollView.bounds.width,
             height: height)
         
-        let itemHeight: CGFloat = 54
-        optionsView.frame = CGRect(
-            x:  Constants.smallMargin,
-            y: descriptionView.frame.maxY + 28,
-            width: scrollView.bounds.width - Constants.smallMargin*2, height: itemHeight*2)
-        
-        profileView.frame = CGRect(
-            x: 0, y: 0, width: optionsView.bounds.width, height: itemHeight)
-        
-        separator.frame = CGRect(
-            x: 0, y: profileView.frame.maxY,
-            width: optionsView.bounds.width, height: 1)
-        
-        notesToggleLabel.sizeToFit()
-        notesToggleLabel.frame.origin = CGPoint(
-            x: Constants.margin, y: itemHeight + itemHeight/2 - notesToggleLabel.bounds.height/2)
-        
-        notesToggle.sizeToFit()
-        notesToggle.frame.origin = CGPoint(
-            x: optionsView.bounds.width - Constants.smallMargin - notesToggle.bounds.width,
-            y: notesToggleLabel.center.y - notesToggle.bounds.height/2)
-        
         button.sizeToFit()
         button.bounds.size.width = view.bounds.width
         let minY = self.scrollView.bounds.maxY - button.bounds.height
         button.frame.origin = CGPoint(
             x: 0, y: minY)
+        
+        let itemHeight = AndanteCellView.height
+        let cellMinY = button.frame.minY - (itemHeight * 3)
+        
+        for (i, cell) in [profileCellView, titleCellView, notesCellView].enumerated() {
+            cell.frame = CGRect(
+                x: 0,
+                y: cellMinY + (CGFloat(i) * itemHeight),
+                width: view.bounds.width,
+                height: itemHeight
+            )
+        }
         
     }
     
@@ -159,7 +153,7 @@ class ExportDataViewController: SettingsDetailViewController {
     
     func didTapButton() {
         guard
-            let profile = profileView.profile,
+            let profile = profileCellView.profile,
             isExporting == false
         else { return }
         
@@ -213,9 +207,18 @@ class ExportDataViewController: SettingsDetailViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         
-        var text = "Duration,Start Date,End Date,Mood,Focus"
+        let includeTitle = Settings.includeNotesInExport
+        let includeNotes = Settings.includeNotesInExport
         
-        if notesToggle.isOn {
+        var text = ""
+        
+        if includeTitle {
+            text += "Title,"
+        }
+        
+        text += "Duration,Start Date,End Date,Mood,Focus"
+        
+        if includeNotes {
             text += ",Notes"
         }
                         
@@ -225,9 +228,16 @@ class ExportDataViewController: SettingsDetailViewController {
             let start = dateFormatter.string(from: session.startTime)
             let end = dateFormatter.string(from: session.getEndTime())
             
-            text += "\n\(duration),\(start),\(end),\(session.mood),\(session.focus)"
+            if includeTitle {
+                text += "\n\(session.title)"
+            }
+            else {
+                text += "\n"
+            }
             
-            if notesToggle.isOn {
+            text += "\(duration),\(start),\(end),\(session.mood),\(session.focus)"
+            
+            if includeNotes {
                 text += ",\"\(session.notes ?? "")\""
             }
             

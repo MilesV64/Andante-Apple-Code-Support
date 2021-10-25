@@ -151,18 +151,19 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
             
         }
         
-        if self.headerView.profileView.superview != self.view {
+        if self.headerView.profilesView.superview != self.view {
             if self.pullToSettingsView.progress >= 1 {
-                let convertedFrame = self.headerView.topView.convert(self.headerView.profileView.frame, to: self.view)
-                self.view.addSubview(self.headerView.profileView)
-                self.headerView.profileView.frame = convertedFrame
+                let convertedFrame = self.headerView.topView.convert(self.headerView.profilesView.frame, to: self.view)
+                self.view.addSubview(self.headerView.profilesView)
+                self.headerView.profilesView.frame = convertedFrame
 
                 UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]) {
 
                     let center = CGPoint(
                         x: self.pullToSettingsView.bounds.midX,
                         y: self.pullToSettingsView.bounds.maxY - 40 - self.pullToSettingsView.bounds.height * 0.1)
-                    self.headerView.profileView.center = self.pullToSettingsView.convert(center, to: self.view)
+                    self.headerView.profilesView.center = self.pullToSettingsView.convert(center, to: self.view)
+                    self.headerView.profilesView.containerBackgroundColor = Colors.backgroundColor
 
                 } completion: { _ in
                     //
@@ -171,11 +172,12 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
         }
         else {
             if self.pullToSettingsView.progress < 1 {
-                self.headerView.profileView.frame = self.view.convert(self.headerView.profileView.frame, to: self.headerView.topView)
-                self.headerView.topView.addSubview(self.headerView.profileView)
+                self.headerView.profilesView.frame = self.view.convert(self.headerView.profilesView.frame, to: self.headerView.topView)
+                self.headerView.topView.addSubview(self.headerView.profilesView)
                 
                 UIView.animate(withDuration: 0.45, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]) {
-                    self.headerView.profileView.frame = self.headerView.profileFrame
+                    self.headerView.profilesView.frame = self.headerView.profileFrame
+                    self.headerView.profilesView.containerBackgroundColor = self.headerView.backgroundColor
                 } completion: { _ in
                     //
                 }
@@ -184,7 +186,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
                 let center = CGPoint(
                     x: self.pullToSettingsView.bounds.midX,
                     y: self.pullToSettingsView.bounds.maxY - 40 - self.pullToSettingsView.bounds.height * 0.1)
-                self.headerView.profileView.center = self.pullToSettingsView.convert(center, to: self.view)
+                self.headerView.profilesView.center = self.pullToSettingsView.convert(center, to: self.view)
             }
         }
         

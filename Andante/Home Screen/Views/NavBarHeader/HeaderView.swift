@@ -29,7 +29,7 @@ class HeaderView: UIView, PracticeDatabaseObserver {
     private let streakAnimation = AnimationView(name: "flame")
     private let streakLabel = UILabel()
     
-    public let profileView = ProfileImagePushButton()
+    public let profilesView = MultipleProfilesView()
     private let label = UILabel()
     
     public var profileButtonHandler: (()->Void)?
@@ -46,7 +46,12 @@ class HeaderView: UIView, PracticeDatabaseObserver {
     
     public var profile: CDProfile? {
         didSet {
-            profileView.profileImg.profile = profile
+            if let profile = profile {
+                profilesView.setProfiles([profile])
+            } else {
+                profilesView.setProfiles(CDProfile.getAllProfiles(context: DataManager.context))
+            }
+            self.setNeedsLayout()
             reloadStreak()
         }
     }
@@ -144,10 +149,11 @@ class HeaderView: UIView, PracticeDatabaseObserver {
         
         self.reloadStreak()
                 
-        profileView.action = {
+        profilesView.containerBackgroundColor = self.backgroundColor
+        profilesView.action = {
             self.profileButtonHandler?()
         }
-        topView.addSubview(profileView)
+        topView.addSubview(profilesView)
         
         label.textColor = Colors.text
         
@@ -181,7 +187,7 @@ class HeaderView: UIView, PracticeDatabaseObserver {
     func setViewsForSizeClass() {
         if !isSidebarLayout {
             
-            profileView.isHidden = false
+            profilesView.isHidden = false
             streakView.isHidden = false
             label.font = Fonts.bold.withSize(18)
             
@@ -194,7 +200,7 @@ class HeaderView: UIView, PracticeDatabaseObserver {
             minHeight = 52
         }
         else {
-            profileView.isHidden = true
+            profilesView.isHidden = false
             streakView.isHidden = true
             label.font = Fonts.bold.withSize(20)
             
@@ -211,9 +217,10 @@ class HeaderView: UIView, PracticeDatabaseObserver {
     }
     
     public var profileFrame: CGRect {
-        let profileSize: CGFloat = 42
-        return CGRect(x: Constants.smallMargin - 1, y: 4,
-                      width: profileSize, height: profileSize).integral
+        let height: CGFloat = 46
+        let width = profilesView.calculateWidth()
+        return CGRect(x: Constants.smallMargin - 3, y: 2,
+            width: width, height: height).integral
     }
     
     override func layoutSubviews() {
@@ -229,11 +236,11 @@ class HeaderView: UIView, PracticeDatabaseObserver {
             
         layoutTopView()
         
-        let profileSize: CGFloat = 42
-
-        if profileView.superview == self.topView {
-            profileView.frame = CGRect(x: Constants.smallMargin - 1, y: 4,
-                width: profileSize, height: profileSize).integral
+        if profilesView.superview == self.topView {
+            let height: CGFloat = 46
+            let width = profilesView.calculateWidth()
+            profilesView.frame = CGRect(x: Constants.smallMargin - 3, y: 2,
+                width: width, height: height).integral
         }
                 
         streakLabel.sizeToFit()
@@ -242,7 +249,7 @@ class HeaderView: UIView, PracticeDatabaseObserver {
         let totalStreakWidth = labelWidth + flameWidth + 2
         streakView.frame = CGRect(
             x: self.bounds.maxX - totalStreakWidth - Constants.margin, y: 4,
-            width: totalStreakWidth, height: profileSize)
+            width: totalStreakWidth, height: 42)
         
         streakAnimation.frame = CGRect(
             x: 0, y: self.streakView.bounds.midY - flameWidth / 2,
@@ -254,7 +261,7 @@ class HeaderView: UIView, PracticeDatabaseObserver {
         
         if !isSidebarLayout {
             label.sizeToFit()
-            label.center = CGPoint(x: topView.bounds.midX, y: profileView.center.y)
+            label.center = CGPoint(x: topView.bounds.midX, y: profilesView.center.y)
             label.frame = label.frame.integral
         }
         else {

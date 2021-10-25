@@ -218,6 +218,8 @@
 		02DD92BE27263FE0006BB32E /* AndanteCellHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92BD27263FE0006BB32E /* AndanteCellHeaderView.swift */; };
 		02DD92C02726401B006BB32E /* ToggleCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92BF2726401B006BB32E /* ToggleCellView.swift */; };
 		02DD92C227264085006BB32E /* DetailLabelCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92C127264085006BB32E /* DetailLabelCellView.swift */; };
+		02DD92C52726521E006BB32E /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92C42726521E006BB32E /* ProfileImageView.swift */; };
+		02DD92C727265231006BB32E /* MultipleProfilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD92C627265231006BB32E /* MultipleProfilesView.swift */; };
 		02DE16122369195600CE7843 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DE16112369195600CE7843 /* MainViewController.swift */; };
 		02DE9843252547070006C10E /* TutorialAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DE9842252547070006C10E /* TutorialAlert.swift */; };
 		02DF2360251EAE4B009490B4 /* WidgetContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DF235F251EAE4B009490B4 /* WidgetContent.swift */; };
@@ -506,6 +508,8 @@
 		02DD92BD27263FE0006BB32E /* AndanteCellHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndanteCellHeaderView.swift; sourceTree = "<group>"; };
 		02DD92BF2726401B006BB32E /* ToggleCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCellView.swift; sourceTree = "<group>"; };
 		02DD92C127264085006BB32E /* DetailLabelCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLabelCellView.swift; sourceTree = "<group>"; };
+		02DD92C42726521E006BB32E /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
+		02DD92C627265231006BB32E /* MultipleProfilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleProfilesView.swift; sourceTree = "<group>"; };
 		02DE16112369195600CE7843 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		02DE9842252547070006C10E /* TutorialAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialAlert.swift; sourceTree = "<group>"; };
 		02DF235F251EAE4B009490B4 /* WidgetContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetContent.swift; sourceTree = "<group>"; };
@@ -1043,6 +1047,7 @@
 				02A2F23124C9766300D7FBD7 /* PlaceholderTextView.swift */,
 				027F351624B3DA94002674EC /* HandleView.swift */,
 				0264770F22DCEAC1002EA732 /* AndanteImageView.swift */,
+				02DD92C3272651EF006BB32E /* ProfileImageView */,
 				02D9F21B23358B7D0047139C /* GradientImageView.swift */,
 				029A70E92338197B00C698BC /* ModalViewHeader.swift */,
 				0287616A24DDF6F800F568CA /* BlurView.swift */,
@@ -1161,6 +1166,15 @@
 				02DD92C127264085006BB32E /* DetailLabelCellView.swift */,
 			);
 			path = "Andante Cells";
+			sourceTree = "<group>";
+		};
+		02DD92C3272651EF006BB32E /* ProfileImageView */ = {
+			isa = PBXGroup;
+			children = (
+				02DD92C42726521E006BB32E /* ProfileImageView.swift */,
+				02DD92C627265231006BB32E /* MultipleProfilesView.swift */,
+			);
+			path = ProfileImageView;
 			sourceTree = "<group>";
 		};
 		02DE15F82361431300CE7843 /* Sounds */ = {
@@ -1448,6 +1462,7 @@
 				02D9D12824C28B810019D36C /* JournalFolderCell.swift in Sources */,
 				021012B625FD92CD00C4F340 /* Layout.swift in Sources */,
 				0200C39E24AC614700E787EC /* BackgroundLabel.swift in Sources */,
+				02DD92C52726521E006BB32E /* ProfileImageView.swift in Sources */,
 				027F351324B3C5D7002674EC /* CalendarGoalView.swift in Sources */,
 				02DD92C02726401B006BB32E /* ToggleCellView.swift in Sources */,
 				02D9D12F24C3DD090019D36C /* NewFolderCenterAlertController.swift in Sources */,
@@ -1494,6 +1509,7 @@
 				027F351024B3C018002674EC /* CustomButton.swift in Sources */,
 				024A914F2565026A003A44B2 /* Tuner.swift in Sources */,
 				024E4D7B25D0E5050083E653 /* CDProfile+CoreDataClass.swift in Sources */,
+				02DD92C727265231006BB32E /* MultipleProfilesView.swift in Sources */,
 				02401BEC24F46D1700608B20 /* StatDataSource.swift in Sources */,
 				02DD92C227264085006BB32E /* DetailLabelCellView.swift in Sources */,
 				026476E422DBF56E002EA732 /* Helpers.swift in Sources */,

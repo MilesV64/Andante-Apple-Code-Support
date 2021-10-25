@@ -218,9 +218,8 @@ class JournalViewController: MainViewController, JournalHeaderDelegate, UICollec
     
     func presentEntry(_ entry: CDJournalEntry?, openKeyboard: Bool = false) {
         
-        let vc = EntryViewController()
+        let vc = EntryViewController(entry: entry)
         vc.delegate = self
-        vc.entry = entry
         vc.shouldOpenKeyboard = openKeyboard
         self.present(vc, animated: false, completion: nil)
         

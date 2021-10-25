@@ -406,7 +406,7 @@ extension JournalViewController: EntryViewControllerDelegate {
     
     func entryViewControllerWillDissapear(_ viewController: EntryViewController, entry: CDJournalEntry?, attributedText: NSAttributedString) {
         
-        if let lastEdit = viewController.lastEdit {
+        if viewController.lastEdit != nil {
             entry?.saveAttrText(attributedText)
             DataManager.saveContext()
         }
@@ -629,20 +629,10 @@ class JournalCell: UICollectionViewCell {
     
     public var entry: CDJournalEntry? {
         didSet {
-            cancellables.removeAll()
-            if let entry = entry {
-                
-                let entryID = entry.objectID
-                let context = DataManager.backgroundContext
-                
-                DispatchQueue.global(qos: .background).async {
-                    if let backgroundEntry = try? context.existingObject(with: entryID) as? CDJournalEntry {
-                        let attText = backgroundEntry.attributedText(layout: self.layout)
-                        DispatchQueue.main.async {
-                            self.textView.attributedText = attText
-                        }
-                    }
-                }
+            if let entry = entry, entry != oldValue {
+                cancellables.removeAll()
+
+                self.textView.attributedText = entry.attributedText(layout: self.layout)
                 
                 entry.objectWillChange.sink {
                     [weak self] _ in
@@ -687,7 +677,7 @@ class JournalCell: UICollectionViewCell {
     
 }
 
-fileprivate protocol JournalHeaderDelegate: class {
+fileprivate protocol JournalHeaderDelegate: AnyObject {
     func didTapJournalHeader()
     func journalHeaderDidTapOptions()
     func journalHeader(didReceiveCellAt indexPath: IndexPath)

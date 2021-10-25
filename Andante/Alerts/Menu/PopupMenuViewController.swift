@@ -76,14 +76,11 @@ class PopupMenuViewController: UIViewController, UIGestureRecognizerDelegate {
         
         bgTouchView.addGestureRecognizer(escapeTap)
         
-        bgView.layer.borderWidth = 0.75
-        bgView.layer.borderColor = Colors.separatorColor.cgColor
-
         if traitCollection.userInterfaceStyle == .dark {
-            bgView.setShadow(radius: 14, yOffset: 7, opacity: 0.3, color: .black)
+            bgView.setShadow(radius: 24, yOffset: 8, opacity: 0.35, color: .black)
         }
         else {
-            bgView.setShadow(radius: 14, yOffset: 7, opacity: 0.2, color: Colors.darkerBarShadow)
+            bgView.setShadow(radius: 24, yOffset: 8, opacity: 0.25, color: Colors.darkerBarShadow)
         }
         
         bgView.backgroundColor = Colors.foregroundColor
@@ -102,13 +99,11 @@ class PopupMenuViewController: UIViewController, UIGestureRecognizerDelegate {
         super.traitCollectionDidChange(previousTraitCollection)
         
         if traitCollection.userInterfaceStyle == .dark {
-            bgView.setShadow(radius: 14, yOffset: 7, opacity: 0.3, color: .black)
+            bgView.setShadow(radius: 24, yOffset: 8, opacity: 0.35, color: .black)
         }
         else {
-            bgView.setShadow(radius: 14, yOffset: 7, opacity: 0.2, color: Colors.darkerBarShadow)
+            bgView.setShadow(radius: 24, yOffset: 8, opacity: 0.25, color: Colors.darkerBarShadow)
         }
-        
-        bgView.layer.borderColor = Colors.separatorColor.cgColor
     }
     
     public func addItem(title: String, icon: UIImage?, handler: (()->Void)?, destructive: Bool = false) {

@@ -540,10 +540,26 @@ protocol ProfileNameViewDelegate: AnyObject {
 
 class ProfileNameView: UIView, UITextFieldDelegate {
     
+    class CenteredTextField: UITextField {
+        override func caretRect(for position: UITextPosition) -> CGRect {
+            if self.hasText {
+                return super.caretRect(for: position)
+            } else {
+                let rect = super.caretRect(for: position)
+                
+                return CGRect(
+                    x: self.bounds.midX - (rect.width/2),
+                    y: rect.minY,
+                    width: rect.width,
+                    height: rect.height)
+            }
+        }
+    }
+    
     public weak var delegate: ProfileNameViewDelegate?
     
     private let titleLabel = UILabel()
-    private let textField = UITextField()
+    private let textField = CenteredTextField()
     
     public var margin: CGFloat = 0
     public var keyboardHeight: CGFloat = 0

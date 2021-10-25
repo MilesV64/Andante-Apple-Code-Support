@@ -19,6 +19,7 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
     
     public var delegate: CalendarScrollViewDelegate?
     
+    private var hasSetProfile = false
     private var lastProfile: CDProfile?
     
     var layout: UICollectionViewFlowLayout!
@@ -93,12 +94,14 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
     
     public func setProfile(_ profile: CDProfile?) {
         self.databaseDidUpdate()
+        
+        self.hasSetProfile = true
     }
     
     @objc func databaseDidUpdate() {
         let profile = User.getActiveProfile()
         
-        if profile != nil, lastProfile == profile {
+        if hasSetProfile, lastProfile == profile {
             collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
         }
         else {
@@ -111,9 +114,26 @@ class CalendarScrollView: UIView, UICollectionViewDataSource, UICollectionViewDe
     }
     
     private func setStartDay() {
-        guard let profile = lastProfile else { return }
+        let profile = self.lastProfile
         
-        let startDate = calendar.startOfDay(for: profile.creationDate ?? Date())
+        let startDate: Date
+        if let profile = profile {
+            startDate = calendar.startOfDay(for: profile.creationDate ?? Date())
+        } else {
+            var date: Date?
+            for profile in CDProfile.getAllProfiles(context: DataManager.context) {
+                if date == nil {
+                    date = profile.creationDate
+                } else if
+                    let unwrappedDate = date,
+                    let creationDate = profile.creationDate,
+                    creationDate < unwrappedDate {
+                    date = creationDate
+                }
+            }
+            startDate = calendar.startOfDay(for: date ?? Date())
+        }
+        
         let today = calendar.startOfDay(for: Date())
         let diff = calendar.dateComponents([.day], from: startDate, to: today).day ?? 0
         if diff < 15 {

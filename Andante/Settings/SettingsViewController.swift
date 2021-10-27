@@ -529,7 +529,7 @@ extension SettingsViewController: AppTweaksViewControllerDelegate {
 
 class SettingsHeaderView: UIView {
     
-    private let activeProfileIcon = ProfileImageView()
+    private let activeProfileIcon = MultipleProfilesView()
     private let activeProfileLabel = LabelGroup()
     private let separator = Separator(position: .bottom)
     
@@ -537,9 +537,9 @@ class SettingsHeaderView: UIView {
     
     public var profile: CDProfile? {
         didSet {
-            
             cancellables.removeAll()
             if let profile = profile {
+                self.activeProfileIcon.setProfiles([profile])
                 profile.publisher(for: \.name).sink {
                     [weak self] name in
                     guard let self = self else { return }
@@ -555,11 +555,12 @@ class SettingsHeaderView: UIView {
                 }.store(in: &cancellables)
             }
             else {
+                self.activeProfileIcon.setProfiles(CDProfile.getAllProfiles())
                 self.activeProfileLabel.titleLabel.text = "All Profiles"
                 self.activeProfileLabel.detailLabel.text = Formatter.formatSessionCount(PracticeDatabase.shared.sessions().count)
             }
             
-            activeProfileIcon.profile = profile
+            self.setNeedsLayout()
             
         }
     }
@@ -573,8 +574,9 @@ class SettingsHeaderView: UIView {
             self.profile = User.getActiveProfile()
         }
         
-        activeProfileIcon.profile = profile
-        activeProfileIcon.inset = 14
+        activeProfileIcon.isUserInteractionEnabled = false
+        activeProfileIcon.containerBackgroundColor = Colors.foregroundColor
+        activeProfileIcon.profileInsets = 4
         self.addSubview(activeProfileIcon)
         
         activeProfileLabel.titleLabel.textColor = Colors.text
@@ -623,7 +625,6 @@ class SettingsHeaderView: UIView {
         self.activeProfileIcon.alpha = 1 - progress*2
         self.activeProfileLabel.detailLabel.alpha = 1 - progress*2
         
-        
     }
     
     override func layoutSubviews() {
@@ -631,8 +632,9 @@ class SettingsHeaderView: UIView {
         
         self.separator.frame = CGRect(x: 0, y: 0, width: bounds.width, height: 80)
         
-        activeProfileIcon.contextualFrame = CGRect(x: self.bounds.midX - 94/2, y: 40,
-                                             width: 94, height: 94)
+        activeProfileIcon.bounds.size.height = 96
+        activeProfileIcon.bounds.size.width = activeProfileIcon.calculateWidth()
+        activeProfileIcon.center = CGPoint(x: self.bounds.midX, y: 40 + (96/2))
         
         let height = activeProfileLabel.sizeThatFits(self.bounds.size).height
         activeProfileLabel.contextualFrame = CGRect(x: 40, y: self.bounds.maxY - height - 20,

@@ -157,7 +157,7 @@ class Colors: NSObject {
     }
     
     class var red: UIColor {
-        return UIColor("#FF3F3F")
+        return UIColor("#FF5555")
     }
     
     class var searchBarColor: UIColor {

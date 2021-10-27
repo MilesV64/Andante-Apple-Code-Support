@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseObserver {
+class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseObserver, ProfileObserver {
 
     private let launchView: UIView
     
@@ -30,10 +30,9 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseOb
         addSubview(launchView)
         
         PracticeDatabase.shared.addObserver(self)
-        // profile monitor
+        ProfileManager.shared.addObserver(self)
         
     }
-    
     
     public func checkForCloudData(_ completion: ((Bool)->())?) {
         self.checkCloudDataCompletion = completion
@@ -73,7 +72,7 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseOb
         })
     }
     
-    @objc func profilesDidChange() {
+    func profileManager(_ profileManager: ProfileManager, didAddProfile profile: CDProfile) {
         guard !self.didFindProfileData else { return }
         
         if CDProfile.getAllProfiles(context: DataManager.context).count > 0 {
@@ -81,7 +80,6 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseOb
             self.checkCloudDataCompletion?(true)
             self.checkCloudDataCompletion = nil
         }
-
     }
     
     func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase) {

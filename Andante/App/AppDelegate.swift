@@ -104,9 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         handleVersionUpdates()
         
-        ProfileMonitor.shared.monitorProfiles()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadWidget), name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)
+        ProfileManager.shared.beginObserving()
         
         CDReminder.updateReminders()
         
@@ -141,10 +139,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if deleteCount > 0 {
             print("Deleted \(deleteCount) item(s) from the temporary directory.")
         }
-    }
-    
-    @objc func reloadWidget() {
-        WidgetDataManager.writeData()
     }
     
     private func setupData() {
@@ -336,117 +330,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
     }
 
-}
-
-
-//MARK: - Monitor reminders/profiles
-class ProfileMonitor: NSObject, NSFetchedResultsControllerDelegate {
-    public static var shared = ProfileMonitor()
-    
-    public static let ProfilesDidChangeNotification = Notification.Name("ProfilesDidChange")
-    public static let DidDeleteActiveProfileNotification = Notification.Name("DidDeleteProfile")
-    
-    private var controller: NSFetchedResultsController<CDProfile>!
-    private var cancellables: [ String : Set<AnyCancellable> ] = [:]
-    
-    override init() {
-        super.init()
-        
-        let request = CDProfile.fetchRequest() as NSFetchRequest<CDProfile>
-        let sort = NSSortDescriptor(key: #keyPath(CDProfile.creationDate), ascending: true)
-        request.sortDescriptors = [sort]
-        
-        controller = NSFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: DataManager.context,
-            sectionNameKeyPath: nil, cacheName: nil)
-        
-        controller.delegate = self
-        
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
-        if type == .insert {
-            guard let profile = anObject as? CDProfile else { return }
-            NotificationCenter.default.post(name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)
-            monitor(profile: profile)
-        }
-        else if type == .delete {
-            guard let profile = anObject as? CDProfile, let uuid = profile.uuid else { return }
-            cancellables[uuid]?.removeAll()
-            self.deleteReminders(with: profile.uuid ?? "")
-            
-            NotificationCenter.default.post(name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)
-            
-            if profile == User.getActiveProfile() {
-                NotificationCenter.default.post(name: ProfileMonitor.DidDeleteActiveProfileNotification, object: nil)
-            }
-        }
-    }
-    
-    /**
-     Monitors profiles for changes/deletions and updates reminders accordingly
-     */
-    public func monitorProfiles() {
-        
-        try? controller.performFetch()
-        
-        guard let profiles = controller.fetchedObjects else { return }
-        
-        profiles.forEach { profile in
-            self.monitor(profile: profile)
-        }
-        
-    }
-    
-    private func monitor(profile: CDProfile) {
-        guard let uuid = profile.uuid else { return }
-        
-        cancellables[uuid] = Set<AnyCancellable>()
-        
-        let originalName = profile.name
-        profile.publisher(for: \.name, options: .new).sink { name in
-            guard name != nil, name != originalName else { return }
-            self.reloadReminders(with: profile.uuid ?? "")
-            NotificationCenter.default.post(name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)
-        }.store(in: &cancellables[uuid]!)
-        
-        let originalIconName = profile.iconName
-        profile.publisher(for: \.iconName, options: .new).sink { name in
-            guard name != nil, name != originalIconName else { return }
-            NotificationCenter.default.post(name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)
-        }.store(in: &cancellables[uuid]!)
-    }
-    
-    private func reloadReminders(with profileID: String) {
-        for reminder in CDReminder.getAllReminders() {
-            if reminder.profileID == profileID {
-                reminder.scheduleNotification()
-            }
-        }
-    }
-    
-    private func deleteReminders(with profileID: String) {
-        //Check existing IDs to see if the reminder should really be deleted, such as in the case of a force sync where profiles are deleted and replaced by duplicates.
-        
-        let existingProfileIDs = CDProfile.getAllProfiles().compactMap { $0.uuid }
-        
-        for reminder in CDReminder.getAllReminders() {
-            if let reminderProfileID = reminder.profileID {
-                if !existingProfileIDs.contains(reminderProfileID) {
-                    reminder.unscheduleNotification()
-                    DataManager.context.delete(reminder)
-                }
-            }
-            else {
-                reminder.unscheduleNotification()
-                DataManager.context.delete(reminder)
-            }
-        }
-        
-        DataManager.saveContext()
-
-    }
-    
 }

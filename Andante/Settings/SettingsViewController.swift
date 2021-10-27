@@ -10,7 +10,7 @@ import UIKit
 import MessageUI
 import Combine
 
-class SettingsViewController: UIViewController, UIScrollViewDelegate {
+class SettingsViewController: UIViewController, UIScrollViewDelegate, ProfileObserver {
     
     private let headerView = SettingsHeaderView()
         
@@ -195,7 +195,7 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate {
         
         self.reloadProfiles()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadProfiles), name: ProfileMonitor.ProfilesDidChangeNotification, object: nil)
+        ProfileManager.shared.addObserver(self)
             
         #if DEBUG
         self.appTweaksGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showAppTweaks))
@@ -207,7 +207,15 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate {
     
     private var profileCells: [AndanteCellView] = []
     
-    @objc func reloadProfiles() {
+    func profileManager(_ profileManager: ProfileManager, didAddProfile profile: CDProfile) {
+        self.reloadProfiles()
+    }
+    
+    func profileManager(_ profileManager: ProfileManager, didDeleteProfile profile: CDProfile) {
+        self.reloadProfiles()
+    }
+    
+    private func reloadProfiles() {
         profileCells.forEach { $0.removeFromSuperview() }
         profileCells.removeAll()
         
@@ -223,7 +231,6 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate {
         }
         
         self.view.setNeedsLayout()
-        
     }
     
     @objc func showAppTweaks() {

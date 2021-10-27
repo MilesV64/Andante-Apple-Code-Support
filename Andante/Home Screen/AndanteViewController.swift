@@ -12,7 +12,7 @@ import CoreData
 import AVFoundation
 import StoreKit
 
-class AndanteViewController: UIViewController, NavigationComponentDelegate {
+class AndanteViewController: UIViewController, NavigationComponentDelegate, ProfileObserver {
     
     //bc of the safe area insets changing for no reason when transformed 🙄
     public var contentView = TransformIgnoringSafeAreaInsetsView()
@@ -77,8 +77,8 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate {
 
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDeleteActiveProfile), name: ProfileMonitor.DidDeleteActiveProfileNotification, object: nil)
-
+        ProfileManager.shared.addObserver(self)
+        
         let today = Day(date: Date())
         let nextDate = today.nextDay().date
         let timer = Timer(fireAt: nextDate, interval: 0, target: self, selector: #selector(didChangeDay), userInfo: nil, repeats: false)
@@ -727,23 +727,25 @@ extension AndanteViewController {
         
     }
     
-    @objc func handleDeleteActiveProfile() {
-        if let first = CDProfile.getAllProfiles().first {
-            User.setActiveProfile(first)
-            if let settingsContainer = self.presentedViewController as? SettingsContainerViewController {
-                settingsContainer.settingsViewController?.changeProfile(to: first)
-            }
-            else {
-                self.closeViewControllers {
-                    self.didChangeProfile(first)
+    func profileManager(_ profileManager: ProfileManager, didDeleteProfile profile: CDProfile) {
+        if profile == User.getActiveProfile() {
+            if let first = CDProfile.getAllProfiles().first {
+                User.setActiveProfile(first)
+                if let settingsContainer = self.presentedViewController as? SettingsContainerViewController {
+                    settingsContainer.settingsViewController?.changeProfile(to: first)
+                }
+                else {
+                    self.closeViewControllers {
+                        self.didChangeProfile(first)
+                    }
                 }
             }
-        } else {
-            //we're in trouble
+            else {
+                // we're in trouble
+            }
         }
     }
     
-
 }
 
 //MARK: Practice

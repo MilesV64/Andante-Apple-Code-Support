@@ -145,6 +145,7 @@
 		02811F6024A5E2F8000E916E /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02811F5F24A5E2F8000E916E /* Separator.swift */; };
 		028142042425D6CD00C9461F /* SessionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028142032425D6CD00C9461F /* SessionsViewController.swift */; };
 		028142062426FB0000C9461F /* PopupMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028142052426FB0000C9461F /* PopupMenuViewController.swift */; };
+		0281DE6D27292E6100369297 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0281DE6C27292E6100369297 /* ProfileManager.swift */; };
 		0284197A24F787E40040E394 /* MoodStatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0284197924F787E40040E394 /* MoodStatView.swift */; };
 		02860C8325312EB900624BDF /* AndanteProViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02860C8225312EB900624BDF /* AndanteProViewController.swift */; };
 		0287616824DD134B00F568CA /* TimerToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287616724DD134A00F568CA /* TimerToolView.swift */; };
@@ -431,6 +432,7 @@
 		02811F5F24A5E2F8000E916E /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		028142032425D6CD00C9461F /* SessionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsViewController.swift; sourceTree = "<group>"; };
 		028142052426FB0000C9461F /* PopupMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupMenuViewController.swift; sourceTree = "<group>"; };
+		0281DE6C27292E6100369297 /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
 		0284197924F787E40040E394 /* MoodStatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodStatView.swift; sourceTree = "<group>"; };
 		02860C8225312EB900624BDF /* AndanteProViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndanteProViewController.swift; sourceTree = "<group>"; };
 		0287616724DD134A00F568CA /* TimerToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerToolView.swift; sourceTree = "<group>"; };
@@ -748,6 +750,7 @@
 				0242CD9F266E0027001DB823 /* Sound.swift */,
 				028F1E0925394D9700C1A5C6 /* IAPHelper.swift */,
 				026476E522DBF59D002EA732 /* Day.swift */,
+				0281DE6C27292E6100369297 /* ProfileManager.swift */,
 				026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */,
 			);
 			path = Classes;
@@ -1453,6 +1456,7 @@
 				0287616B24DDF6F800F568CA /* BlurView.swift in Sources */,
 				02E99D94261AA4F300EDCA52 /* TextEditor+Extensions.swift in Sources */,
 				02800EA326DB579D00B45268 /* CDOngoingSession+CoreDataClass.swift in Sources */,
+				0281DE6D27292E6100369297 /* ProfileManager.swift in Sources */,
 				02A2F23224C9766300D7FBD7 /* PlaceholderTextView.swift in Sources */,
 				028D5DD623FDDE9F00285204 /* JournalViewController.swift in Sources */,
 				02B2E29625DF4910006CBBD5 /* JournalEntryOptionsViewController.swift in Sources */,
@@ -1861,7 +1865,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				"OTHER_SWIFT_FLAGS[arch=*]" = "-Xfrontend -warn-long-expression-type-checking=140";
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante$(BUNDLE_ID_SUFFIX)";
@@ -1894,7 +1897,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1921,7 +1923,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntentUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1949,7 +1950,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntentUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1976,7 +1976,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntent";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2004,7 +2003,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.WidgetProfileIntent";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2033,7 +2031,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.AndanteWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2063,7 +2060,6 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-
 				MARKETING_VERSION = 3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = "milesvinson.Andante${BUNDLE_ID_SUFFIX}.AndanteWidget";
 				PRODUCT_NAME = "$(TARGET_NAME)";

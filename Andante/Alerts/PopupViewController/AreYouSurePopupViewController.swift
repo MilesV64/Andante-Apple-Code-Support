@@ -67,11 +67,11 @@ class AreYouSurePopupViewController: PopupViewController {
         super.viewDidLoad()
         
         titleLabel.textColor = Colors.text
-        titleLabel.font = Fonts.semibold.withSize(18)
+        titleLabel.font = Fonts.semibold.withSize(19)
         titleLabel.textAlignment = .center
         self.contentView.addSubview(titleLabel)
         
-        textView.font = Fonts.regular.withSize(16)
+        textView.font = Fonts.regular.withSize(17)
         textView.textColor = Colors.lightText
         textView.textContainerInset.left = Constants.margin + 5
         textView.textContainerInset.right = Constants.margin + 5

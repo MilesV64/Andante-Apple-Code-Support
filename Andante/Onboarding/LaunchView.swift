@@ -10,18 +10,16 @@ import UIKit
 import CoreData
 
 class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseObserver {
-    
+
     private let launchView: UIView
     
-    private var loadingIndicator: UIActivityIndicatorView?
-    private var loadingLabel: UILabel?
+    private var loadingIndicator = UIActivityIndicatorView()
+    private var loadingLabel = UILabel()
     
     private var checkCloudDataCompletion: ((Bool)->())?
     
     private var didFindAnyData = false
     private var didFindProfileData = false
-    
-    private var checkDataFRC: NSFetchedResultsController<CDProfile>?
     
     init() {
         
@@ -31,122 +29,108 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseOb
         
         addSubview(launchView)
         
+        PracticeDatabase.shared.addObserver(self)
+        // profile monitor
+        
     }
     
     
     public func checkForCloudData(_ completion: ((Bool)->())?) {
+        self.checkCloudDataCompletion = completion
         
-        showLoadingView(showLabel: false) { [weak self] in
+        showLoadingView(completion: { [weak self] in
             guard let self = self else { return }
+            guard !self.didFindProfileData else { return }
             
-            self.checkCloudDataCompletion = completion
-            
-            PracticeDatabase.shared.addObserver(self)
-            
-            let request = CDProfile.fetchRequest() as NSFetchRequest<CDProfile>
-            request.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            
-            self.checkDataFRC = NSFetchedResultsController(
-                fetchRequest: request,
-                managedObjectContext: DataManager.context,
-                sectionNameKeyPath: nil,
-                cacheName: nil)
-            
-            self.checkDataFRC?.delegate = self
-            
-            do {
-                try self.checkDataFRC?.performFetch()
-            }
-            catch {
-                print("Error performing fetch for checking data: \(error)")
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in
                 guard let self = self, self.didFindAnyData == false else { return }
-                print("LaunchView: Did not find any data in 3 seconds")
+                print("LaunchView: Did not find any data in 4 seconds")
                 
                 completion?(false)
                 UIView.animate(withDuration: 0.25) {
-                    self.loadingIndicator?.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
-                    self.loadingIndicator?.alpha = 0
+                    self.loadingIndicator.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+                    self.loadingIndicator.alpha = 0
+                    self.loadingLabel.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+                    self.loadingLabel.alpha = 0
                 }
                 self.checkCloudDataCompletion = nil
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) { [weak self] in
                 guard let self = self, self.didFindProfileData == false else { return }
-                print("LaunchView: Did not find any profile data in 10 seconds")
+                print("LaunchView: Did not find any profile data in 12 seconds")
                 
                 completion?(false)
                 UIView.animate(withDuration: 0.25) {
-                    self.loadingIndicator?.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
-                    self.loadingIndicator?.alpha = 0
+                    self.loadingIndicator.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+                    self.loadingIndicator.alpha = 0
+                    self.loadingLabel.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+                    self.loadingLabel.alpha = 0
                 }
                 self.checkCloudDataCompletion = nil
             }
             
-        }
+        })
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+    @objc func profilesDidChange() {
         guard !self.didFindProfileData else { return }
         
-        if (controller.fetchedObjects as? [CDProfile])?.first != nil {
-            print("LaunchView: Found profile data")
+        if CDProfile.getAllProfiles(context: DataManager.context).count > 0 {
+            self.didFindProfileData = true
+            self.checkCloudDataCompletion?(true)
+            self.checkCloudDataCompletion = nil
+        }
+
+    }
+    
+    func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase) {
+        guard !self.didFindProfileData else { return }
+
+        if self.didFindAnyData == false {
+            print("LaunchView: Found iCloud data")
+            self.showLabel()
+            self.didFindAnyData = true
+        }
+        
+        if CDProfile.getAllProfiles(context: DataManager.context).count > 0 {
             self.didFindProfileData = true
             self.checkCloudDataCompletion?(true)
             self.checkCloudDataCompletion = nil
         }
         
     }
-    
-    func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase) {
-        guard !self.didFindProfileData else { return }
-        
-        if let session = practiceDatabase.sessions().first {
-            
-            if self.didFindAnyData == false {
-                print("LaunchView: Found iCloud data")
-                self.didFindAnyData = true
-            }
-            
-            if session.session?.profile != nil {
-                print("LaunchView: Found profile data via CDSessionAttributes")
-                self.didFindProfileData = true
-                self.checkCloudDataCompletion?(true)
-                self.checkCloudDataCompletion = nil
-            }
-            
-        }
-    }
-    
-    private func showLoadingView(showLabel: Bool = true, _ completion: (()->())?) {
-        loadingIndicator = UIActivityIndicatorView()
-        loadingIndicator!.color = Colors.white
-        loadingIndicator!.alpha = 0
-        loadingIndicator!.transform = CGAffineTransform(translationX: 0, y: 40)
-        loadingIndicator!.startAnimating()
-        addSubview(loadingIndicator!)
-        
-        loadingLabel = UILabel()
 
-        if showLabel {
-            loadingLabel!.text = "Updating"
-            loadingLabel!.textColor = Colors.white
-            loadingLabel!.font = Fonts.regular.withSize(15)
-            loadingLabel!.alpha = 0
-            loadingLabel!.transform = loadingIndicator!.transform
-            addSubview(loadingLabel!)
-        }
+    private func showLoadingView(completion: (()->())?) {
+        loadingIndicator.color = Colors.white
+        loadingIndicator.alpha = 0
+        loadingIndicator.transform = CGAffineTransform(translationX: 0, y: 40)
+        loadingIndicator.startAnimating()
+        addSubview(loadingIndicator)
+        
+        loadingLabel.text = "Retrieving iCloud Data"
+        loadingLabel.textColor = Colors.white
+        loadingLabel.font = Fonts.regular.withSize(15)
+        loadingLabel.alpha = 0
+        loadingLabel.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        addSubview(loadingLabel)
        
         UIView.animate(withDuration: 1.25, delay: 0, usingSpringWithDamping: 0.92, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
-            self.loadingIndicator!.alpha = 1
-            self.loadingIndicator!.transform = .identity
-            self.loadingLabel?.alpha = 1
-            self.loadingLabel?.transform = .identity
+            self.loadingIndicator.alpha = 1
+            self.loadingIndicator.transform = .identity
         }, completion: { complete in
             completion?()
         })
+    }
+    
+    private func showLabel() {
+        UIView.animate(withDuration: 0.65, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
+            self.loadingLabel.alpha = 1
+            self.loadingLabel.transform = .identity
+        }, completion: { _ in
+            //
+        })
+        
     }
     
     private func newIconName(for iconName: String) -> String {
@@ -191,16 +175,11 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate, PracticeDatabaseOb
         self.frame = superview?.bounds ?? .zero
         launchView.frame = self.bounds
         
-        if
-            let loadingIndicator = self.loadingIndicator,
-            let loadingLabel = self.loadingLabel
-        {
-            loadingIndicator.bounds.size = CGSize(40)
-            loadingIndicator.center = CGPoint(x: bounds.midX, y: floor(bounds.height * 4/5))
-            
-            loadingLabel.sizeToFit()
-            loadingLabel.center = CGPoint(x: bounds.midX, y: loadingIndicator.center.y + 30)
-        }
+        loadingIndicator.bounds.size = CGSize(40)
+        loadingIndicator.center = CGPoint(x: bounds.midX, y: floor(bounds.height * 4/5))
+        
+        loadingLabel.sizeToFit()
+        loadingLabel.center = CGPoint(x: bounds.midX, y: loadingIndicator.center.y + 30)
         
     }
 }

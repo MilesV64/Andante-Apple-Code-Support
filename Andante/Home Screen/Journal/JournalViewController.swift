@@ -568,7 +568,7 @@ extension JournalViewController: UICollectionViewDragDelegate, UICollectionViewD
 
 
 
-protocol JournalCellDelegate: class {
+protocol JournalCellDelegate: AnyObject {
     func journalCellDidTapOptions(journalCell: JournalCell, indexPath: IndexPath, relativePoint: CGPoint)
 }
 
@@ -628,17 +628,16 @@ class JournalCell: UICollectionViewCell {
     
     public var entry: CDJournalEntry? {
         didSet {
-            if let entry = entry, entry != oldValue {
-                cancellables.removeAll()
 
+            if let entry = entry, entry.objectID != oldValue?.objectID {
+                cancellables.removeAll()
+                
                 self.textView.attributedText = entry.attributedText(layout: self.layout)
                 
-                entry.objectWillChange.sink {
-                    [weak self] _ in
+                entry.objectWillChange.sink { [weak self] _ in
                     guard let self = self else { return }
                     self.textView.attributedText = entry.attributedText(layout: self.layout)
                 }.store(in: &cancellables)
-                
             }
         }
     }

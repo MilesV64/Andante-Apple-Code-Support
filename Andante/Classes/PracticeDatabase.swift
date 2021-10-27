@@ -47,6 +47,8 @@ class PracticeDatabase: NSObject {
     public static var PracticeDatabaseDidChangeNotification =
         NSNotification.Name("PracticeDatabaseDidChangeNotification")
     
+    public static var PracticeDatabaseAnySessionDataDidChangeNotification = NSNotification.Name("PracticeDatabaseStreakDidChangeNotification")
+    
     public static var PracticeDatabaseStreakDidChangeNotification = NSNotification.Name("PracticeDatabaseStreakDidChangeNotification")
     
     //MARK: - Public attributes
@@ -234,10 +236,11 @@ extension PracticeDatabase: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         WidgetDataManager.writeData()
+        
         self.generateSectionDictionary()
         
         self.observers.forEach { $0.value?.practiceDatabaseDidUpdate?(self) }
-        
+
         NotificationCenter.default.post(
             name: PracticeDatabase.PracticeDatabaseDidChangeNotification, object: nil)
     }

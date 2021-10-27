@@ -13,7 +13,7 @@ import Combine
 import os.log
 import CloudKit
 
-public let storeVersionNumber = "2.1.4"
+public let storeVersionNumber = "2.1.5"
 
 public let StartPracticeSessionNotification = "Start Practice Session"
 public let ResumeSessionInProgressNotification = "Resume Practice Session"

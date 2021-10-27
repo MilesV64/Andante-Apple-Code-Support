@@ -66,9 +66,9 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
                 print("Error performing fetch for checking data: \(error)")
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
                 guard let self = self, self.didFindAnyData == false else { return }
-                print("LaunchView: Did not find any data in 3 seconds")
+                print("LaunchView: Did not find any data in 5 seconds")
                 
                 completion?(false)
                 UIView.animate(withDuration: 0.25) {
@@ -78,9 +78,9 @@ class LaunchView: UIView, NSFetchedResultsControllerDelegate {
                 self.checkCloudDataCompletion = nil
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 12) { [weak self] in
                 guard let self = self, self.didFindProfileData == false else { return }
-                print("LaunchView: Did not find any profile data in 10 seconds")
+                print("LaunchView: Did not find any profile data in 12 seconds")
                 
                 completion?(false)
                 UIView.animate(withDuration: 0.25) {

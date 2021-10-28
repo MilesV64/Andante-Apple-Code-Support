@@ -67,6 +67,8 @@ class PracticeDatabase: NSObject {
     override init() {
         let request = CDSessionAttributes.fetchRequest() as NSFetchRequest<CDSessionAttributes>
         
+        request.predicate = NSPredicate(format: "session.profile != nil")
+        
         let sort = NSSortDescriptor(key: #keyPath(CDSessionAttributes.startTime), ascending: false)
         request.sortDescriptors = [sort]
         

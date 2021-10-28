@@ -172,6 +172,8 @@ class StatsViewController: MainViewController {
 
             if let profileID = self.profileID, let profile = try? context.existingObject(with: profileID) {
                 request.predicate = NSPredicate(format: "session.profile == %@", profile)
+            } else {
+                request.predicate = NSPredicate(format: "session.profile != nil")
             }
             
             context.performAndWait {

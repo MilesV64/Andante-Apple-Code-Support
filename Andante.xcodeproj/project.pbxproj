@@ -133,7 +133,6 @@
 		0275B19C251EDD9A00F853AE /* WidgetProfileIntentUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0275B191251EDD9A00F853AE /* WidgetProfileIntentUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0275B19F251EDD9A00F853AE /* WidgetProfileIntent.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0275B188251EDD9A00F853AE /* WidgetProfileIntent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0275B1B2251EDDEE00F853AE /* ProfileIntent.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 02DF2372251EB9F5009490B4 /* ProfileIntent.intentdefinition */; };
-		0277EB1625EB86C8008C3CC9 /* DescriptionActionPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277EB1525EB86C8008C3CC9 /* DescriptionActionPopupViewController.swift */; };
 		027E855625C940A30054D210 /* TunerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E855525C940A30054D210 /* TunerViewController.swift */; };
 		027F351024B3C018002674EC /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F350F24B3C018002674EC /* CustomButton.swift */; };
 		027F351324B3C5D7002674EC /* CalendarGoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027F351224B3C5D7002674EC /* CalendarGoalView.swift */; };
@@ -421,7 +420,6 @@
 		0275B197251EDD9A00F853AE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		0275B199251EDD9A00F853AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0275B1B7251EDFDF00F853AE /* WidgetProfileIntentRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetProfileIntentRelease.entitlements; sourceTree = "<group>"; };
-		0277EB1525EB86C8008C3CC9 /* DescriptionActionPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionActionPopupViewController.swift; sourceTree = "<group>"; };
 		027E855525C940A30054D210 /* TunerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunerViewController.swift; sourceTree = "<group>"; };
 		027F350F24B3C018002674EC /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		027F351224B3C5D7002674EC /* CalendarGoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarGoalView.swift; sourceTree = "<group>"; };
@@ -1092,7 +1090,6 @@
 				02BBB95625E4B5B600A10A3D /* AreYouSurePopupViewController.swift */,
 				0215E06325EB5B5200FE5900 /* ProfilesPopupViewController.swift */,
 				028FAACE25F3182F000561DD /* IconPickerPopupController.swift */,
-				0277EB1525EB86C8008C3CC9 /* DescriptionActionPopupViewController.swift */,
 				02B2E2AF25DF5A68006CBBD5 /* PopupViewAreYouSureView.swift */,
 				023AFF4B25E2323F00F9395D /* PopupSecondaryView.swift */,
 			);
@@ -1614,7 +1611,6 @@
 				021826D52625137A008CB7C4 /* CDTextEditorBlock+CoreDataClass.swift in Sources */,
 				02AA3F9C250A01CA00EF19EA /* MoveSessionViewController.swift in Sources */,
 				0287616D24E0F13B00F568CA /* StatIconView.swift in Sources */,
-				0277EB1625EB86C8008C3CC9 /* DescriptionActionPopupViewController.swift in Sources */,
 				02015BB62702C1A0003B2450 /* PulltoSettingsView.swift in Sources */,
 				0284197A24F787E40040E394 /* MoodStatView.swift in Sources */,
 				0264773422E1420E002EA732 /* PickerAlertController.swift in Sources */,

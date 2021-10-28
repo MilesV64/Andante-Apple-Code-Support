@@ -151,16 +151,16 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate, ProfileObs
                 self.presentPopupViewController(changeProfilePopup)
             }
             else {
-                let descriptionActionAlert = DescriptionActionPopupViewController(
+                let alert = ActionTrayPopupViewController(
                     title: "You only have one profile!",
-                    description: "Use multiple profiles to conveniently track your progress with every art, skill, and craft you're practicing.",
-                    actionText: "New Profile") {
-                        [weak self] in
-                        guard let self = self else { return }
-                        self.newProfile()
+                    description: "Use multiple profiles to conveniently track your progress with every art, skill, and craft you're practicing."
+                )
+                
+                alert.addAction("New Profile") { [weak self] in
+                    self?.newProfile()
                 }
                 
-                self.presentPopupViewController(descriptionActionAlert)
+                self.presentPopupViewController(alert)
                 
             }
             
@@ -502,10 +502,12 @@ extension SettingsViewController: MFMailComposeViewControllerDelegate {
             self.presentModal(mail, animated: true, completion: nil)
 
         } else {
-            let alert = DescriptionActionPopupViewController(title: "Can't send mail", description: "Your device isn't configured to automatically send emails. Try copying the address instead!", actionText: "Copy Email", action: nil)
-            alert.action = {
+            let alert = ActionTrayPopupViewController(title: "Can't send mail", description: "Your device isn't configured to automatically send emails. Try copying the address instead!")
+            
+            alert.addAction("Copy Email") {
                 UIPasteboard.general.string = "contact@andante.app"
             }
+            
             self.presentPopupViewController(alert)
         }
     }

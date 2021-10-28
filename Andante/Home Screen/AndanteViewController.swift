@@ -306,17 +306,13 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
            
         }
         else {
-            let descriptionActionAlert = DescriptionActionPopupViewController(
-                title: "You only have one profile!",
-                description: "Use multiple profiles to conveniently track your progress with every art, skill, and craft you're practicing.",
-                actionText: "New Profile") {
-                    [weak self] in
-                    guard let self = self else { return }
-                
-                    self.newProfile()
+            let alert = ActionTrayPopupViewController(title: "You only have one profile!", description: "Use multiple profiles to conveniently track your progress with every art, skill, and craft you're practicing.")
+            
+            alert.addAction("New Profile") { [weak self] in
+                self?.newProfile()
             }
             
-            self.presentPopupViewController(descriptionActionAlert)
+            self.presentPopupViewController(alert)
         }
     }
     
@@ -342,18 +338,20 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
     }
     
     private func presentResumeSessionAlert() {
-        let popupVC = DescriptionActionPopupViewController(
+        let alert = ActionTrayPopupViewController(
             title: "Resume Session?",
-            description: "The app was terminated while a session was in progress.",
-            actionText: "Resume Session") {
-            self.startPracticeSession(animated: true)
+            description: "The app was terminated while a session was in progress."
+        )
+        
+        alert.addAction("Resume Session") { [weak self] in
+            self?.startPracticeSession(animated: true)
         }
         
-        popupVC.cancelAction = {
+        alert.cancelAction = {
             CDOngoingSession.deleteOngoingSession()
         }
         
-        self.presentPopupViewController(popupVC)
+        self.presentPopupViewController(alert)
         
     }
 

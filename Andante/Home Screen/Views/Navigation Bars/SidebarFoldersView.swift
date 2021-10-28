@@ -274,13 +274,12 @@ class SidebarFoldersView: UIView, UITableViewDelegate, UITableViewDragDelegate, 
             let sourceTitle = sourceFolder.title ?? ""
             let destinationTitle = destinationFolder.title ?? ""
             
-            let alert = AreYouSurePopupViewController(
-                isDistructive: false,
+            let alert = ActionTrayPopupViewController(
                 title: "Move Entries?",
-                description: "This will move all entries from \"\(sourceTitle)\" into \"\(destinationTitle)\"",
-                destructiveText: "Move Entries", cancelText: "Cancel") {
-                    action()
-            }
+                description: "This will move all entries from \"\(sourceTitle)\" into \"\(destinationTitle)\""
+            )
+                
+            alert.addAction("Move Entries", handler: action)
             
             delegate?.presentationViewController()?.presentPopupViewController(alert)
 

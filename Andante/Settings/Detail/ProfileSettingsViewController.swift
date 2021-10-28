@@ -117,8 +117,8 @@ class ProfileSettingsViewController: SettingsDetailViewController {
             guard let self = self else { return }
             
             if CDProfile.getAllProfiles().count == 1 {
-                let alert = DescriptionActionPopupViewController(
-                    title: "You only have one profile!", description: "You can merge profiles to combine multiple profiles into one.", actionText: "Got it", action: nil)
+                let alert = ActionTrayPopupViewController(
+                    title: "You only have one profile!", description: "You can merge profiles to combine multiple profiles into one.", cancelText: "Got it")
                 self.presentPopupViewController(alert)
                 return
             }
@@ -135,17 +135,13 @@ class ProfileSettingsViewController: SettingsDetailViewController {
             
             self.stopEditing()
             
-            let alert = AreYouSurePopupViewController(
-                isDistructive: true,
+            let alert = ActionTrayPopupViewController(
                 title: "Are you sure?",
-                description: "This will permanently delete all practice and journal data from this profile, across all devices. This cannot be undone.",
-                destructiveText: "Clear Data",
-                cancelText: "Cancel"
-            ) {
-                [weak self] in
-                guard let self = self else { return }
-                
-                self.clearData()
+                description: "This will permanently delete all practice and journal data from this profile, across all devices."
+            )
+            
+            alert.addAction("Clear Data", isDestructive: true) { [weak self] in
+                self?.clearData()
             }
             
             self.presentPopupViewController(alert)
@@ -159,20 +155,18 @@ class ProfileSettingsViewController: SettingsDetailViewController {
             self.stopEditing()
             
             if CDProfile.getAllProfiles().count == 1 {
-                let alert = DescriptionActionPopupViewController(
-                    title: "You have to have at least one profile!", description: "If you want to reset the profile, you can tap Clear Data to start from a clean slate.", actionText: "Got it", action: nil)
+                let alert = ActionTrayPopupViewController(
+                    title: "You have to have at least one profile!", description: "If you want to reset the profile, you can tap Clear Data to start from a clean slate.", cancelText: "Got it")
                 self.presentPopupViewController(alert)
                 return
             }
             
-            let alert = AreYouSurePopupViewController(
-                isDistructive: true,
+            let alert = ActionTrayPopupViewController(
                 title: "Are you sure?",
-                description: "This will permanently the profile, across all devices. This cannot be undone.",
-                destructiveText: "Delete Profile",
-                cancelText: "Cancel"
-            ) {
-                [weak self] in
+                description: "This will permanently delete the profile across all devices"
+            )
+            
+            alert.addAction("Delete Profile", isDestructive: true) { [weak self] in
                 guard let self = self else { return }
                 
                 //reminders are deleted by profile monitor
@@ -194,7 +188,6 @@ class ProfileSettingsViewController: SettingsDetailViewController {
                         self.close()
                         
                     }
-                    
 
                 }
             

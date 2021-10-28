@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AreYouSurePopupViewController: PopupViewController {
+class ActionTrayPopupViewController: PopupViewController {
     
     private let titleLabel = UILabel()
     private let textView = UITextView()
@@ -25,41 +25,32 @@ class AreYouSurePopupViewController: PopupViewController {
         }
     }
     
-    public var destructiveText: String? {
-        didSet {
-            destructiveButton.setTitle(destructiveText, for: .normal)
-        }
-    }
-    
     public var cancelText: String? {
         didSet {
             cancelButton.setTitle(cancelText, for: .normal)
         }
     }
     
-    private let destructiveButton = Button(destructive: true)
-    private let cancelButton = Button(destructive: false)
+    private var actionButton: Button?
+    private let cancelButton = Button()
     
-    public var destructiveAction: (()->Void)?
+    private var action: (()->Void)?
     
     public var cancelAction: (()->Void)?
     
-    private var didSelectDestructive = false
+    private var didSelectAction = false
     
     private var isDestructive = true
     
-    convenience init(isDistructive: Bool = true, title: String? = "Are you sure?", description: String? = nil, destructiveText: String?, cancelText: String? = "Cancel", destructiveAction: (()->Void)?) {
+    convenience init(title: String, description: String? = nil, cancelText: String? = "Cancel") {
         self.init()
         
-        self.isDestructive = isDistructive
+        self.isDestructive = isDestructive
         
         titleLabel.text = title
         textView.text = description
         
-        self.destructiveText = destructiveText
         self.cancelText = cancelText
-        
-        self.destructiveAction = destructiveAction
         
     }
     
@@ -88,17 +79,7 @@ class AreYouSurePopupViewController: PopupViewController {
             self.close()
         }
         self.contentView.addSubview(cancelButton)
-        
-        let textColor = isDestructive ? Colors.red : Colors.orange
-        destructiveButton.setTitle(destructiveText ?? "", color: textColor, font: Fonts.medium.withSize(19))
-        destructiveButton.action = {
-            [weak self] in
-            guard let self = self else { return }
-            self.didSelectDestructive = true
-            self.close()
-        }
-        self.contentView.addSubview(destructiveButton)
-                
+            
     }
     
     override func viewDidLayoutSubviews() {
@@ -118,25 +99,42 @@ class AreYouSurePopupViewController: PopupViewController {
         titleLabel.frame = CGRect(x: 0, y: 20, width: self.contentView.bounds.width, height: titleHeight)
         textView.frame = CGRect(x: 0, y: titleLabel.frame.maxY, width: self.contentView.bounds.width, height: textHeight)
         
-        destructiveButton.frame = CGRect(
-            x: 0, y: textView.frame.maxY + 20,
-            width: contentView.bounds.width,
-            height: buttonHeight)
+        if let actionButton = actionButton {
+            actionButton.frame = CGRect(
+                x: 0, y: textView.frame.maxY + 20,
+                width: contentView.bounds.width,
+                height: buttonHeight)
+        }
         
         cancelButton.frame = CGRect(
-            x: 0, y: destructiveButton.frame.maxY,
+            x: 0, y: (actionButton?.frame.maxY) ?? (textView.frame.maxY + 20),
             width: contentView.bounds.width,
             height: buttonHeight)
         
         
     }
     
+    public func addAction(_ title: String, isDestructive: Bool = false, handler: (() -> ())?) {
+        self.action = handler
+        
+        let actionButton = Button()
+        actionButton.setTitle(title, color: isDestructive ? Colors.red : Colors.orange, font: Fonts.medium.withSize(19))
+        actionButton.action = { [weak self] in
+            self?.didSelectAction = true
+            self?.close()
+        }
+        self.contentView.addSubview(actionButton)
+        self.actionButton = actionButton
+        
+        self.view.setNeedsLayout()
+    }
+    
     override func close() {
-        if didSelectDestructive {
+        if didSelectAction {
             self.closeCompletion = {
                 [weak self] in
                 guard let self = self else { return }
-                self.destructiveAction?()
+                self.action?()
             }
         }
         else {
@@ -150,13 +148,12 @@ class AreYouSurePopupViewController: PopupViewController {
         
         let separator = Separator(position: .top)
         
-        init(destructive: Bool) {
+        override init() {
             super.init()
             
             self.addSubview(separator)
             
-            self.setTitleColor(destructive ? Colors.red : Colors.text, for: .normal)
-            self.titleLabel?.font = destructive ? Fonts.semibold.withSize(17) : Fonts.semibold.withSize(17)
+            self.titleLabel?.font = Fonts.semibold.withSize(17)
             
             self.highlightAction = {
                 [weak self] highlighted in

@@ -166,6 +166,7 @@
 		0290AA6D251D5DE100B08CC0 /* AndanteWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0290AA5D251D5DDD00B08CC0 /* AndanteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0290AA7B251D955B00B08CC0 /* IconProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0290AA77251D926D00B08CC0 /* IconProgressCircle.swift */; };
 		02930C8B25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02930C8A25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift */; };
+		0294A273272A60C0004E63A9 /* SliderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0294A272272A60C0004E63A9 /* SliderPickerView.swift */; };
 		029A70EA2338197B00C698BC /* ModalViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029A70E92338197B00C698BC /* ModalViewHeader.swift */; };
 		029BA39726FD527000CEC028 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 029BA39626FD527000CEC028 /* Lottie */; };
 		029C5FF726FD2548000D9936 /* flame.json in Resources */ = {isa = PBXBuildFile; fileRef = 029C5FF626FD2548000D9936 /* flame.json */; };
@@ -456,6 +457,7 @@
 		0290AA68251D5DE100B08CC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0290AA77251D926D00B08CC0 /* IconProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconProgressCircle.swift; sourceTree = "<group>"; };
 		02930C8A25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedObjectCollectionViewDataSource.swift; sourceTree = "<group>"; };
+		0294A272272A60C0004E63A9 /* SliderPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderPickerView.swift; sourceTree = "<group>"; };
 		029A70E92338197B00C698BC /* ModalViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewHeader.swift; sourceTree = "<group>"; };
 		029BA39526FD51BD00CEC028 /* lottie-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lottie-ios"; path = "../lottie-ios"; sourceTree = "<group>"; };
 		029C5FF626FD2548000D9936 /* flame.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = flame.json; sourceTree = "<group>"; };
@@ -1048,6 +1050,7 @@
 				0287616C24E0F13B00F568CA /* StatIconView.swift */,
 				0252EE34262262C70017367F /* ClippingShadowView.swift */,
 				02A2F23124C9766300D7FBD7 /* PlaceholderTextView.swift */,
+				0294A272272A60C0004E63A9 /* SliderPickerView.swift */,
 				027F351624B3DA94002674EC /* HandleView.swift */,
 				0264770F22DCEAC1002EA732 /* AndanteImageView.swift */,
 				02DD92C3272651EF006BB32E /* ProfileImageView */,
@@ -1539,6 +1542,7 @@
 				023BEEB325379FB7008A3371 /* ProgressRing.swift in Sources */,
 				02BBB96825E72F3E00A10A3D /* SessionSharePopupView.swift in Sources */,
 				02B2D0F12518573300DA75C7 /* SiriShortcutsViewController.swift in Sources */,
+				0294A273272A60C0004E63A9 /* SliderPickerView.swift in Sources */,
 				02930C8B25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift in Sources */,
 				02401BF624F6327700608B20 /* StatsLineChartView.swift in Sources */,
 				026476DE22DBF4F1002EA732 /* PracticeDatabase.swift in Sources */,

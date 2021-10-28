@@ -7,9 +7,15 @@
 //
 import UIKit
 
-class TunerViewController: PickerAlertController {
+class TunerViewController: PickerAlertController, SegmentedPickerViewDelegate {
     
-    private let optionsControl = TunerTypeControl()
+    private let optionsControl: SegmentedPickerView = {
+        let picker = SegmentedPickerView()
+        picker.insertOption(SegmentedPickerView.StandardOptionView(title: "Pure"), at: 0)
+        picker.insertOption(SegmentedPickerView.StandardOptionView(title: "Strings"), at: 1)
+        return picker
+    }()
+    
     private let octavePicker = OctavePicker()
     
     private var noteButtons: [PushButton] = []
@@ -68,14 +74,7 @@ class TunerViewController: PickerAlertController {
         volumeSlider.addTarget(self, action: #selector(sliderDidChange), for: .valueChanged)
         contentView.addSubview(volumeSlider)
         
-        optionsControl.action = {
-            [weak self] option in
-            guard let self = self else { return }
-            
-            self.selectedOption = option
-            self.animate(option)
-            self.tuner.setSelectedTuner(option)
-        }
+        optionsControl.delegate = self
         
         octavePicker.changeHandler = {
             [weak self] octave in
@@ -84,6 +83,12 @@ class TunerViewController: PickerAlertController {
             self.tuner.octave = octave
         }
         
+    }
+    
+    func segmentedPickerView(_ view: SegmentedPickerView, didSelectOptionAt index: Int) {
+        self.selectedOption = index
+        self.animate(index)
+        self.tuner.setSelectedTuner(index)
     }
     
     private func animate(_ option: Int) {
@@ -485,3 +490,4 @@ fileprivate class OctavePicker: UIView {
     }
     
 }
+

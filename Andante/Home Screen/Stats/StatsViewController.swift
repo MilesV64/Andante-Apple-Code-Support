@@ -131,10 +131,10 @@ class StatsViewController: MainViewController {
     private func reloadData() {
         operationQueue.cancelAllOperations()
         
-        guard let profile = User.getActiveProfile() else { return }
+        let profile = User.getActiveProfile()
         
         let context = DataManager.backgroundContext
-        let reloadOperation = StatsReloadOperation(context, profileID: profile.objectID)
+        let reloadOperation = StatsReloadOperation(context, profileID: profile?.objectID)
         
         let dataSources: [StatDataSource] = [totalsView, practicedView, moodView, focusView, activityView]
         dataSources.forEach { reloadOperation.addReloadBlock($0.reloadBlock()) }
@@ -150,7 +150,7 @@ class StatsViewController: MainViewController {
     class StatsReloadOperation: Operation {
         
         private let context: NSManagedObjectContext
-        private let profileID: NSManagedObjectID
+        private let profileID: NSManagedObjectID?
         
         private var reloadBlocks: [ReloadBlock] = []
         
@@ -158,7 +158,7 @@ class StatsViewController: MainViewController {
             reloadBlocks.append(block)
         }
         
-        init(_ context: NSManagedObjectContext, profileID: NSManagedObjectID) {
+        init(_ context: NSManagedObjectContext, profileID: NSManagedObjectID?) {
             self.context = context
             self.profileID = profileID
             super.init()
@@ -168,9 +168,11 @@ class StatsViewController: MainViewController {
         override func main() {
             guard !isCancelled else { return }
             
-            guard let profile = try? context.existingObject(with: profileID) else { return }
             let request = CDSessionAttributes.fetchRequest() as NSFetchRequest<CDSessionAttributes>
-            request.predicate = NSPredicate(format: "session.profile == %@", profile)
+
+            if let profileID = self.profileID, let profile = try? context.existingObject(with: profileID) {
+                request.predicate = NSPredicate(format: "session.profile == %@", profile)
+            }
             
             context.performAndWait {
                 if let sessions = try? context.fetch(request) {

@@ -62,6 +62,22 @@ public class CDProfile: NSManagedObject {
         
     }
     
+    /// Returns the sum of each profile's daily goal
+    class func getTotalDailyGoal() -> Int {
+        return CDProfile.getAllProfiles().reduce(0, { $0 + Int($1.dailyGoal) })
+    }
+    
+    /// Returns the earliest creation date of all profiles
+    class func getEarliestCreationDate() -> Date {
+        var date = Date()
+        CDProfile.getAllProfiles().forEach {
+            if let profileDate = $0.creationDate, profileDate < date {
+                date = profileDate
+            }
+        }
+        return date
+    }
+    
     public func getSiriActivity() -> NSUserActivity {
         let actionIdentifier = "\(self.uuid ?? "")"
         let activity = NSUserActivity(activityType: actionIdentifier)
@@ -98,6 +114,8 @@ public class CDProfile: NSManagedObject {
         return profile
         
     }
+    
+    
     
     
 }

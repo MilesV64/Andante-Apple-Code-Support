@@ -32,8 +32,6 @@ class ActivityStatView: StatBackgroundView, StatDataSource {
     private var showLabels = false
     private let tapGesture = UITapGestureRecognizer()
     
-    private var lastProfile: CDProfile?
-    
     private var data: [Day : Int] = [:]
     private var goal: Int = 0
     
@@ -85,25 +83,36 @@ class ActivityStatView: StatBackgroundView, StatDataSource {
     }
     
     public func reloadData() {
-        guard let profile = User.getActiveProfile() else { return }
-        goal = Int(profile.dailyGoal)
-        if lastProfile == nil || lastProfile != profile {
-            let start = Month(date: profile.creationDate ?? Date()).addingMonths(UIDevice.current.userInterfaceIdiom == .pad ? -10 : -3).date
-            let end = Date()
-            
-            offset = start.weekday()
+        
+        if let profile = User.getActiveProfile() {
+            goal = Int(profile.dailyGoal)
+        }
+        else {
+            goal = CDProfile.getTotalDailyGoal()
+        }
+        
+        let addedMonths: Int = UIDevice.current.userInterfaceIdiom == .pad ? -10 : -3
+        let start = Month(date: CDProfile.getEarliestCreationDate()).addingMonths(addedMonths).date
+        let end = Date()
+        
+        let offset = start.weekday()
 
-            let calendar = Calendar.current
-            totalDays = (calendar.dateComponents([.day], from: start, to: end).day ?? 0) + offset + 1
-            startDay = Day(date: start)
-                    
-            //TODO can this be optimized?
+        let calendar = Calendar.current
+        let totalDays = (calendar.dateComponents([.day], from: start, to: end).day ?? 0) + offset + 1
+        let startDay = Day(date: start)
+        
+        if self.offset == offset, self.totalDays == totalDays, self.startDay == startDay {
+            collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
+        }
+        else {
+            self.offset = offset
+            self.totalDays = totalDays
+            self.startDay = startDay
+            
             collectionView.reloadData()
             collectionView.scrollToItem(at: IndexPath(row: totalDays-1, section: 0), at: .right, animated: false)
         }
-        
-        collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
-        
+             
     }
     
     @objc func didTapView() {
@@ -274,7 +283,7 @@ fileprivate class DayCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        bgView.roundCorners(3)
+        bgView.roundCorners(2)
         self.addSubview(bgView)
         
         label.textColor = Colors.text
@@ -318,7 +327,7 @@ fileprivate class DayCell: UICollectionViewCell {
         super.layoutSubviews()
         
         label.frame = self.bounds
-        bgView.frame = self.bounds.insetBy(dx: 2, dy: 2)
+        bgView.frame = self.bounds.insetBy(dx: 1.5, dy: 1.5)
         
     }
 }

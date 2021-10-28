@@ -661,7 +661,7 @@ private extension PracticeViewController {
     func layoutTools() {
         
         let totalWidth = min(self.view.bounds.width - 60, 330)
-        let spacing: CGFloat = isSmallScreen() ? 10 : 12
+        let spacing: CGFloat = isSmallScreen() ? 10 : 16
         
         let buttonSize = (totalWidth - (spacing*4))/5
 
@@ -704,7 +704,7 @@ private extension PracticeViewController {
     func layoutOther() {
         
         handleView.frame = CGRect(
-            x: 0, y: view.safeAreaInsets.top + 10,
+            x: 0, y: view.safeAreaInsets.top + 6,
             width: view.bounds.width, height: 20)
         
         doneButton.frame = CGRect(

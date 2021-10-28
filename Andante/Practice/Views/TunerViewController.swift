@@ -181,7 +181,7 @@ class TunerViewController: PickerAlertController {
         let buttonsFrame = CGRect(
             x: Constants.margin,
             y: Constants.margin,
-            width: contentWidth - Constants.smallMargin*2,
+            width: self.contentView.bounds.width - Constants.margin*2,
             height: buttonsHeight)
         
         let buttonSpacing: CGFloat = 3
@@ -458,7 +458,7 @@ fileprivate class OctavePicker: UIView {
         let totalWidth: CGFloat = 160
         
         bgView.frame = CGRect(
-            x: self.bounds.maxX - Constants.smallMargin - totalWidth,
+            x: self.bounds.maxX - Constants.margin - totalWidth,
             y: label.center.y - 20,
             width: totalWidth, height: 40).insetBy(dx: -2, dy: 0)
         

@@ -773,9 +773,10 @@ extension AndanteViewController: CollapsedSessionViewDelegate {
     }
     
     func setupIntentsForSiri() {
-        let activity = User.getActiveProfile()!.getSiriActivity()
-        view.userActivity = activity
-        activity.becomeCurrent()
+        if let activity = User.getActiveProfile()?.getSiriActivity() {
+            view.userActivity = activity
+            activity.becomeCurrent()
+        }
     }
     
     func collapsedSessionDidTapExpand() {

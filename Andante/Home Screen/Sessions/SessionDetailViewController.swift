@@ -43,6 +43,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
     private let scrollView = ScrollView()
     private let textView = SessionNotesTextView()
     
+    private let profileCell = SessionProfileCell()
     private let timeCell = SessionStatsCell()
     private let practicedCell = SessionStatsCell()
     private let moodCell = SessionStatsCell()
@@ -146,6 +147,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
             scrollView.addSubview(recordingView!)
         }
         
+        scrollView.addSubview(profileCell)
         scrollView.addSubview(timeCell)
         scrollView.addSubview(practicedCell)
         scrollView.addSubview(moodCell)
@@ -228,6 +230,8 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
     }
     
     private func setStats() {
+        profileCell.profile = self.session.profile
+        
         timeCell.setTimeTitle(start: session.startTime, end: session.getEndTime())
         timeCell.iconView.stat = .time
         
@@ -549,7 +553,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
     
     private func layoutStats() {
         
-        let statsMinY = recordingView == nil ? dateLabel.frame.maxY + 24 : dateLabel.frame.maxY + 24 + 120
+        let statsMinY = recordingView == nil ? dateLabel.frame.maxY + 16 : dateLabel.frame.maxY + 24 + 120
         
         let cellHeight: CGFloat = 64
         
@@ -557,8 +561,13 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
         let margin = (view.bounds.width - totalWidth)/2 + Constants.margin
         let width = totalWidth - margin*2
         
-        timeCell.frame = CGRect(
+        profileCell.frame = CGRect(
             x: margin, y: statsMinY,
+            width: width,
+            height: cellHeight)
+        
+        timeCell.frame = CGRect(
+            x: margin, y: profileCell.frame.maxY,
             width: width,
             height: cellHeight)
         
@@ -838,6 +847,59 @@ class SessionStatsCell: UIView {
             width: 38,
             height: 38).integral
         iconView.roundCorners(10)
+        
+        titleLabel.sizeToFit()
+        titleLabel.frame = CGRect(x: iconView.frame.maxX + 16, y: 0,
+                                  width: titleLabel.bounds.width,
+                                  height: self.bounds.height)
+    }
+}
+
+class SessionProfileCell: UIView {
+    
+    public let iconView = ProfileImageView()
+    private let titleLabel = UILabel()
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    public var profile: CDProfile? {
+        didSet {
+            self.cancellables.removeAll()
+            
+            self.profile?.publisher(for: \.name).sink { [weak self] name in
+                self?.titleLabel.text = name
+            }.store(in: &cancellables)
+            
+            self.iconView.profile = self.profile
+        }
+    }
+    
+    init() {
+        super.init(frame: .zero)
+        
+        self.backgroundColor = .clear
+        
+        iconView.inset = 6
+        iconView.cornerRadius = 10
+        self.addSubview(iconView)
+        
+        titleLabel.font = Fonts.semibold.withSize(17)
+        titleLabel.textColor = Colors.text
+        self.addSubview(titleLabel)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        iconView.frame = CGRect(
+            x: 0,
+            y: self.bounds.midY - 18,
+            width: 38,
+            height: 38).integral
         
         titleLabel.sizeToFit()
         titleLabel.frame = CGRect(x: iconView.frame.maxX + 16, y: 0,

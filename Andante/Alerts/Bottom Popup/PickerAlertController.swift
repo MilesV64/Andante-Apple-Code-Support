@@ -361,7 +361,7 @@ private extension PickerAlertController {
             self.viewDidLayoutSubviews()
             popupView.transform = CGAffineTransform(translationX: 0, y: visibleHeight)
             
-            UIView.animate(withDuration: 0.55, delay: 0, usingSpringWithDamping: 0.88, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
+            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
                 
                 self.dimView.alpha = 1
                 

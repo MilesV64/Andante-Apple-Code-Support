@@ -27,18 +27,43 @@ class CalendarGoalView: UIView, UICollectionViewDelegate, UICollectionViewDelega
     private var firstMonth: Month!
     private var totalMonths = 0
     private var today: Day!
-    private var profile: CDProfile!
+    
+    private let profile: CDProfile?
+    
+    private struct GoalData {
+        let profile: CDProfile
+        let proportion: CGFloat
+        let goal: Int
+    }
+    
+    private let goals: [GoalData]
     
     private let selectionFeedback = UIImpactFeedbackGenerator(style: .light)
     
     init() {
-        super.init(frame: .zero)
-
+        self.profile = User.getActiveProfile()
         
-        currentPage = totalMonths/2
-
-        profile = User.getActiveProfile()
-        if let earliest = PracticeDatabase.shared.sessions().last?.startTime {
+        if let profile = profile {
+            self.goals = [GoalData(profile: profile, proportion: 1, goal: Int(profile.dailyGoal))]
+        } else {
+            let sum = CGFloat(CDProfile.getTotalDailyGoal())
+            self.goals = CDProfile.getAllProfiles().map({ profile in
+                return GoalData(
+                    profile: profile,
+                    proportion: CGFloat(profile.dailyGoal) / sum,
+                    goal: Int(profile.dailyGoal))
+            })
+        }
+        
+        super.init(frame: .zero)
+        
+        if let earliest = PracticeDatabase.shared.sessions().last(where: {
+            if let profile = self.profile {
+                return $0.session?.profile == profile
+            } else {
+                return true
+            }
+        })?.startTime {
             firstMonth = Month(date: earliest)
         }
         else {
@@ -197,13 +222,17 @@ extension CalendarGoalView {
             cell.isInMonth = false
         }
         
-        if let sessions = PracticeDatabase.shared.sessions(for: day) {
-            let practiceTime = sessions.reduce(into: 0) { $0 += Int($1.practiceTime) }
-            cell.progress = CGFloat(practiceTime) / CGFloat(profile.dailyGoal)
+        var progress: CGFloat = 0
+        
+        for goalData in self.goals {
+            if let sessions = PracticeDatabase.shared.sessions(for: day, profile: goalData.profile) {
+                let practiceTime = sessions.reduce(into: 0) { $0 += Int($1.practiceTime) }
+                let profileProgress = min(1, CGFloat(practiceTime) / CGFloat(goalData.goal))
+                progress += goalData.proportion * profileProgress
+            }
         }
-        else {
-            cell.progress = 0
-        }
+        
+        cell.progress = progress
         
         return cell
     }

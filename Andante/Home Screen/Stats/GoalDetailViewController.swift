@@ -18,6 +18,9 @@ class PopoverViewController: UIViewController, UIPopoverPresentationControllerDe
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.modalPresentationStyle = .popover
+        if #available(iOS 15.0, *) {
+            self.popoverPresentationController?.adaptiveSheetPresentationController.preferredCornerRadius = 25
+        }
         self.popoverPresentationController?.delegate = self
     }
     

@@ -19,7 +19,7 @@ class SessionSaveNotification: PushButton {
         super.init()
         
         self.backgroundColor = Colors.orange
-        self.cornerRadius = 10
+        self.cornerRadius = 14
         self.setShadow(radius: 12, yOffset: 4, opacity: 0.24)
         
         self.addSubview(progressCircle)

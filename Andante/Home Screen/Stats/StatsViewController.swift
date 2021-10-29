@@ -409,17 +409,42 @@ class StatsHeaderView: HeaderAccessoryView {
     }
         
     func reloadData() {
-        guard let profile = self.profile else { return }
+        
+        struct GoalData {
+            let profile: CDProfile
+            let proportion: CGFloat
+            let goal: Int
+        }
+        
+        let goals: [GoalData]
+        
+        if let profile = profile {
+            goals = [GoalData(profile: profile, proportion: 1, goal: Int(profile.dailyGoal))]
+        } else {
+            let sum = CGFloat(CDProfile.getTotalDailyGoal())
+            goals = CDProfile.getAllProfiles().map({ profile in
+                return GoalData(
+                    profile: profile,
+                    proportion: CGFloat(profile.dailyGoal) / sum,
+                    goal: Int(profile.dailyGoal))
+            })
+        }
         
         for i in 0..<circles.count {
             let day = Day(date: Date()).addingDays(-6+i)
-            if let sessions = PracticeDatabase.shared.sessions(for: day) {
-                let practiceTime = sessions.reduce(into: 0) { $0 += ($1.practiceTime) }
-                circles[i].animateTo(CGFloat(practiceTime) / CGFloat(profile.dailyGoal))
+            
+            var progress: CGFloat = 0
+            
+            for goalData in goals {
+                if let sessions = PracticeDatabase.shared.sessions(for: day, profile: goalData.profile) {
+                    let practiceTime = sessions.reduce(into: 0) { $0 += Int($1.practiceTime) }
+                    let profileProgress = min(1, CGFloat(practiceTime) / CGFloat(goalData.goal))
+                    progress += goalData.proportion * profileProgress
+                }
             }
-            else {
-                circles[i].animateTo(0)
-            }
+            
+            circles[i].animateTo(progress)
+            
         }
     }
     

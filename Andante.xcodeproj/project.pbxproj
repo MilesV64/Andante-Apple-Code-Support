@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0200C39324A9B27F00E787EC /* DoneToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200C39224A9B27F00E787EC /* DoneToolbar.swift */; };
-		0200C39524AC133700E787EC /* SessionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200C39424AC133700E787EC /* SessionDetailViewController.swift */; };
 		0200C39724AC2A9000E787EC /* ManualSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200C39624AC2A9000E787EC /* ManualSessionViewController.swift */; };
 		0200C39A24AC2C8D00E787EC /* CalendarPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200C39924AC2C8D00E787EC /* CalendarPickerView.swift */; };
 		0200C39C24AC382100E787EC /* CalendarPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200C39B24AC382100E787EC /* CalendarPickerCell.swift */; };
@@ -168,6 +167,14 @@
 		0294A273272A60C0004E63A9 /* SliderPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0294A272272A60C0004E63A9 /* SliderPickerView.swift */; };
 		029A70EA2338197B00C698BC /* ModalViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029A70E92338197B00C698BC /* ModalViewHeader.swift */; };
 		029BA39726FD527000CEC028 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 029BA39626FD527000CEC028 /* Lottie */; };
+		029C014E272CCC4100943E5B /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C014D272CCC4100943E5B /* KeyboardManager.swift */; };
+		029C0153272CD1D100943E5B /* PopupStackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C0152272CD1D100943E5B /* PopupStackViewController.swift */; };
+		029C0155272CD1D900943E5B /* PopupStackInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C0154272CD1D900943E5B /* PopupStackInteractionController.swift */; };
+		029C0157272CD1E700943E5B /* PopupStackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C0156272CD1E700943E5B /* PopupStackContentView.swift */; };
+		029C015A272CD3E400943E5B /* ActionTrayPopupStackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C0159272CD3E400943E5B /* ActionTrayPopupStackContentView.swift */; };
+		029C015D272CD6D100943E5B /* SessionOptionsPopupStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C015C272CD6D100943E5B /* SessionOptionsPopupStackView.swift */; };
+		029C015F272CEAAB00943E5B /* TimerPopupStackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C015E272CEAAB00943E5B /* TimerPopupStackContentView.swift */; };
+		029C0163272D1D5000943E5B /* SessionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C0162272D1D5000943E5B /* SessionDetailViewController.swift */; };
 		029C5FF726FD2548000D9936 /* flame.json in Resources */ = {isa = PBXBuildFile; fileRef = 029C5FF626FD2548000D9936 /* flame.json */; };
 		029EA97624B5430500C37072 /* TimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029EA97524B5430500C37072 /* TimePickerView.swift */; };
 		029F3285244D651300060F33 /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029F3284244D651300060F33 /* PracticeViewController.swift */; };
@@ -295,7 +302,6 @@
 
 /* Begin PBXFileReference section */
 		0200C39224A9B27F00E787EC /* DoneToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoneToolbar.swift; sourceTree = "<group>"; };
-		0200C39424AC133700E787EC /* SessionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDetailViewController.swift; sourceTree = "<group>"; };
 		0200C39624AC2A9000E787EC /* ManualSessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSessionViewController.swift; sourceTree = "<group>"; };
 		0200C39924AC2C8D00E787EC /* CalendarPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerView.swift; sourceTree = "<group>"; };
 		0200C39B24AC382100E787EC /* CalendarPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerCell.swift; sourceTree = "<group>"; };
@@ -458,6 +464,14 @@
 		0294A272272A60C0004E63A9 /* SliderPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderPickerView.swift; sourceTree = "<group>"; };
 		029A70E92338197B00C698BC /* ModalViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewHeader.swift; sourceTree = "<group>"; };
 		029BA39526FD51BD00CEC028 /* lottie-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lottie-ios"; path = "../lottie-ios"; sourceTree = "<group>"; };
+		029C014D272CCC4100943E5B /* KeyboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardManager.swift; sourceTree = "<group>"; };
+		029C0152272CD1D100943E5B /* PopupStackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupStackViewController.swift; sourceTree = "<group>"; };
+		029C0154272CD1D900943E5B /* PopupStackInteractionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupStackInteractionController.swift; sourceTree = "<group>"; };
+		029C0156272CD1E700943E5B /* PopupStackContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupStackContentView.swift; sourceTree = "<group>"; };
+		029C0159272CD3E400943E5B /* ActionTrayPopupStackContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTrayPopupStackContentView.swift; sourceTree = "<group>"; };
+		029C015C272CD6D100943E5B /* SessionOptionsPopupStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionOptionsPopupStackView.swift; sourceTree = "<group>"; };
+		029C015E272CEAAB00943E5B /* TimerPopupStackContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPopupStackContentView.swift; sourceTree = "<group>"; };
+		029C0162272D1D5000943E5B /* SessionDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDetailViewController.swift; sourceTree = "<group>"; };
 		029C5FF626FD2548000D9936 /* flame.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = flame.json; sourceTree = "<group>"; };
 		029EA97524B5430500C37072 /* TimePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerView.swift; sourceTree = "<group>"; };
 		029F3284244D651300060F33 /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
@@ -719,7 +733,9 @@
 				02800EA826DB765400B45268 /* Onboarding */,
 				02800EA726DB763200B45268 /* Home Screen */,
 				027011EB244D6E2D001B46FD /* Practice */,
+				029C015B272CD6B500943E5B /* Session Detail */,
 				02FA154722FB6C3600641F6A /* Settings */,
+				029C0151272CD1BE00943E5B /* PopupStackViewController */,
 				0264773222E141F0002EA732 /* Alerts */,
 				026476DF22DBF522002EA732 /* Views */,
 				026476D822DBF24D002EA732 /* Classes */,
@@ -751,6 +767,7 @@
 				028F1E0925394D9700C1A5C6 /* IAPHelper.swift */,
 				026476E522DBF59D002EA732 /* Day.swift */,
 				0281DE6C27292E6100369297 /* ProfileManager.swift */,
+				029C014D272CCC4100943E5B /* KeyboardManager.swift */,
 				026476DD22DBF4F1002EA732 /* PracticeDatabase.swift */,
 			);
 			path = Classes;
@@ -856,9 +873,7 @@
 			isa = PBXGroup;
 			children = (
 				028142032425D6CD00C9461F /* SessionsViewController.swift */,
-				0200C39424AC133700E787EC /* SessionDetailViewController.swift */,
 				0200C39624AC2A9000E787EC /* ManualSessionViewController.swift */,
-				0201AF97253E6D150015CA51 /* EditSessionViewController.swift */,
 				02AA3F9B250A01CA00EF19EA /* MoveSessionViewController.swift */,
 				0274ABD626DB77F700221890 /* Views */,
 			);
@@ -913,7 +928,6 @@
 			isa = PBXGroup;
 			children = (
 				02BD7E2724749FD200EB73D1 /* CalendarScrollView.swift */,
-				02D52A04250C39C3005504EA /* SessionShareView.swift */,
 				02015BB52702C1A0003B2450 /* PulltoSettingsView.swift */,
 			);
 			path = Views;
@@ -1012,6 +1026,36 @@
 			path = AndanteWidget;
 			sourceTree = "<group>";
 		};
+		029C0151272CD1BE00943E5B /* PopupStackViewController */ = {
+			isa = PBXGroup;
+			children = (
+				029C0152272CD1D100943E5B /* PopupStackViewController.swift */,
+				029C0154272CD1D900943E5B /* PopupStackInteractionController.swift */,
+				029C0156272CD1E700943E5B /* PopupStackContentView.swift */,
+				029C0158272CD3D000943E5B /* Content Views */,
+			);
+			path = PopupStackViewController;
+			sourceTree = "<group>";
+		};
+		029C0158272CD3D000943E5B /* Content Views */ = {
+			isa = PBXGroup;
+			children = (
+				029C0159272CD3E400943E5B /* ActionTrayPopupStackContentView.swift */,
+			);
+			path = "Content Views";
+			sourceTree = "<group>";
+		};
+		029C015B272CD6B500943E5B /* Session Detail */ = {
+			isa = PBXGroup;
+			children = (
+				029C0162272D1D5000943E5B /* SessionDetailViewController.swift */,
+				0201AF97253E6D150015CA51 /* EditSessionViewController.swift */,
+				02D52A04250C39C3005504EA /* SessionShareView.swift */,
+				029C015C272CD6D100943E5B /* SessionOptionsPopupStackView.swift */,
+			);
+			path = "Session Detail";
+			sourceTree = "<group>";
+		};
 		02A2D7F424C13701005AAD90 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1022,6 +1066,7 @@
 				027E855525C940A30054D210 /* TunerViewController.swift */,
 				0224EA4024D3AFA200FB1E15 /* AudioWaveView.swift */,
 				027011ED244D6E3F001B46FD /* RecordingButton.swift */,
+				029C015E272CEAAB00943E5B /* TimerPopupStackContentView.swift */,
 				02A2DB4424CD149F002E0760 /* PracticeToolButton.swift */,
 				02A2DB4824CE7D18002E0760 /* Tool Views */,
 			);
@@ -1480,7 +1525,6 @@
 				025957DD22E3A80800CD2E2D /* Easing.swift in Sources */,
 				023AFF4C25E2323F00F9395D /* PopupSecondaryView.swift in Sources */,
 				02401BF424F49A1000608B20 /* StatsChartView.swift in Sources */,
-				0200C39524AC133700E787EC /* SessionDetailViewController.swift in Sources */,
 				028142062426FB0000C9461F /* PopupMenuViewController.swift in Sources */,
 				0264771022DCEAC1002EA732 /* AndanteImageView.swift in Sources */,
 				0274ABDC26DB7A7800221890 /* SettingsDetailViewController.swift in Sources */,
@@ -1533,6 +1577,7 @@
 				0222F17424C90D680070E638 /* SessionSaveNotification.swift in Sources */,
 				02A2DB4A24CE7D32002E0760 /* MetronomeToolView.swift in Sources */,
 				02B52868255A8CE4008086B5 /* CenterAlertViewController.swift in Sources */,
+				029C0153272CD1D100943E5B /* PopupStackViewController.swift in Sources */,
 				027011EE244D6E3F001B46FD /* RecordingButton.swift in Sources */,
 				02A2DB4024CBD382002E0760 /* CreateProfileViewController.swift in Sources */,
 				024E4D7F25D0E5050083E653 /* CDStringAttributes+CoreDataClass.swift in Sources */,
@@ -1542,6 +1587,7 @@
 				0294A273272A60C0004E63A9 /* SliderPickerView.swift in Sources */,
 				02930C8B25DDD92F00D01DE2 /* FetchedObjectCollectionViewDataSource.swift in Sources */,
 				02401BF624F6327700608B20 /* StatsLineChartView.swift in Sources */,
+				029C014E272CCC4100943E5B /* KeyboardManager.swift in Sources */,
 				026476DE22DBF4F1002EA732 /* PracticeDatabase.swift in Sources */,
 				026831DE257B6B8B00B90884 /* PracticeAnimationViewController.swift in Sources */,
 				028F1E0A25394D9700C1A5C6 /* IAPHelper.swift in Sources */,
@@ -1602,6 +1648,7 @@
 				0264772922DF9279002EA732 /* Formatter.swift in Sources */,
 				028FAAD625F4BECC000561DD /* CDReminder+CoreDataClass.swift in Sources */,
 				02C083E9254FFA14006D9DA0 /* Sidebar.swift in Sources */,
+				029C015A272CD3E400943E5B /* ActionTrayPopupStackContentView.swift in Sources */,
 				027011F2244E3DD9001B46FD /* RecordingAudioWaveView.swift in Sources */,
 				02E99DA1261E609A00EDCA52 /* TextEditorTextBlockView.swift in Sources */,
 				0200C3A324AC745400E787EC /* CancelConfirmCenterPickerViewController.swift in Sources */,
@@ -1615,9 +1662,12 @@
 				0284197A24F787E40040E394 /* MoodStatView.swift in Sources */,
 				0264773422E1420E002EA732 /* PickerAlertController.swift in Sources */,
 				0200C3A124AC6F1400E787EC /* CenterPickerViewController.swift in Sources */,
+				029C0157272CD1E700943E5B /* PopupStackContentView.swift in Sources */,
+				029C0163272D1D5000943E5B /* SessionDetailViewController.swift in Sources */,
 				024E4D7925D0E5050083E653 /* CDRecording+CoreDataClass.swift in Sources */,
 				0270BB972492F448003AC91F /* RichTextView.swift in Sources */,
 				02D9D12D24C3D6750019D36C /* BottomActionButton.swift in Sources */,
+				029C015F272CEAAB00943E5B /* TimerPopupStackContentView.swift in Sources */,
 				02F9335F25E1CF9500166027 /* CDStringAttributes+CoreDataProperties.swift in Sources */,
 				02401BD724E107AB00608B20 /* OnboardingViewController.swift in Sources */,
 				028D2B7A25535FFC00273A3D /* SidebarFoldersView.swift in Sources */,
@@ -1636,9 +1686,11 @@
 				0200C39C24AC382100E787EC /* CalendarPickerCell.swift in Sources */,
 				0200C39A24AC2C8D00E787EC /* CalendarPickerView.swift in Sources */,
 				02401BDB24EBA1E800608B20 /* TimerPickerAlertController.swift in Sources */,
+				029C0155272CD1D900943E5B /* PopupStackInteractionController.swift in Sources */,
 				02649354248DD08B00B543E2 /* NotesViewController.swift in Sources */,
 				026476C322DBF0CB002EA732 /* AppDelegate.swift in Sources */,
 				02800EA426DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift in Sources */,
+				029C015D272CD6D100943E5B /* SessionOptionsPopupStackView.swift in Sources */,
 				0270BBA624A03CD6003AC91F /* HeaderView.swift in Sources */,
 				02D52A05250C39C3005504EA /* SessionShareView.swift in Sources */,
 			);

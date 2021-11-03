@@ -21,10 +21,10 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
     public var contentView = PopupContentView()
 
     private let dimView = UIView()
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+   
     private let bgView = UIView()
-    private var bottomView: UIView?
-    
+    private let containerView = UIView()
+        
     private var handleView: HandleView?
     
     private var widthBreakpt: CGFloat = 428
@@ -39,9 +39,9 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
     
     public var contentWidth: CGFloat {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            return view.bounds.width
+            return view.bounds.width - 20
         } else {
-            return min(375, view.bounds.width)
+            return min(375, view.bounds.width - 20)
         }
         
     }
@@ -52,8 +52,6 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
     public var layout: UIUserInterfaceSizeClass {
         return (view.window ?? view).bounds.width > widthBreakpt ? .regular : .compact
     }
-    
-    
     
     public var closeCompletion: (()->())?
     
@@ -82,9 +80,6 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     
-        let contentInset = layout == .compact ? self.view.safeAreaInsets : nil
-        contentView.setSafeArea(contentInset)
-        
         dimView.frame = view.bounds
         
         setResponsiveLayout()
@@ -185,10 +180,10 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
             
             if keyboardFrame != .zero {
                 height = contentHeight + handleSpace
-                maxY = keyboardFrame.minY
+                maxY = keyboardFrame.minY - 10
             } else {
-                height = contentHeight + handleSpace + view.safeAreaInsets.bottom
-                maxY = view.bounds.maxY
+                height = contentHeight + handleSpace
+                maxY = view.bounds.maxY - max(view.safeAreaInsets.bottom, 10)
             }
             
             bgView.contextualFrame = CGRect(
@@ -198,24 +193,20 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
                 height: height
             )
             
-            bottomView?.frame = CGRect(
-                x: 0, y: bgView.bounds.maxY - 4,
-                width: bgView.bounds.width,
-                height: 300)
+            containerView.contextualFrame = bgView.bounds
             
             handleView?.frame = CGRect(x: 0, y: 0, width: bgView.bounds.width, height: handleSpace)
             
             if !animateContent {
                 UIView.performWithoutAnimation {
-                    self.contentView.contextualFrame = self.bgView.bounds.inset(
+                    self.contentView.contextualFrame = self.containerView.bounds.inset(
                         by: UIEdgeInsets(top: handleSpace, left: 0, bottom: 0, right: 0))
                 }
             }
             else {
-                contentView.contextualFrame = bgView.bounds.inset(by: UIEdgeInsets(top: handleSpace, left: 0, bottom: 0, right: 0))
+                contentView.contextualFrame = containerView.bounds.inset(by: UIEdgeInsets(top: handleSpace, left: 0, bottom: 0, right: 0))
             }
             
-//            blurView.frame = CGRect(x: 0, y: 0, width: bgView.bounds.width, height: bgView.bounds.height + 600)
             
         }
         else if let sourceView = sourceView {
@@ -242,10 +233,9 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
                 x: relativePoint.x,
                 y: minY)
             
-            contentView.contextualFrame = bgView.bounds.inset(by: UIEdgeInsets(t: 8))
+            containerView.contextualFrame = bgView.bounds
+            contentView.contextualFrame = containerView.bounds.inset(by: UIEdgeInsets(t: 8))
             
-            blurView.frame = bgView.bounds
-
         }
         else {
             let space = view.bounds.height - 100
@@ -253,10 +243,10 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
             
             bgView.bounds.size = CGSize(width: contentWidth, height: contentHeight)
             bgView.center = view.bounds.center
-            contentView.contextualFrame = bgView.bounds
             
-            blurView.frame = bgView.bounds
-
+            containerView.contextualFrame = bgView.bounds
+            contentView.contextualFrame = containerView.bounds
+            
         }
         
         
@@ -292,17 +282,15 @@ extension PopupViewController {
     private func setupBGView() {
         bgView.backgroundColor = Colors.foregroundColor
         
-//        blurView.contentView.backgroundColor = Colors.dynamicColor(
-//            light: Colors.foregroundColor.withAlphaComponent(0.75),
-//            dark: Colors.foregroundColor.withAlphaComponent(0.7))
-//        bgView.addSubview(blurView)
-        
-        blurView.clipsToBounds = true
-         
         bgView.clipsToBounds = false
         
-        contentView.backgroundColor = .clear
-        bgView.addSubview(contentView)
+        containerView.clipsToBounds = true
+        bgView.addSubview(containerView)
+        
+        bgView.roundCorners(25, prefersContinuous: true)
+        containerView.roundCorners(25, prefersContinuous: true)
+        
+        containerView.addSubview(contentView)
         
         view.addSubview(bgView)
 
@@ -327,23 +315,7 @@ extension PopupViewController {
         if handleView == nil {
             handleView = HandleView()
             bgView.addSubview(handleView!)
-            
-            bottomView = UIView()
-            bottomView?.backgroundColor = Colors.foregroundColor
-            bgView.addSubview(bottomView!)
-
         }
-        
-        blurView.roundCorners(25)
-        bgView.roundCorners(25)
-        
-        blurView.layer.maskedCorners = [
-            .layerMaxXMinYCorner, .layerMinXMinYCorner
-        ]
-        
-        bgView.layer.maskedCorners = [
-            .layerMaxXMinYCorner, .layerMinXMinYCorner
-        ]
         
         dimView.backgroundColor = Colors.dimColor
         setBGShadow()
@@ -357,20 +329,7 @@ extension PopupViewController {
             handleView?.removeFromSuperview()
             handleView = nil
             
-            bottomView?.removeFromSuperview()
-            bottomView = nil
         }
-        
-        blurView.roundCorners(12)
-        bgView.roundCorners(12)
-        
-        blurView.layer.maskedCorners = [
-            .layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner
-        ]
-        
-        bgView.layer.maskedCorners = [
-            .layerMaxXMaxYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMinXMinYCorner
-        ]
         
         dimView.backgroundColor = Colors.lighterDimColor
         setBGShadow()
@@ -517,7 +476,7 @@ extension PopupViewController {
                 translationX: 0,
                 y: bgView.bounds.height + max(10, view.safeAreaInsets.bottom) + 6)
             
-            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseInOut, .allowUserInteraction], animations: {
+            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
                 
                 self.dimView.alpha = 1
                 self.bgView.transform = .identity

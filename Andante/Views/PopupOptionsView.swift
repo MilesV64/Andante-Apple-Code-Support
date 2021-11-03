@@ -78,7 +78,7 @@ class PopupOptionsView: Separator {
                 } else {
                     iconView.tintColor = Colors.extraLightText
                     label.textColor = Colors.extraLightText
-                    backgroundColor = Colors.lightColor
+                    backgroundColor = Colors.extraLightColor
                     self.isUserInteractionEnabled = false
                 }
             }
@@ -93,7 +93,7 @@ class PopupOptionsView: Separator {
         init(title: String, iconName: String, destructive: Bool, action: (()->Void)?) {
             
             self.color = destructive ? Colors.red : Colors.text.withAlphaComponent(0.85)
-            self.bgColor = destructive ? Colors.red.withAlphaComponent(0.1) : Colors.lightColor
+            self.bgColor = Colors.extraLightColor
             
             super.init()
             

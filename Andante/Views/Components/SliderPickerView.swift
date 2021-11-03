@@ -322,7 +322,7 @@ extension SegmentedPickerView {
         
         func setSelected(_ selected: Bool) {
             if selected {
-                self.label.textColor = Colors.text
+                self.label.textColor = .white
             }
             else {
                 self.label.textColor = Colors.text.withAlphaComponent(0.3)

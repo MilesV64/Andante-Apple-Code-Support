@@ -11,7 +11,7 @@ import UIKit
 class TimerPickerAlertController: PickerAlertController {
     
     private let picker = UIDatePicker()
-    private let actionButton = PushButton()
+    private let actionButton = BottomActionButton(title: "Start Timer")
     
     public var action: ((TimeInterval)->Void)? {
         didSet {
@@ -40,28 +40,26 @@ class TimerPickerAlertController: PickerAlertController {
         picker.countDownDuration = TimeInterval(Settings.practiceTimerMinutes * 60)
         self.contentView.addSubview(picker)
         
-        actionButton.setTitle("Start Timer", color: Colors.white, font: Fonts.semibold.withSize(16))
-        actionButton.backgroundColor = Colors.orange
+        actionButton.color = .clear
         self.contentView.addSubview(actionButton)
         
     }
     
     override func viewDidLayoutSubviews() {
 
-        let buttonHeight: CGFloat = 50
+        let buttonHeight: CGFloat = BottomActionButton.height
         
         self.contentHeight = buttonHeight + 250
         
         super.viewDidLayoutSubviews()
         
-        actionButton.frame = CGRect(x: Constants.margin, y: self.contentView.bounds.maxY - buttonHeight - 22,
-                                    width: self.view.bounds.width - Constants.margin*2,
+        actionButton.frame = CGRect(x: 0, y: self.contentView.bounds.maxY - buttonHeight,
+                                    width: self.contentView.bounds.width,
                                     height: buttonHeight)
-        actionButton.cornerRadius = 14
         
         picker.frame = CGRect(
             from: CGPoint(x: Constants.margin, y: 0),
-            to: CGPoint(x: contentView.bounds.maxX - Constants.margin*2, y: actionButton.frame.minY - 22))
+            to: CGPoint(x: contentView.bounds.maxX - Constants.margin, y: actionButton.frame.minY))
         
         
     }

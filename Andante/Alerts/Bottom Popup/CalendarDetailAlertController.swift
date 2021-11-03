@@ -64,6 +64,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         let headerSep = Separator()
         headerSep.color = Colors.separatorColor
         headerSep.position = .bottom
+        headerSep.insetToMargins()
         headerSep.bounds.size.height = 128
         headerSep.backgroundColor = .clear
         tableView.tableHeaderView = headerSep
@@ -122,7 +123,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         titleSep.backgroundColor = .clear
         titleSep.addSubview(titleLabel)
         titleSep.color = Colors.barSeparator
-        titleSep.inset = .zero
+        titleSep.insetToMargins()
         titleSep.position = .bottom
         titleSep.isUserInteractionEnabled = true
         self.contentView.addSubview(titleSep)
@@ -130,6 +131,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         if sessions.count == 0 {
             newSessionButton.color = .clear
         }
+        newSessionButton.insetToMargins()
         newSessionButton.action = {
             [weak self] in
             guard let self = self else { return }
@@ -199,7 +201,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         
         focusLabel.frame = CGRect(x: self.contentView.bounds.width*0.75, y: 0, width: self.contentView.bounds.width/4, height: tableView.tableHeaderView!.bounds.height)
         
-        let buttonHeight = BottomActionButton.height + view.safeAreaInsets.bottom
+        let buttonHeight = BottomActionButton.height
         newSessionButton.frame = CGRect(
             x: 0, y: contentView.bounds.maxY - buttonHeight,
             width: contentView.bounds.width,
@@ -247,6 +249,7 @@ fileprivate class PracticeSessionCalendarCell: UITableViewCell {
         self.backgroundColor = .clear
         self.selectionStyle = .none
         
+        separator.insetToMargins()
         self.addSubview(separator)
         self.addSubview(sessionView)
         

@@ -67,6 +67,14 @@ class CheckmarkTableViewCell: UITableViewCell {
         self.addSubview(self.checkmarkCellView)
     }
     
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut, .allowUserInteraction, .beginFromCurrentState]) {
+            self.transform = highlighted ? CGAffineTransform(scaleX: 0.95, y: 0.95) : .identity
+        } completion: { _ in
+            //
+        }
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.checkmarkCellView.frame = self.bounds

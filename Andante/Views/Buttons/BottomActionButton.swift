@@ -83,11 +83,11 @@ class BottomActionButton: Separator {
     }
     
     public static var height: CGFloat {
-        return 52 + 34
+        return 50 + 40
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let buttonHeight: CGFloat = 52
+        let buttonHeight: CGFloat = 50
         let padding: CGFloat = 20 + 20
         let extraSpace = buttonHeight + padding
         let bottomSpace: CGFloat = superview?.safeAreaInsets.bottom ?? 0

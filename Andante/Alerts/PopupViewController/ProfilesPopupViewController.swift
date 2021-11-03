@@ -42,7 +42,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CheckmarkTableViewCell
             
-            cell.checkmarkCellView.margin = 28
+            cell.checkmarkCellView.margin = 24
             cell.checkmarkCellView.profile = profile
             cell.checkmarkCellView.setChecked(profile == self.selectedProfile)
             
@@ -52,6 +52,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         
         fetchController?.performFetch()
         
+        tableView.delaysContentTouches = false
         tableView.alwaysBounceVertical = false
         tableView.rowHeight = CheckmarkCellView.height
         tableView.register(CheckmarkTableViewCell.self, forCellReuseIdentifier: "cell")
@@ -62,7 +63,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         contentView.addSubview(tableView)
         
         self.allProfilesCellView.setChecked(self.selectedProfile == nil)
-        self.allProfilesCellView.margin = 28
+        self.allProfilesCellView.margin = 24
         self.allProfilesCellView.action = { [weak self] in
             self?.action?(nil)
             self?.close()
@@ -93,7 +94,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
             contentView.addSubview(newProfileButton!)
         }
         
-        newProfileButton?.margin = 24
+        newProfileButton?.margin = 20
         
         newProfileButton?.backgroundColor = .clear
         
@@ -141,7 +142,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
     }
     
     override func viewDidLayoutSubviews() {
-        let tableHeight: CGFloat = tableView.rowHeight * CGFloat((fetchController?.numberOfItems() ?? 0) + 1) + 16
+        let tableHeight: CGFloat = tableView.rowHeight * CGFloat((fetchController?.numberOfItems() ?? 0) + 1) + 10
         
         let buttonHeight = newProfileButton == nil ? 0 : BottomActionButton.height
         
@@ -150,7 +151,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         super.viewDidLayoutSubviews()
         
         tableView.frame = CGRect(
-            x: 0, y: 12,
+            x: 0, y: 10,
             width: contentView.bounds.width,
             height: tableHeight)
         
@@ -158,7 +159,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
             x: 0, y: 0, width: tableView.bounds.width, height: AndanteCellView.height)
         
         newProfileButton?.frame = CGRect(
-            x: 0, y: contentView.bounds.maxY - buttonHeight - contentView.safeAreaInsets.bottom,
+            x: 0, y: contentView.bounds.maxY - buttonHeight,
             width: contentView.bounds.width, height: buttonHeight)
         
     }

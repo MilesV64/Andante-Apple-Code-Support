@@ -306,15 +306,15 @@ private extension PickerAlertController {
         let maxY = UIScreen.main.bounds.maxY
         
         let contentHeight = self.contentHeight + contentOffset
-        let minY = isFullscreen ? self.view.safeAreaInsets.top : maxY - contentHeight - self.view.safeAreaInsets.bottom
+        let minY = isFullscreen ? self.view.safeAreaInsets.top : (maxY - contentHeight - self.view.safeAreaInsets.bottom)
         let rect = CGRect(
-            x: 0,
+            x: 10,
             y: max(self.view.safeAreaInsets.top, minY),
-            width: self.view.bounds.width,
-            height: contentHeight + self.view.safeAreaInsets.bottom + self.view.bounds.height
+            width: self.view.bounds.width - 20,
+            height: contentHeight
         )
         
-        self.visibleHeight = contentHeight + self.view.safeAreaInsets.bottom
+        self.visibleHeight = contentHeight
         
         popupView.center = CGPoint(x: rect.midX, y: rect.midY)
         popupView.bounds.size = rect.size
@@ -326,15 +326,18 @@ private extension PickerAlertController {
     
     func layoutComponentView() {
         if isPopover {
+            contentView.roundCorners(0, prefersContinuous: true)
             return
         }
         
         let minY = contentOffset
+        contentView.roundCorners(25, prefersContinuous: true)
+        contentView.clipsToBounds = true
         contentView.frame = CGRect(
             origin: CGPoint(x: 0, y: minY),
             size: CGSize(
                 width: popupView.bounds.width,
-                height: self.contentHeight + (useSafeArea ? 0 : self.view.safeAreaInsets.bottom)))
+                height: self.contentHeight))
     }
     
 }

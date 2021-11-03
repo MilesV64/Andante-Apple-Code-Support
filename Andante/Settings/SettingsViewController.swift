@@ -122,6 +122,8 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate, ProfileObs
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
+        self.headerView.separator.inset = UIEdgeInsets(24)
+        
         changeProfileButton.backgroundColor = Colors.orange
         changeProfileButton.setButtonShadow(floating: false)
         changeProfileButton.setTitle("Change Profile", color: Colors.white, font: Fonts.semibold.withSize(16))
@@ -533,7 +535,7 @@ class SettingsHeaderView: UIView {
     
     private let activeProfileIcon = MultipleProfilesView()
     private let activeProfileLabel = LabelGroup()
-    private let separator = Separator(position: .bottom)
+    let separator = Separator(position: .bottom)
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -590,7 +592,6 @@ class SettingsHeaderView: UIView {
         self.addSubview(activeProfileLabel)
         
         self.separator.alpha = 0
-        self.separator.inset = .zero
         self.addSubview(self.separator)
         
     }

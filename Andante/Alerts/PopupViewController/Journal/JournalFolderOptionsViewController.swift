@@ -8,7 +8,7 @@
 
 import UIKit
 
-class JournalFolderOptionsViewController: TransitionPopupViewController {
+class JournalFolderOptionsViewController: TransitionPopupViewController, SegmentedPickerViewDelegate {
     
     private let optionsView = PopupOptionsView()
     
@@ -20,10 +20,20 @@ class JournalFolderOptionsViewController: TransitionPopupViewController {
     
     public var selectedLayoutOption: JournalViewController.EntryLayout = .list {
         didSet {
-            listOptionView.setSelected(selectedLayoutOption == .list)
-            gridOptionView.setSelected(selectedLayoutOption == .grid)
+            if self.selectedLayoutOption == .list {
+                self.layoutPicker.selectOption(at: 0, animated: false)
+            } else {
+                self.layoutPicker.selectOption(at: 1, animated: false)
+            }
         }
     }
+    
+    private let layoutPicker: SegmentedPickerView = {
+        let picker = SegmentedPickerView()
+        picker.insertOption(LayoutOptionView(.list), at: 0)
+        picker.insertOption(LayoutOptionView(.grid), at: 1)
+        return picker
+    }()
     
     private var listOptionView = LayoutOptionView(.list)
     private var gridOptionView = LayoutOptionView(.grid)
@@ -91,115 +101,74 @@ class JournalFolderOptionsViewController: TransitionPopupViewController {
         
         primaryView.addSubview(optionsView)
         
-        listOptionView.setSelected(selectedLayoutOption == .list)
-        listOptionView.action = {
-            [weak self] in
-            guard let self = self else { return }
-            self.listOptionView.setSelected(true)
-            self.gridOptionView.setSelected(false)
-            self.layoutHandler?(.list)
-        }
-        primaryView.addSubview(listOptionView)
+        layoutPicker.delegate = self
         
-        gridOptionView.setSelected(selectedLayoutOption == .grid)
-        gridOptionView.action = {
-            [weak self] in
-            guard let self = self else { return }
-            self.listOptionView.setSelected(false)
-            self.gridOptionView.setSelected(true)
-            self.layoutHandler?(.grid)
-        }
-        primaryView.addSubview(gridOptionView)
+        primaryView.addSubview(layoutPicker)
         
+    }
+    
+    func segmentedPickerView(_ view: SegmentedPickerView, didSelectOptionAt index: Int) {
+        self.layoutHandler?(index == 0 ? .list : .grid)
     }
     
     override func preferredHeightForPrimaryView(for width: CGFloat) -> CGFloat {
         let optionsHeight = PopupOptionsView.height
-        let layoutOptHeight: CGFloat = 52
-        return optionsHeight + layoutOptHeight*2 + 46
+        let layoutOptHeight: CGFloat = 50
+        return optionsHeight + layoutOptHeight + 52
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         let optionsHeight = PopupOptionsView.height
-        let layoutOptHeight: CGFloat = 52
         
         optionsView.frame = CGRect(
-            x: Constants.smallMargin,
+            x: 24,
             y: 0,
-            width: contentView.bounds.width - Constants.smallMargin*2,
+            width: contentView.bounds.width - 48,
             height: optionsHeight)
         
-        listOptionView.frame = CGRect(
-            x: Constants.smallMargin, y: optionsView.frame.maxY + 20,
-            width: contentView.bounds.width - Constants.smallMargin*2,
-            height: layoutOptHeight)
-        
-        gridOptionView.frame = CGRect(
-            x: Constants.smallMargin, y: listOptionView.frame.maxY + 8,
-            width: contentView.bounds.width - Constants.smallMargin*2,
-            height: layoutOptHeight)
+        layoutPicker.frame = CGRect(
+            x: 22, y: optionsView.frame.maxY + 20,
+            width: contentView.bounds.width - 44, height: 56
+        )
         
     }
     
 }
 
 
-fileprivate class LayoutOptionView: CustomButton {
+fileprivate class LayoutOptionView: UIView, SegmentedPickerOptionView {
     
     private let iconView = UIImageView()
     private let label = UILabel()
-    private var isSelectedOption = false
         
     init(_ layout: JournalViewController.EntryLayout) {
-        super.init()
+        super.init(frame: .zero)
         
         if layout == .list {
-            iconView.image = UIImage(name: "rectangle.grid.1x2.fill", pointSize: 20, weight: .medium)
+            iconView.image = UIImage(name: "rectangle.grid.1x2.fill", pointSize: 19, weight: .medium)
             label.text = "List"
         } else {
-            iconView.image = UIImage(name: "rectangle.grid.2x2.fill", pointSize: 20, weight: .medium)
+            iconView.image = UIImage(name: "rectangle.grid.2x2.fill", pointSize: 19, weight: .medium)
             label.text = "Grid"
         }
         
-        
+        label.font = Fonts.medium.withSize(16)
         addSubview(iconView)
         addSubview(label)
         
-        roundCorners(12)
-        
-        highlightAction = {
-            [weak self] highlighted in
-            guard let self = self else { return }
-            
-            if highlighted && !self.isSelectedOption {
-                self.backgroundColor = Colors.lightColor
-            } else if !self.isSelectedOption {
-                UIView.animate(withDuration: 0.3) {
-                    self.backgroundColor = .clear
-                }
-            }
-            
-        }
-        
     }
     
-    public func setSelected(_ selected: Bool) {
-        self.isSelectedOption = selected
-        
+    
+    
+    func setSelected(_ selected: Bool) {
         if selected {
             iconView.tintColor = Colors.white
             label.textColor = Colors.white
-            backgroundColor = Colors.orange
-            label.font = Fonts.semibold.withSize(16)
-            isUserInteractionEnabled = false
         } else {
-            iconView.tintColor = Colors.text.withAlphaComponent(0.9)
-            label.textColor = Colors.text.withAlphaComponent(0.9)
-            backgroundColor = .clear
-            label.font = Fonts.medium.withSize(16)
-            isUserInteractionEnabled = true
+            iconView.tintColor = Colors.lightText
+            label.textColor = Colors.lightText
         }
     }
     
@@ -210,12 +179,14 @@ fileprivate class LayoutOptionView: CustomButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        label.sizeToFit()
         iconView.sizeToFit()
-        iconView.center = CGPoint(x: 28, y: bounds.midY)
         
-        label.frame = CGRect(
-            from: CGPoint(x: 52, y: 0),
-            to: CGPoint(x: bounds.maxX - 8, y: bounds.maxY))
+        let totalWidth = label.bounds.width + iconView.bounds.width + 8
+        
+        iconView.center = CGPoint(x: bounds.midX - 4 - totalWidth/2 + iconView.bounds.width/2, y: bounds.midY)
+        
+        label.center = CGPoint(x: iconView.contextualFrame.maxX + 8 + label.bounds.width/2, y: bounds.midY)
         
     }
 }

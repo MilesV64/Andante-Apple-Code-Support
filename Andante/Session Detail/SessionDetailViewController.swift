@@ -147,7 +147,10 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
             scrollView.addSubview(recordingView!)
         }
         
-        scrollView.addSubview(profileCell)
+        if User.getActiveProfile() == nil {
+            scrollView.addSubview(profileCell)
+        }
+        
         scrollView.addSubview(timeCell)
         scrollView.addSubview(practicedCell)
         scrollView.addSubview(moodCell)
@@ -312,11 +315,6 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
     }
     
     @objc func openOptionsMenu() {
-        let optionsView = SessionOptionsPopupStackView(session: self.session)
-        let popupVC = PopupStackViewController(optionsView)
-        self.presentPopupViewController(popupVC)
-        
-        return
         let optionsVC = SessionOptionsPopupController()
         optionsVC.session = self.session
         
@@ -566,30 +564,18 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
         let margin = (view.bounds.width - totalWidth)/2 + Constants.margin
         let width = totalWidth - margin*2
         
-        profileCell.frame = CGRect(
-            x: margin, y: statsMinY,
-            width: width,
-            height: cellHeight)
+        var cells: [UIView] = [timeCell, practicedCell, moodCell, focusCell]
+        if User.getActiveProfile() == nil {
+            cells.insert(profileCell, at: 0)
+        }
         
-        timeCell.frame = CGRect(
-            x: margin, y: profileCell.frame.maxY,
-            width: width,
-            height: cellHeight)
-        
-        practicedCell.frame = CGRect(
-            x: margin, y: timeCell.frame.maxY,
-            width: width,
-            height: cellHeight)
-        
-        moodCell.frame = CGRect(
-            x: margin, y: practicedCell.frame.maxY,
-            width: width,
-            height: cellHeight)
-        
-        focusCell.frame = CGRect(
-            x: margin, y: moodCell.frame.maxY,
-            width: width,
-            height: cellHeight)
+        for (i, view) in cells.enumerated() {
+            view.frame = CGRect(
+                x: margin, y: statsMinY + CGFloat(i)*cellHeight,
+                width: width,
+                height: cellHeight
+            )
+        }
         
     }
     

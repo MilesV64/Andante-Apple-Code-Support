@@ -135,7 +135,7 @@ class StandardTimePickerView: TimePickerSource, UITextFieldDelegate {
         super.init(frame: .zero)
         
         button.backgroundColor = Colors.lightColor
-        button.roundCorners(7)
+        button.roundCorners(10)
         
         button.highlightAction = { isHighlighted in
             if isHighlighted {
@@ -404,7 +404,7 @@ class AMPMTimePickerView: TimePickerSource, UITextFieldDelegate {
         super.init(frame: .zero)
         
         button.backgroundColor = Colors.lightColor
-        button.roundCorners(7)
+        button.roundCorners(10)
         
         button.highlightAction = { isHighlighted in
             if isHighlighted {
@@ -626,13 +626,13 @@ fileprivate class AMPMPickerView: UIView {
         super.init(frame: .zero)
         
         self.backgroundColor = Colors.lightColor
-        self.roundCorners(7)
+        self.roundCorners(10)
         
         selectionView.backgroundColor = Colors.dynamicColor(
             light: Colors.foregroundColor,
             dark: Colors.text.withAlphaComponent(0.25))
         selectionView.setShadow(radius: 4, yOffset: 1, opacity: 0.08)
-        selectionView.roundCorners(5)
+        selectionView.roundCorners(8)
         self.addSubview(selectionView)
         
         amButton.setTitle("AM", color: Colors.text, font: Fonts.medium.withSize(15))

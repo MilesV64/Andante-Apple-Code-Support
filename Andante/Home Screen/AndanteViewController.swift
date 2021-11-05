@@ -668,7 +668,8 @@ extension AndanteViewController {
 extension AndanteViewController {
     
     public func savePracticeSession(_ model: SessionModel) {
-        guard let profileID = User.getActiveProfile()?.objectID else { return }
+        let profile = model.profile ?? User.getActiveProfile()
+        guard let profileID = profile?.objectID else { return }
         
         let context = DataManager.backgroundContext
         

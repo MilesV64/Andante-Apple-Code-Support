@@ -19,6 +19,7 @@ class SessionModel {
     var end: Date?
     var recordings: [Data] = []
     var title = ""
+    var profile: CDProfile?
 }
 
 class PracticeColors {
@@ -395,6 +396,7 @@ class PracticeViewController: PracticeAnimationViewController {
 private extension PracticeViewController {
     func setupInitialUI() {
         
+        
         view.addSubview(contentView)
         
         self.contentView.backgroundColor = PracticeColors.background
@@ -403,6 +405,7 @@ private extension PracticeViewController {
         self.contentView.addSubview(practiceView)
         
         confirmView = ConfirmView(session)
+        confirmView.viewControllerForPresenting = self
         self.contentView.addSubview(confirmView)
         
         handleView.color = Colors.white.withAlphaComponent(0.35)

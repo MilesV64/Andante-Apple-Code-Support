@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 class SessionNotesTextView: PlaceHolderTextView {
     
@@ -52,6 +53,8 @@ class ManualSessionViewController: UIViewController, UITextViewDelegate, Calenda
     public let practicePicker = MinutePickerView(.prominent)
     public let moodCell = MFCell()
     public let focusCell = MFCell()
+    
+    public let profileCell = ChooseProfileCell()
     
     private var startTime = Date()
     
@@ -251,6 +254,7 @@ class ManualSessionViewController: UIViewController, UITextViewDelegate, Calenda
         session.focus = focusCell.value
         session.notes = textView.text
         session.title = title
+        session.profile = profileCell.profile
                 
         if let container = self.presentingViewController as? AndanteViewController {
             container.savePracticeSession(session)
@@ -292,6 +296,27 @@ class ManualSessionViewController: UIViewController, UITextViewDelegate, Calenda
     }
     
     func setStatCells() {
+        
+        if User.getActiveProfile() == nil {
+            profileCell.profile = CDProfile.getAllProfiles().first
+            profileCell.action = { [weak self] in
+                guard let self = self else { return }
+                self.profileCell.highlight()
+                let popup = ProfilesPopupViewController()
+                popup.selectedProfile = self.profileCell.profile
+                popup.useNewProfileButton = false
+                popup.allowsAllProfiles = false
+                popup.action = { profile in
+                    self.profileCell.profile = profile
+                    
+                }
+                popup.willDismiss = {
+                    self.profileCell.endHighlight()
+                }
+                self.presentPopupViewController(popup)
+            }
+            self.scrollView.addSubview(profileCell)
+        }
         
         timeCell.title = "Start"
         timeCell.stat = .time
@@ -468,31 +493,20 @@ class ManualSessionViewController: UIViewController, UITextViewDelegate, Calenda
     
     private func layoutStats() {
         
-        let cellHeight: CGFloat = 72
+        let cellHeight: CGFloat = 70
         
-        timeCell.inset = UIEdgeInsets(view.responsiveMargin)
-        timeCell.frame = CGRect(
-            x: 0, y: calendarPicker.frame.maxY,
-            width: self.view.bounds.width,
-            height: cellHeight)
+        var cells: [Separator] = [timeCell, practicedCell, moodCell, focusCell]
+        if User.getActiveProfile() == nil {
+            cells.insert(self.profileCell, at: 0)
+        }
         
-        practicedCell.inset = UIEdgeInsets(view.responsiveMargin)
-        practicedCell.frame = CGRect(
-            x: 0, y: timeCell.frame.maxY,
-            width: self.view.bounds.width,
-            height: cellHeight)
-        
-        moodCell.inset = UIEdgeInsets(view.responsiveMargin)
-        moodCell.frame = CGRect(
-            x: 0, y: practicedCell.frame.maxY,
-            width: self.view.bounds.width,
-            height: cellHeight)
-        
-        focusCell.inset = UIEdgeInsets(view.responsiveMargin)
-        focusCell.frame = CGRect(
-            x: 0, y: moodCell.frame.maxY,
-            width: self.view.bounds.width,
-            height: cellHeight)
+        for (i, cell) in cells.enumerated() {
+            cell.inset = UIEdgeInsets(view.responsiveMargin)
+            cell.frame = CGRect(
+                x: 0, y: calendarPicker.frame.maxY + CGFloat(i)*cellHeight,
+                width: self.view.bounds.width,
+                height: cellHeight)
+        }
         
         
     }
@@ -615,9 +629,9 @@ fileprivate class StatsCell: UIView {
         iconView.iconSize = CGSize(22)
         iconView.frame = CGRect(
             x: Constants.margin,
-            y: self.bounds.midY - 19,
-            width: 38,
-            height: 38).integral
+            y: self.bounds.midY - 18,
+            width: 36,
+            height: 36).integral
         iconView.roundCorners(10)
         
         titleLabel.sizeToFit()
@@ -669,9 +683,9 @@ class SessionStatCell: Separator {
         iconView.iconSize = CGSize(22)
         iconView.frame = CGRect(
             x: responsiveMargin,
-            y: self.bounds.midY - 19,
-            width: 38,
-            height: 38).integral
+            y: self.bounds.midY - 18,
+            width: 36,
+            height: 36).integral
         iconView.roundCorners(10)
         
         titleLabel.sizeToFit()
@@ -681,14 +695,22 @@ class SessionStatCell: Separator {
     }
 }
 
-fileprivate class ButtonCell: SessionStatCell {
+class ChooseProfileCell: Separator {
     
-    private let button = InsetButton(inset: 5)
+    private let button = UIButton()
+    private let profileIcon = ProfileImageView()
+    private let label = UILabel()
     
-    public var buttonTitle: String? {
+    private var cancellables = Set<AnyCancellable>()
+    
+    public var profile: CDProfile? {
         didSet {
-            button.setTitle(buttonTitle, for: .normal)
-            setNeedsLayout()
+            self.cancellables.removeAll()
+            self.profileIcon.profile = profile
+            self.profile?.publisher(for: \.name).sink { [weak self] name in
+                self?.button.setTitle(name ?? "", for: .normal)
+            }.store(in: &cancellables)
+            self.setNeedsLayout()
         }
     }
     
@@ -697,20 +719,31 @@ fileprivate class ButtonCell: SessionStatCell {
     }
     
     public func endHighlight() {
-        UIView.transition(with: button, duration: 0.4, options: .transitionCrossDissolve, animations: {
-            self.button.setTitleColor(Colors.text, for: .normal)
-        }, completion: nil)
+        self.button.setTitleColor(Colors.text, for: .normal)
     }
     
     public var action: (()->Void)?
     
-    override init() {
-        super.init()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.backgroundColor = .clear
+        
+        profileIcon.inset = 5
+        self.addSubview(profileIcon)
+        
+        label.text = "Profile"
+        label.font = Fonts.semibold.withSize(17)
+        label.textColor = Colors.text
+        self.addSubview(label)
+        
+        self.position = .bottom
+        self.inset = UIEdgeInsets(Constants.margin)
         
         button.setTitleColor(Colors.text, for: .normal)
-        button.titleLabel?.font = Fonts.regular.withSize(17)
+        button.titleLabel?.font = Fonts.medium.withSize(16)
         button.backgroundColor = Colors.lightColor
-        button.roundCorners(9)
+        button.roundCorners(10)
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         
         self.addSubview(button)
@@ -728,6 +761,20 @@ fileprivate class ButtonCell: SessionStatCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        profileIcon.frame = CGRect(
+            x: responsiveMargin,
+            y: self.bounds.midY - 18,
+            width: 36,
+            height: 36).integral
+        profileIcon.cornerRadius = 10
+        
+        label.sizeToFit()
+        label.frame = CGRect(
+            x: profileIcon.frame.maxX + 16, y: 0,
+            width: label.bounds.width,
+            height: self.bounds.height
+        )
         
         let labelSize = button.titleLabel!.sizeThatFits(self.bounds.size)
         button.frame = CGRect(
@@ -822,14 +869,14 @@ class MFCell: SessionStatCell {
         super.init()
         
         bgView.backgroundColor = Colors.lightColor
-        bgView.roundCorners(7)
+        bgView.roundCorners(10)
         self.addSubview(bgView)
         
         selectedView.backgroundColor = Colors.dynamicColor(
             light: Colors.foregroundColor,
             dark: Colors.text.withAlphaComponent(0.25))
         selectedView.setShadow(radius: 4, yOffset: 1, opacity: 0.08)
-        selectedView.roundCorners(6)
+        selectedView.roundCorners(8)
         self.addSubview(selectedView)
                 
     }

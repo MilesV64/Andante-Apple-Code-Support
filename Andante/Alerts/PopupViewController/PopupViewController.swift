@@ -54,6 +54,7 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     public var closeCompletion: (()->())?
+    public var willDismiss: (()->())?
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -117,7 +118,7 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     public func willClose() {
-        
+        self.willDismiss?()
     }
     
     

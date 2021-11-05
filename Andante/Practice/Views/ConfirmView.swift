@@ -15,7 +15,9 @@ class ScrollView: CancelTouchScrollView {
     }
 }
 
-class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
+class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDelegate {
+    
+    public weak var viewControllerForPresenting: UIViewController?
     
     private let topView = UIView()
     private let backButton = UIButton(type: .system)
@@ -27,8 +29,14 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
     private let scrollView = ScrollView()
     private let textView = SessionNotesTextView()
     
-    private let startCell = ConfirmStatCell()
-    private let practicedCell = ConfirmStatCell()
+    private let profileCell = ChooseProfileCell()
+    
+    private let timeCell = SessionStatCell()
+    private let timePicker = TimePickerView()
+    
+    private let practicedCell = SessionStatCell()
+    private let practicePicker = MinutePickerView(.prominent)
+    
     private let moodCell = MFCell()
     private let focusCell = MFCell()
     
@@ -114,6 +122,9 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
                 self.session.title = self.titleLabel.text ??  User.getActiveProfile()?.defaultSessionTitle ?? "Practice"
             }
             self.textView.delegate = nil
+            self.session.practiceTime = self.practicePicker.value
+            self.session.start = self.timePicker.date
+            self.session.profile = self.profileCell.profile
             self.saveAction?()
         }
         self.addSubview(saveButton)
@@ -155,12 +166,20 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
     }
     
     public func updateNotes() {
-        textView.text = session.notes ?? ""
+        textView.text = session.notes
     }
     
     public func updateCells() {
-        startCell.detailLabel.text = session.start.string(timeStyle: .short)
-        practicedCell.detailLabel.text = "\(session.practiceTime) min"
+        timePicker.date = session.start
+        practicePicker.value = session.practiceTime
+        
+        if User.getActiveProfile() == nil, profileCell.profile == nil {
+            profileCell.profile = CDProfile.getAllProfiles().first
+        }
+        
+        profileCell.isHidden = User.getActiveProfile() != nil
+        self.setNeedsLayout()
+        
     }
     
     @objc func didTapBack() {
@@ -251,15 +270,41 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
     
     private func setStats() {
         
-        startCell.title = "Start"
-        startCell.stat = .time
-        startCell.detailLabel.text = session.start.string(timeStyle: .short)
-        scrollView.addSubview(startCell)
+        profileCell.profile = CDProfile.getAllProfiles().first
+        profileCell.action = { [weak self] in
+            guard let self = self else { return }
+            self.profileCell.highlight()
+            let popup = ProfilesPopupViewController()
+            popup.selectedProfile = self.profileCell.profile
+            popup.useNewProfileButton = false
+            popup.allowsAllProfiles = false
+            popup.action = { profile in
+                self.profileCell.profile = profile
                 
+            }
+            popup.willDismiss = {
+                self.profileCell.endHighlight()
+            }
+            self.viewControllerForPresenting?.presentPopupViewController(popup)
+        }
+        profileCell.isHidden = User.getActiveProfile() != nil
+        self.scrollView.addSubview(profileCell)
+        
+        timeCell.title = "Start"
+        timeCell.stat = .time
+        scrollView.addSubview(timeCell)
+        
+        timePicker.delegate = self
+        scrollView.addSubview(timePicker)
+        
         practicedCell.title = "Duration"
         practicedCell.stat = .practice
-        practicedCell.detailLabel.text = "\(session.practiceTime) min"
         scrollView.addSubview(practicedCell)
+
+        practicePicker.value = 30
+        practicePicker.useSuggested = true
+        practicePicker.delegate = self
+        scrollView.addSubview(practicePicker)
 
         moodCell.title = "Mood"
         moodCell.stat = .mood
@@ -283,6 +328,35 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
             self.session.focus = value
         }
         
+    }
+    
+    func pickerViewWillBeginEditing(_ view: UIView) {
+        
+        if view === practicePicker {
+            let date = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+            let interval = Int(date.timeIntervalSince(timePicker.date)/60) - 1
+            if interval > 0 && interval < 3*60 {
+                practicePicker.useSuggested = true
+            }
+            else {
+                practicePicker.useSuggested = false
+            }
+        }
+    }
+    
+    func pickerViewDidEndEditing(_ view: UIView) {
+        
+    }
+    
+    func pickerViewDidSelectSuggested(_ view: UIView) {
+        let date = Calendar.current.date(bySetting: .second, value: 0, of: Date()) ?? Date()
+        practicePicker.value = Int(date.timeIntervalSince(timePicker.date)/60) - 1
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        practicePicker.resignFirstResponder()
+        timePicker.resignFirstResponder()
+        titleLabel.resignFirstResponder()
     }
     
     override func layoutSubviews() {
@@ -323,7 +397,10 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
             height: 10)
         
         let statHeight: CGFloat = 72
-        let stats = [startCell, practicedCell, moodCell, focusCell]
+        var stats: [Separator] = [timeCell, practicedCell, moodCell, focusCell]
+        if self.profileCell.isHidden == false {
+            stats.insert(profileCell, at: 0)
+        }
         for (i, cell) in stats.enumerated() {
             cell.inset = UIEdgeInsets(responsiveMargin)
             cell.frame = CGRect(
@@ -332,10 +409,26 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate {
                 height: statHeight)
         }
         
+        let margin = responsiveSmallMargin
+        
+        let practiceFrame = practicedCell.frame
+        
+        practicePicker.sizeToFit()
+        practicePicker.frame.origin = CGPoint(
+            x: practiceFrame.maxX - margin - practicePicker.bounds.width,
+            y: practiceFrame.midY - practicePicker.bounds.height/2)
+        
+        let timeFrame = timeCell.frame
+        
+        timePicker.sizeToFit()
+        timePicker.frame.origin = CGPoint(
+            x: timeFrame.maxX - margin - timePicker.bounds.width,
+            y: timeFrame.midY - timePicker.bounds.height/2)
+        
         notesLabel.sizeToFit()
         notesLabel.frame.origin = CGPoint(
             x: responsiveMargin,
-            y: stats[3].frame.maxY + 14)
+            y: focusCell.frame.maxY + 14)
         
         layoutTextView()
         

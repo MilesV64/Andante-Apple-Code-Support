@@ -21,6 +21,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
     
     public var selectedProfile: CDProfile?
     
+    public var allowsAllProfiles = true
     public var useNewProfileButton = true
     public var newProfileAction: (()->())?
     public var action: ((CDProfile?)->())?
@@ -58,17 +59,21 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         tableView.register(CheckmarkTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.backgroundColor = .clear
         tableView.separatorColor = .clear
-        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: AndanteCellView.height))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4))
         contentView.addSubview(tableView)
         
-        self.allProfilesCellView.setChecked(self.selectedProfile == nil)
-        self.allProfilesCellView.margin = 24
-        self.allProfilesCellView.action = { [weak self] in
-            self?.action?(nil)
-            self?.close()
+        if self.allowsAllProfiles {
+            self.allProfilesCellView.setChecked(self.selectedProfile == nil)
+            self.allProfilesCellView.margin = 24
+            self.allProfilesCellView.action = { [weak self] in
+                self?.action?(nil)
+                self?.close()
+            }
+            tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: AndanteCellView.height))
+            tableView.tableHeaderView?.addSubview(self.allProfilesCellView)
+        } else {
+            tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         }
-        tableView.tableHeaderView?.addSubview(self.allProfilesCellView)
         
         if useNewProfileButton {
             newProfileButton = BottomActionButton(title: "New Profile")
@@ -142,7 +147,9 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
     }
     
     override func viewDidLayoutSubviews() {
-        let tableHeight: CGFloat = tableView.rowHeight * CGFloat((fetchController?.numberOfItems() ?? 0) + 1) + 10
+        var tableHeight: CGFloat = tableView.rowHeight * CGFloat(fetchController?.numberOfItems() ?? 0) + 10
+    
+        tableHeight += tableView.tableHeaderView?.bounds.height ?? 0
         
         let buttonHeight = newProfileButton == nil ? 0 : BottomActionButton.height
         

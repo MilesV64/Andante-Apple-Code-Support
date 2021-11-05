@@ -56,7 +56,7 @@ class MinutePickerView: UIView, UITextFieldDelegate {
         
         button.touchMargin = 8
         button.backgroundColor = self.style == .inline ? .clear : Colors.lightColor
-        button.roundCorners(7)
+        button.roundCorners(10)
         
         button.highlightAction = { isHighlighted in
             if isHighlighted {
@@ -374,7 +374,7 @@ fileprivate class MinuteSuggestionCell: UICollectionViewCell {
         super.init(frame: frame)
         
         self.backgroundColor = Colors.lightColor
-        self.roundCorners(7)
+        self.roundCorners(10)
         
         label.textColor = Colors.text
         label.font = Fonts.medium.withSize(17)

@@ -63,13 +63,13 @@ class CalendarPickerView: Separator, UICollectionViewDelegate, UICollectionViewD
         monthLabel.font = Fonts.semibold.withSize(18)
         self.addSubview(monthLabel)
         
-        nextButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)), for: .normal)
-        nextButton.tintColor = Colors.text
+        nextButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .bold)), for: .normal)
+        nextButton.tintColor = Colors.lightText
         nextButton.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
         self.addSubview(nextButton)
         
-        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .semibold)), for: .normal)
-        backButton.tintColor = Colors.text
+        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .bold)), for: .normal)
+        backButton.tintColor = Colors.lightText
         backButton.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
         self.addSubview(backButton)
         

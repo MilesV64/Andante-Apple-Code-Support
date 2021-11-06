@@ -19,8 +19,8 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
     
     public weak var viewControllerForPresenting: UIViewController?
     
-    private let topView = UIView()
-    private let backButton = UIButton(type: .system)
+    private let topView = Separator(position: .bottom)
+    private let backButton = Button("chevron.left")
         
     private let titleLabel = UITextField()
     private let titleSeparator = Separator(position: .bottom)
@@ -129,16 +129,20 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
         }
         self.addSubview(saveButton)
         
-        backButton.setImage(UIImage(name: "chevron.left", pointSize: 16, weight: .bold), for: .normal)
-        backButton.tintColor = Colors.text
-        backButton.contentHorizontalAlignment = .left
-        backButton.contentEdgeInsets.left = Constants.smallMargin
-        backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
-        scrollView.addSubview(backButton)
-        scrollView.delegate = self
         
-        topView.backgroundColor = Colors.foregroundColor.withAlphaComponent(0.94)
+        topView.backgroundColor = Colors.foregroundColor
+        topView.alpha = 0
         self.addSubview(topView)
+        
+        backButton.contentHorizontalAlignment = .left
+        backButton.action = {
+            [weak self] in
+            guard let self = self else { return }
+            self.didTapBack()
+        }
+        self.addSubview(backButton)
+        
+        scrollView.delegate = self
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -157,7 +161,6 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
             backButton.titleLabel?.font = Fonts.regular.withSize(17)
             backButton.tintColor = Colors.orange
             backButton.contentHorizontalAlignment = .left
-            backButton.contentEdgeInsets.left = Constants.smallMargin
         }
     }
     
@@ -224,7 +227,8 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
+        let offset = scrollView.contentOffset.y + scrollView.contentInset.top
+        topView.alpha = (offset - 20)/20
     }
     
     func textViewDidChangeSelection(_ textView: UITextView) {
@@ -359,6 +363,9 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
         titleLabel.resignFirstResponder()
     }
     
+    
+    // MARK: - LayoutSubviews
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -370,11 +377,13 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
         saveButton.frame.origin = CGPoint(
             x: extraMargin, y: self.bounds.maxY - saveButton.bounds.height)
         
-        scrollView.frame = self.bounds.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: saveButton.bounds.height, right: 0))
-        
         topView.frame = CGRect(
-            x: 0, y: 0, width: self.bounds.width,
-            height: self.safeAreaInsets.top)
+            x: 0, y: 0,
+            width: self.bounds.width,
+            height: 44 + self.safeAreaInsets.top)
+        
+        topView.inset.left = responsiveMargin
+        topView.inset.right = responsiveMargin
         
         if backButton.image(for: .normal) == nil {
             backButton.frame = CGRect(
@@ -382,11 +391,14 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
                 width: 110, height: 48)
         }
         else {
+            backButton.contentEdgeInsets.left = responsiveMargin - 1
             backButton.frame = CGRect(
-                x: 0, y: 0,
-                width: 60, height: 44)
+                x: 0, y: self.safeAreaInsets.top,
+                width: responsiveMargin + 56, height: 44)
         }
         
+        
+        scrollView.frame = self.bounds.inset(by: UIEdgeInsets(top: topView.frame.maxY, left: 0, bottom: saveButton.bounds.height, right: 0))
         
         layoutTitleLabel()
         
@@ -454,7 +466,7 @@ class ConfirmView: UIView, UITextViewDelegate, TransitionDelegate, PickerViewDel
         
         let titleWidth = titleLabel.isFirstResponder ? self.bounds.width - responsiveMargin*2 : min(titleLabel.bounds.width, self.bounds.width - responsiveMargin*2)
         
-        titleLabel.frame = CGRect(x: responsiveMargin, y: 70,
+        titleLabel.frame = CGRect(x: responsiveMargin, y: 36,
                                   width: titleWidth,
                                   height: titleLabel.bounds.size.height)
         

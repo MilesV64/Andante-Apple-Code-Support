@@ -727,7 +727,11 @@ extension AndanteViewController {
     }
     
     func profileManager(_ profileManager: ProfileManager, didDeleteProfile profile: CDProfile) {
-        if profile == User.getActiveProfile() {
+        let didDeleteActiveProfile = profile == User.getActiveProfile()
+        let isAllProfilesSelected = User.getActiveProfile() == nil
+        let currentProfileCount = CDProfile.getAllProfiles().count
+        
+        if didDeleteActiveProfile || (isAllProfilesSelected && currentProfileCount == 1)  {
             if let first = CDProfile.getAllProfiles().first {
                 User.setActiveProfile(first)
                 if let settingsContainer = self.presentedViewController as? SettingsContainerViewController {

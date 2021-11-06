@@ -12,7 +12,6 @@ class PopupAreYouSureView: PopupContentView {
     
     private let titleLabel = UILabel()
     private let textView = UITextView()
-    private let separator = Separator()
     
     private let destructiveButton = PushButton()
     private let cancelButton = PushButton()
@@ -69,12 +68,12 @@ class PopupAreYouSureView: PopupContentView {
         textView.backgroundColor = .clear
         self.addSubview(textView)
         
-        cancelButton.backgroundColor = Colors.lightColor
-        cancelButton.cornerRadius = 10
+        cancelButton.backgroundColor = Colors.extraLightColor
+        cancelButton.cornerRadius = 14
         cancelButton.action = cancelAction
         self.addSubview(cancelButton)
         
-        let buttonColor = isDestructive ? Colors.red.withAlphaComponent(0.13) : Colors.orange
+        let buttonColor = isDestructive ? Colors.extraLightColor : Colors.orange
         
         destructiveButton.action = {
             [weak self] in
@@ -82,12 +81,8 @@ class PopupAreYouSureView: PopupContentView {
             self.destructiveAction?()
         }
         destructiveButton.backgroundColor = buttonColor
-        destructiveButton.cornerRadius = 10
+        destructiveButton.cornerRadius = 14
         self.addSubview(destructiveButton)
-        
-        separator.insetToMargins()
-        separator.position = .top
-        self.addSubview(separator)
         
     }
     
@@ -102,7 +97,7 @@ class PopupAreYouSureView: PopupContentView {
         let titleHeight = titleLabel.sizeThatFits(CGSize(width: width, height: .infinity)).height
         let textHeight = textView.sizeThatFits(CGSize(width: width, height: CGFloat.infinity)).height
         
-        return titleHeight + textHeight + buttonHeight*2 + buttonSpacing*3 + 16 + 10 + 16
+        return titleHeight + textHeight + buttonHeight*2 + 60 + buttonSpacing
         
     }
     
@@ -118,13 +113,8 @@ class PopupAreYouSureView: PopupContentView {
         titleLabel.frame = CGRect(x: 0, y: 16, width: bounds.width, height: titleHeight)
         textView.frame = CGRect(x: 0, y: titleLabel.frame.maxY, width: bounds.width, height: textHeight)
         
-        separator.frame = CGRect(
-            x: 0, y: textView.frame.maxY + 10,
-            width: bounds.width,
-            height: 6)
-        
         destructiveButton.frame = CGRect(
-            x: Constants.margin, y: separator.frame.maxY + buttonSpacing,
+            x: Constants.margin, y: textView.frame.maxY + 20,
             width: bounds.width - Constants.margin*2,
             height: buttonHeight)
         
@@ -133,46 +123,6 @@ class PopupAreYouSureView: PopupContentView {
             width: bounds.width - Constants.margin*2,
             height: buttonHeight)
         
-        
-    }
-    
-    private class Button: CustomButton {
-        
-        let separator = Separator(position: .top)
-        
-        init(destructive: Bool) {
-            super.init()
-            
-            self.addSubview(separator)
-            
-            self.setTitleColor(destructive ? Colors.red : Colors.text, for: .normal)
-            self.titleLabel?.font = destructive ? Fonts.semibold.withSize(17) : Fonts.semibold.withSize(17)
-            
-            self.highlightAction = {
-                [weak self] highlighted in
-                guard let self = self else { return }
-                
-                if highlighted {
-                    self.titleLabel?.alpha = 0.25
-                }
-                else {
-                    UIView.animate(withDuration: 0.2) {
-                        self.titleLabel?.alpha = 1
-                    }
-                }
-                
-            }
-            
-        }
-        
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            separator.frame = self.bounds
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
         
     }
     

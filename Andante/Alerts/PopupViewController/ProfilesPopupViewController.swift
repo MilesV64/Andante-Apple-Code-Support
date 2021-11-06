@@ -156,7 +156,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         
         action?(profile)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
             self.close()
         }
         

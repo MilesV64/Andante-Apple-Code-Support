@@ -64,7 +64,7 @@ class CheckmarkCellView: AndanteCellView {
         self.checkmarkView.roundCorners(12, prefersContinuous: false)
         
         self.checkmarkView.addSubview(self.animationView)
-        self.animationView.frame = self.checkmarkView.bounds.offsetBy(dx: -1, dy: 0)
+        self.animationView.frame = self.checkmarkView.bounds.offsetBy(dx: -0.5, dy: 0)
         
     }
     

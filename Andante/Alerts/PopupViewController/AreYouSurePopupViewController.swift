@@ -72,7 +72,7 @@ class ActionTrayPopupViewController: PopupViewController {
         textView.backgroundColor = .clear
         self.contentView.addSubview(textView)
         
-        cancelButton.setTitle(cancelText ?? "Cancel", color: Colors.lightText, font: Fonts.medium.withSize(19))
+        cancelButton.setTitle(cancelText ?? "Cancel", color: Colors.lightText, font: Fonts.medium.withSize(17))
         cancelButton.action = {
             [weak self] in
             guard let self = self else { return }
@@ -84,31 +84,36 @@ class ActionTrayPopupViewController: PopupViewController {
     
     override func viewDidLayoutSubviews() {
         
-        let buttonHeight: CGFloat = 70
+        let buttonHeight: CGFloat = 50
+        let buttonSpacing: CGFloat = 10
         
         let titleHeight = titleLabel.sizeThatFits(CGSize(width: contentWidth, height: .infinity)).height
         let textHeight = textView.sizeThatFits(CGSize(width: contentWidth, height: CGFloat.infinity)).height
         
         let totalTextHeight: CGFloat = titleHeight + textHeight
-        let totalButtonHeight: CGFloat = buttonHeight * (actionButton == nil ? 1 : 2)
+        let totalButtonHeight: CGFloat = (buttonHeight * (actionButton == nil ? 1 : 2)) + (actionButton == nil ? 0 : buttonSpacing)
         
-        self.preferredContentHeight = totalTextHeight + totalButtonHeight + 20 + 20
+        
+        self.preferredContentHeight = totalTextHeight + totalButtonHeight + 20 + 20 + 20
         
         super.viewDidLayoutSubviews()
         
         titleLabel.frame = CGRect(x: 0, y: 20, width: self.contentView.bounds.width, height: titleHeight)
         textView.frame = CGRect(x: 0, y: titleLabel.frame.maxY, width: self.contentView.bounds.width, height: textHeight)
         
+        var cancelMinY: CGFloat = textView.frame.maxY + 20
+        
         if let actionButton = actionButton {
             actionButton.frame = CGRect(
-                x: 0, y: textView.frame.maxY + 20,
-                width: contentView.bounds.width,
+                x: 20, y: textView.frame.maxY + 20,
+                width: contentView.bounds.width - 40,
                 height: buttonHeight)
+            cancelMinY = actionButton.frame.maxY + buttonSpacing
         }
         
         cancelButton.frame = CGRect(
-            x: 0, y: (actionButton?.frame.maxY) ?? (textView.frame.maxY + 20),
-            width: contentView.bounds.width,
+            x: 20, y: cancelMinY,
+            width: contentView.bounds.width - 40,
             height: buttonHeight)
         
         
@@ -118,7 +123,8 @@ class ActionTrayPopupViewController: PopupViewController {
         self.action = handler
         
         let actionButton = Button()
-        actionButton.setTitle(title, color: isDestructive ? Colors.red : Colors.orange, font: Fonts.medium.withSize(19))
+        actionButton.backgroundColor = isDestructive ? Colors.extraLightColor : Colors.orange
+        actionButton.setTitle(title, color: isDestructive ? Colors.red : UIColor.white, font: Fonts.medium.withSize(17))
         actionButton.action = { [weak self] in
             self?.didSelectAction = true
             self?.close()
@@ -144,37 +150,18 @@ class ActionTrayPopupViewController: PopupViewController {
         super.close()
     }
     
-    private class Button: CustomButton {
-        
-        let separator = Separator(position: .top)
+    private class Button: PushButton {
         
         override init() {
             super.init()
             
-            self.addSubview(separator)
-            
-            self.titleLabel?.font = Fonts.semibold.withSize(17)
-            
-            self.highlightAction = {
-                [weak self] highlighted in
-                guard let self = self else { return }
-                
-                if highlighted {
-                    self.backgroundColor = Colors.cellHighlightColor
-                }
-                else {
-                    UIView.animate(withDuration: 0.2) {
-                        self.backgroundColor = .clear
-                    }
-                }
-                
-            }
-            
+            self.cornerRadius = 14
+            self.backgroundColor = Colors.extraLightColor
         }
         
         override func layoutSubviews() {
             super.layoutSubviews()
-            separator.frame = self.bounds
+            
         }
         
         required init?(coder aDecoder: NSCoder) {

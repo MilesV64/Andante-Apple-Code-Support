@@ -83,8 +83,10 @@ class AndanteCellView: UIView {
         didSet {
             if let icon = icon {
                 self.iconView.image = UIImage(name: icon, pointSize: 17, weight: .medium)?.withRenderingMode(.alwaysTemplate)
+                self.iconView.tintColor = .white
                 self.imageSize = nil
                 self.profile = nil
+                self.setNeedsLayout()
             }
         }
     }

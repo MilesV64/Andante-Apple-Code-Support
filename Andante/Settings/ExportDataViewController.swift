@@ -35,6 +35,8 @@ class ExportDataViewController: SettingsDetailViewController {
     private var isExporting = false
     private var didCancelExport = false
     
+    private var showProfileCell = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,6 +44,7 @@ class ExportDataViewController: SettingsDetailViewController {
         
         self.backgroundColor = Colors.foregroundColor
         self.scrollView.alwaysBounceVertical = false
+        self.scrollView.delaysContentTouches = false
         
         button.margin = 24
         button.color = .clear
@@ -72,27 +75,33 @@ class ExportDataViewController: SettingsDetailViewController {
         descriptionView.backgroundColor = .clear
         self.scrollView.addSubview(descriptionView)
                 
-        profileCellView.profile = User.getActiveProfile()
-        profileCellView.alternateProfileTitle = "Profile"
-        profileCellView.detailText = User.getActiveProfile()?.name ?? "All Profiles"
-        
-        profileCellView.action = { [weak self] in
-            guard let self = self, self.isExporting == false else { return }
+        if CDProfile.getAllProfiles().count > 1 {
+            self.showProfileCell = true
             
-            let vc = ProfilesPopupViewController()
-            vc.selectedProfile = self.profileCellView.profile
-            vc.useNewProfileButton = false
-            vc.action = {
-                [weak self] profile in
-                guard let self = self else { return }
-                self.profileCellView.profile = profile
-                self.profileCellView.detailText = profile?.name ?? "All Profiles"
+            let profile = User.getActiveProfile() ?? CDProfile.getAllProfiles().first
+            profileCellView.profile = profile
+            profileCellView.detailText = profile?.name
+            profileCellView.alternateProfileTitle = "Profile"
+            
+            profileCellView.action = { [weak self] in
+                guard let self = self, self.isExporting == false else { return }
+                
+                let vc = ProfilesPopupViewController()
+                vc.allowsAllProfiles = false
+                vc.selectedProfile = self.profileCellView.profile
+                vc.useNewProfileButton = false
+                vc.action = {
+                    [weak self] profile in
+                    guard let self = self else { return }
+                    self.profileCellView.profile = profile
+                    self.profileCellView.detailText = profile?.name
+                }
+                
+                self.presentPopupViewController(vc)
+                
             }
-            
-            self.presentPopupViewController(vc)
-            
+            self.scrollView.addSubview(self.profileCellView)
         }
-        self.scrollView.addSubview(self.profileCellView)
         
         titleCellView.isOn = Settings.includeTitleInExport
         titleCellView.toggleAction = { isOn in
@@ -133,9 +142,15 @@ class ExportDataViewController: SettingsDetailViewController {
             x: 0, y: minY)
         
         let itemHeight = AndanteCellView.height
-        let cellMinY = button.frame.minY - (itemHeight * 3)
+        let cellMinY = descriptionView.frame.maxY + 32
         
-        for (i, cell) in [profileCellView, titleCellView, notesCellView].enumerated() {
+        var cells: [UIView] = [titleCellView, notesCellView]
+        
+        if showProfileCell {
+            cells.insert(profileCellView, at: 0)
+        }
+        
+        for (i, cell) in cells.enumerated() {
             cell.frame = CGRect(
                 x: 0,
                 y: cellMinY + (CGFloat(i) * itemHeight),
@@ -153,7 +168,7 @@ class ExportDataViewController: SettingsDetailViewController {
     
     func didTapButton() {
         guard
-            let profile = profileCellView.profile,
+            let profile = profileCellView.profile ?? User.getActiveProfile(),
             isExporting == false
         else { return }
         
@@ -207,7 +222,7 @@ class ExportDataViewController: SettingsDetailViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         
-        let includeTitle = Settings.includeNotesInExport
+        let includeTitle = Settings.includeTitleInExport
         let includeNotes = Settings.includeNotesInExport
         
         var text = ""
@@ -229,7 +244,7 @@ class ExportDataViewController: SettingsDetailViewController {
             let end = dateFormatter.string(from: session.getEndTime())
             
             if includeTitle {
-                text += "\n\(session.title)"
+                text += "\n\(session.title ?? "Practice")"
             }
             else {
                 text += "\n"

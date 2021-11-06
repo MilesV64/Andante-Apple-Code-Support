@@ -13,6 +13,7 @@ import Combine
 @objc protocol ProfileObserver: AnyObject {
     @objc optional func profileManager(_ profileManager: ProfileManager, didAddProfile profile: CDProfile)
     @objc optional func profileManager(_ profileManager: ProfileManager, didDeleteProfile profile: CDProfile)
+    @objc optional func profileManager(_ profileManager: ProfileManager, profileDidUpdateDailyGoal profile: CDProfile)
 }
 
 class ProfileManager: NSObject, NSFetchedResultsControllerDelegate {
@@ -106,6 +107,12 @@ class ProfileManager: NSObject, NSFetchedResultsControllerDelegate {
         
         profile.publisher(for: \.iconName, options: .new).sink { iconName in
             guard iconName != nil else { return }
+            WidgetDataManager.writeData()
+        }.store(in: &cancellables[uuid]!)
+        
+        profile.publisher(for: \.dailyGoal, options: .new).sink { iconName in
+            guard iconName != nil else { return }
+            self.observers.forEach { $0.value?.profileManager?(self, profileDidUpdateDailyGoal: profile) }
             WidgetDataManager.writeData()
         }.store(in: &cancellables[uuid]!)
     }

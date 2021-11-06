@@ -38,6 +38,21 @@ class AndanteCellView: UIView {
         }
     }
     
+    public var showSeparator: Bool = false {
+        didSet {
+            if self.showSeparator, self.separator == nil {
+                let separator = Separator(position: .bottom)
+                separator.insetToMargins()
+                self.separator = separator
+                self.addSubview(separator)
+                self.setNeedsLayout()
+            } else {
+                self.separator?.removeFromSuperview()
+                self.separator = nil
+            }
+        }
+    }
+    
     private(set) var separator: Separator?
         
     
@@ -250,6 +265,8 @@ class AndanteCellView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        self.separator?.frame = self.bounds
         
         self.button.contextualFrame = self.bounds
         

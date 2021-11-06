@@ -48,6 +48,15 @@ class MinutePickerView: UIView, UITextFieldDelegate {
     }
     
     private var _value: Int = 30
+    
+    public var allowsEditing: Bool = false {
+        didSet {
+            if self.isFirstResponder == false && allowsEditing == false {
+                print("Fas")
+                self.isUserInteractionEnabled = false
+            }
+        }
+    }
         
     init(_ style: Style) {
         self.style = style
@@ -77,18 +86,23 @@ class MinutePickerView: UIView, UITextFieldDelegate {
             self.becomeFirstResponder()
         }
         
+        if self.allowsEditing == false {
+            self.button.isUserInteractionEnabled = false
+            self.isUserInteractionEnabled = false
+        }
+        
         self.addSubview(button)
         
         minLabel.isUserInteractionEnabled = false
         minLabel.text = "min"
-        minLabel.textColor = self.style == .inline ? Colors.orange : Colors.text
-        minLabel.font = Fonts.medium.withSize(17)
+        minLabel.textColor = style == .inline ? Colors.lightText : Colors.text
+        minLabel.font = style == .inline ? Fonts.regular.withSize(17) : Fonts.medium.withSize(17)
         self.addSubview(minLabel)
         
         textField.text = "\(value)"
         textField.isUserInteractionEnabled = false
-        textField.textColor = self.style == .inline ? Colors.orange : Colors.text
-        textField.font = Fonts.medium.withSize(17)
+        textField.textColor = style == .inline ? Colors.lightText : Colors.text
+        textField.font = minLabel.font
         textField.keyboardType = .numberPad
         textField.delegate = self
         textField.textAlignment = .right
@@ -113,12 +127,17 @@ class MinutePickerView: UIView, UITextFieldDelegate {
     
     @discardableResult
     override func becomeFirstResponder() -> Bool {
+        self.isUserInteractionEnabled = true
+        self.textField.isUserInteractionEnabled = true
         return textField.becomeFirstResponder()
     }
     
     @discardableResult
     override func resignFirstResponder() -> Bool {
+        self.isUserInteractionEnabled = false
+        self.textField.isUserInteractionEnabled = false
         return textField.resignFirstResponder()
+        
     }
     
     override var isFirstResponder: Bool {
@@ -139,8 +158,9 @@ class MinutePickerView: UIView, UITextFieldDelegate {
         button.frame.origin = .zero
         button.bounds.size = CGSize(width: 93, height: 36)
         let minWidth = minLabel.sizeThatFits(self.bounds.size).width
+        
         minLabel.frame = CGRect(
-            x: button.bounds.maxX - minWidth - 14,
+            x: button.bounds.maxX - minWidth - (self.style == .inline ? 0 : 14),
             y: 0,
             width: minWidth,
             height: button.bounds.height - 0.5)
@@ -155,8 +175,8 @@ class MinutePickerView: UIView, UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         button.isUserInteractionEnabled = false
 
-        minLabel.textColor = Colors.text
-        textField.textColor = Colors.orange
+        minLabel.textColor = style == .inline ? Colors.lightText : Colors.text
+        textField.textColor = style == .inline ? Colors.text : Colors.orange
         
         isFirstEdit = true
     }
@@ -166,8 +186,8 @@ class MinutePickerView: UIView, UITextFieldDelegate {
         button.isUserInteractionEnabled = true
         textField.isUserInteractionEnabled = false
 
-        minLabel.textColor = self.style == .inline ? Colors.orange : Colors.text
-        textField.textColor = self.style == .inline ? Colors.orange : Colors.text
+        minLabel.textColor = style == .inline ? Colors.lightText : Colors.text
+        textField.textColor = style == .inline ? Colors.lightText : Colors.text
         
     }
     

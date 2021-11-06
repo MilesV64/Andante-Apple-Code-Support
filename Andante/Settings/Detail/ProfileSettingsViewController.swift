@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import Combine
 
-class ProfileSettingsViewController: SettingsDetailViewController {
+class ProfileSettingsViewController: SettingsDetailViewController, PickerViewDelegate {
     
     private var profile: CDProfile
         
@@ -25,17 +25,20 @@ class ProfileSettingsViewController: SettingsDetailViewController {
     
     let nameCell = SettingsDetailTextFieldView(title: "Name")
     let iconCell = SettingsDetailProfileIconView(title: "Icon")
+    let dailyGoalCell = SettingsDetailTextFieldView(title: "Daily Practice Goal")
     let sessionTitleCell = SettingsDetailTextFieldView(title: "Default Session Title")
     let mergeProfileCell = SettingsDetailView(title: "Merge Profile")
     let resetDataCell = SettingsDetailView(title: "Clear Data", destructive: true)
     let deleteCell = SettingsDetailView(title: "Delete Profile", destructive: true)
+    
+    private let goalButton = MinutePickerView(.inline)
     
     private var cancellables = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addItem(SettingsDetailGroupView(items: [nameCell, iconCell, sessionTitleCell]))
+        addItem(SettingsDetailGroupView(items: [nameCell, iconCell, dailyGoalCell, sessionTitleCell]))
         
         var manageItems: [SettingsDetailItem] = [mergeProfileCell, resetDataCell]
         if CDProfile.getAllProfiles().count > 1 {
@@ -57,6 +60,12 @@ class ProfileSettingsViewController: SettingsDetailViewController {
             guard let self = self else { return }
             self.nameCell.detailText = name
             self.title = name
+        }.store(in: &cancellables)
+        
+        profile.publisher(for: \.dailyGoal).sink {
+            [weak self] goal in
+            guard let self = self else { return }
+            self.goalButton.value = Int(goal)
         }.store(in: &cancellables)
         
         nameCell.textAction = {
@@ -97,6 +106,14 @@ class ProfileSettingsViewController: SettingsDetailViewController {
             guard let self = self else { return }
             self.sessionTitleCell.detailText = title
         }.store(in: &cancellables)
+        
+        self.goalButton.delegate = self
+        self.goalButton.allowsEditing = false
+        self.dailyGoalCell.action = { [weak self] in
+            self?.setSaveButtonVisible(true)
+            self?.goalButton.becomeFirstResponder()
+        }
+        self.dailyGoalCell.addSubview(self.goalButton)
         
         sessionTitleCell.textAction = {
             [weak self] text in
@@ -206,6 +223,25 @@ class ProfileSettingsViewController: SettingsDetailViewController {
         
     }
     
+    override func didTapSave() {
+        self.goalButton.resignFirstResponder()
+    }
+    
+    func pickerViewDidEndEditing(_ view: UIView) {
+        self.setSaveButtonVisible(false)
+        self.profile.dailyGoal = Int64(goalButton.value)
+        DataManager.saveContext()
+        WidgetDataManager.writeData()
+    }
+    
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        super.scrollViewDidScroll(scrollView)
+        
+        self.stopEditing()
+        
+    }
+    
     private func clearData() {
         let loadingAlert = CenterLoadingViewController(style: .indefinite)
         self.present(loadingAlert, animated: false, completion: nil)
@@ -232,6 +268,12 @@ class ProfileSettingsViewController: SettingsDetailViewController {
     private func stopEditing() {
         nameCell.stopEditing()
         sessionTitleCell.stopEditing()
+        goalButton.resignFirstResponder()
+    }
+    
+    override func close(animated: Bool = true, completion: (() -> Void)? = nil) {
+        self.stopEditing()
+        super.close(animated: animated, completion: completion)
     }
     
     override func viewDidBeginDragging() {
@@ -241,6 +283,9 @@ class ProfileSettingsViewController: SettingsDetailViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        self.goalButton.sizeToFit()
+        self.goalButton.center = CGPoint(x: self.dailyGoalCell.bounds.maxX - Constants.margin - self.goalButton.bounds.width/2, y: self.dailyGoalCell.bounds.midY)
         
     }
     

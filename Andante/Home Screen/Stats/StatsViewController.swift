@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import Combine
 
-class StatsViewController: MainViewController {
+class StatsViewController: MainViewController, ProfileObserver {
     
     public static var compactBreakpoint: CGFloat = 700
     
@@ -32,9 +32,11 @@ class StatsViewController: MainViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         self.title = "Stats"
         
+        ProfileManager.shared.addObserver(self)
+
         self.scrollView = CancelTouchScrollView()
         
         scrollView!.alwaysBounceVertical = true
@@ -87,6 +89,14 @@ class StatsViewController: MainViewController {
     @objc func handleNeedsReloadNotification() {
         print("did change")
         reloadData()
+    }
+    
+    func profileManager(_ profileManager: ProfileManager, profileDidUpdateDailyGoal profile: CDProfile) {
+        print("A")
+        if headerView.profile == profile || headerView.profile == nil {
+            print("B")
+            headerView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

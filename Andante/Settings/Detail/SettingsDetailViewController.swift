@@ -17,6 +17,7 @@ class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewD
     private let backButton = Button("chevron.left")
     private let titleLabel = UILabel()
     
+    public let saveButton = UIButton(type: .system)
     
     public var items: [SettingsDetailItem] = []
     private var itemHeight: CGFloat = 66
@@ -63,6 +64,11 @@ class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewD
         titleLabel.font = Fonts.semibold.withSize(17)
         titleLabel.textAlignment = .center
         headerView.addSubview(titleLabel)
+        
+        self.saveButton.alpha = 0
+        saveButton.setTitle("Save", color: Colors.orange, font: Fonts.semibold.withSize(17))
+        saveButton.addTarget(self, action: #selector(self.handleSaveButton), for: .touchUpInside)
+        headerView.addSubview(saveButton)
         
         backButton.action = {
             [weak self] in
@@ -116,6 +122,21 @@ class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewD
 
     }
     
+    @objc private func handleSaveButton() {
+        self.didTapSave()
+    }
+    
+    public func didTapSave() {
+        
+    }
+    
+    public func setSaveButtonVisible(_ visible: Bool) {
+        UIView.animate(withDuration: 0.1) {
+            self.saveButton.alpha = visible ? 1 : 0
+        }
+    }
+    
+    
     public func addItem(_ item: SettingsDetailItem) {
         items.append(item)
         scrollView.addSubview(item)
@@ -139,6 +160,7 @@ class SettingsDetailViewController: ChildTransitionViewController, UIScrollViewD
         
         backButton.frame = CGRect(x: 5, y: 12, width: 50, height: 70)
         titleLabel.frame = CGRect(x: 50, y: 10, width: headerView.bounds.width - 100, height: 70)
+        saveButton.frame = CGRect(x: headerView.bounds.maxX - 80 - 1, y: 20, width: 80, height: 50)
         
         scrollView.frame = self.view.bounds
         scrollView.contentInset.top = headerView.bounds.height

@@ -36,7 +36,7 @@ class CalendarGoalView: UIView, UICollectionViewDelegate, UICollectionViewDelega
         let goal: Int
     }
     
-    private let goals: [GoalData]
+    private var goals: [GoalData]
     
     private let selectionFeedback = UIImpactFeedbackGenerator(style: .light)
     
@@ -84,12 +84,12 @@ class CalendarGoalView: UIView, UICollectionViewDelegate, UICollectionViewDelega
         self.addSubview(monthLabel)
         
         nextButton.setImage(UIImage(systemName: "chevron.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .heavy)), for: .normal)
-        nextButton.tintColor = Colors.text.withAlphaComponent(0.75)
+        nextButton.tintColor = Colors.lightText
         nextButton.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
         self.addSubview(nextButton)
         
         backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13, weight: .heavy)), for: .normal)
-        backButton.tintColor = Colors.text.withAlphaComponent(0.75)
+        backButton.tintColor = Colors.lightText
         backButton.addTarget(self, action: #selector(didTapButton(_:)), for: .touchUpInside)
         self.addSubview(backButton)
         
@@ -161,6 +161,9 @@ class CalendarGoalView: UIView, UICollectionViewDelegate, UICollectionViewDelega
     }
     
     public func reloadData() {
+        if self.goals.count == 1, let profile = User.getActiveProfile() {
+            self.goals = [GoalData(profile: profile, proportion: 1, goal: Int(profile.dailyGoal))]
+        }
         collectionView.reloadSections([currentPage])
     }
     

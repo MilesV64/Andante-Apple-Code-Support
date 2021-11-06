@@ -45,71 +45,71 @@ class HitTestView: UIView {
 
 class GoalDetailViewController: PopoverViewController, PickerViewDelegate {
     
-    private let headerView = ModalViewHeader(title: "")
+    private let headerView = ModalViewHeader(title: "Daily Practice Goal")
     
-    private let titleLabel = TitleBodyGroup()
-
-    private let goalButton = MinutePickerView(.inline)
-    private var profile: CDProfile?
+    private let goalCell = AndanteCellView(
+        title: "Daily Goal",
+        icon: Stat.practice.icon,
+        imageSize: CGSize(22),
+        iconColor: Stat.practice.color
+    )
+    
+    private let goalButton = MinutePickerView(.prominent)
+    private let separator = Separator(position: .top)
+    private let descriptionLabel = UILabel()
+    
     private var currentGoal = 0
     
     private let goalCalendar = CalendarGoalView()
-        
-    private let goalPicker = PracticeGoalPickerView()
-    
-    private var cancellables = Set<AnyCancellable>()
-    
+            
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        profile = User.getActiveProfile()
-        
-        profile?.publisher(for: \.dailyGoal, options: .new).sink {
-            [weak self] goal in
-            guard let self = self else { return }
-            self.currentGoal = Int(goal)
-            self.goalButton.value = self.currentGoal
-            self.goalCalendar.reloadData()
-        }.store(in: &cancellables)
-        
         self.view.backgroundColor = Colors.foregroundColor
         
-        titleLabel.titleLabel.text = "Daily Goal"
-        titleLabel.titleLabel.textColor = Colors.text
-        titleLabel.titleLabel.font = Fonts.bold.withSize(28)
-        titleLabel.padding = -1
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 3
-        titleLabel.textView.attributedText = NSAttributedString(
-            string: "Stay motivated with a daily practice goal for this profile.",
-            attributes: [
-                .foregroundColor : Colors.lightText,
-                .font : Fonts.regular.withSize(17),
-                .paragraphStyle : paragraphStyle
-            ])
-        titleLabel.textView.textContainerInset.left = Constants.margin + 5
-        titleLabel.textView.textContainerInset.right = Constants.margin + 5
-        titleLabel.textAlignment = .center
-        self.view.addSubview(titleLabel)
+        if let profile = User.getActiveProfile() {
+            currentGoal = Int(profile.dailyGoal)
+            goalButton.value = currentGoal
+            self.descriptionLabel.isHidden = true
+        }
+        else {
+            currentGoal = CDProfile.getTotalDailyGoal()
+            goalButton.value = currentGoal
+            goalButton.button.backgroundColor = .clear
+            goalButton.isUserInteractionEnabled = false
+            
+            self.descriptionLabel.text = "Showing the sum of each profile’s individual goals. You can change each profile’s goal in Settings."
+            self.descriptionLabel.numberOfLines = 0
+            self.descriptionLabel.textColor = Colors.lightText
+            self.descriptionLabel.font = Fonts.regular.withSize(14)
+            self.descriptionLabel.lineBreakMode = .byWordWrapping
+            self.view.addSubview(self.descriptionLabel)
+            
+        }
         
-        currentGoal = Int(profile?.dailyGoal ?? 10)
-        goalButton.value = currentGoal
         goalButton.delegate = self
         
-        goalPicker.goalButton = goalButton
-        self.view.addSubview(goalPicker)
+        self.goalCell.button.isUserInteractionEnabled = false
+        self.view.addSubview(self.goalCell)
+        
+        self.goalCell.addSubview(goalButton)
+        
+        self.separator.insetToMargins()
+        self.view.addSubview(self.separator)
         
         self.view.addSubview(goalCalendar)
         
+        
         headerView.backgroundColor = .clear
-        headerView.showsSeparator = false
+        headerView.showsSeparator = true
+        headerView.headerSeparator.insetToMargins()
         
         headerView.cancelButtonAction = {
             [weak self] in
             guard let self = self else { return }
             
             self.goalButton.resignFirstResponder()
-            self.goalButton.value = Int(self.profile?.dailyGoal ?? 10)
+            self.goalButton.value = Int(self.currentGoal)
             
         }
         headerView.doneButtonText = "Save"
@@ -161,7 +161,7 @@ class GoalDetailViewController: PopoverViewController, PickerViewDelegate {
         
         if goalButton.isFirstResponder {
             self.goalButton.resignFirstResponder()
-            self.goalButton.value = Int(self.profile?.dailyGoal ?? 10)
+            self.goalButton.value = self.currentGoal
         }
         
     }
@@ -182,16 +182,19 @@ class GoalDetailViewController: PopoverViewController, PickerViewDelegate {
         }
         
         if !didSave {
-            self.goalButton.value = Int(self.profile?.dailyGoal ?? 10)
+            self.goalButton.value = self.currentGoal
         }
         else {
             if self.currentGoal != self.goalButton.value {
                 self.currentGoal = self.goalButton.value
                 
-                self.profile?.dailyGoal = Int64(self.currentGoal)
+                User.getActiveProfile()?.dailyGoal = Int64(self.currentGoal)
                 
                 DataManager.saveContext()
                 WidgetDataManager.writeData()
+                
+                self.goalCalendar.reloadData()
+                
             }
         }
         
@@ -223,29 +226,34 @@ class GoalDetailViewController: PopoverViewController, PickerViewDelegate {
         headerView.frame = CGRect(
             x: 0, y: self.view.safeAreaInsets.top,
             width: self.view.bounds.width,
-            height: 48)
+            height: 70)
         
-        var titleSpace: CGFloat = 50
-        if self.view.bounds.height < 300 {
-            titleSpace = 24 //adjusting for keyboard in popover presentation
+        goalCell.frame = CGRect(
+            x: 0,
+            y: headerView.frame.maxY,
+            width: self.view.bounds.width,
+            height: 76
+        )
+        
+        goalButton.sizeToFit()
+        goalButton.center = CGPoint(
+            x: goalCell.bounds.maxX - Constants.margin - goalButton.bounds.width/2,
+            y: goalCell.bounds.midY)
+        
+        if self.descriptionLabel.isHidden == false {
+            let height = self.descriptionLabel.sizeThatFits(self.view.bounds.insetBy(dx: Constants.margin*2, dy: 0).size).height
+            descriptionLabel.frame = CGRect(x: Constants.margin, y: goalCell.frame.maxY - 12, width: self.view.bounds.width - Constants.margin*2, height: height)
+            self.separator.frame = CGRect(x: 0, y: descriptionLabel.frame.maxY + 10, width: self.view.bounds.width, height: 1)
         }
-        let size = titleLabel.sizeThatFits(self.view.bounds.size)
-        titleLabel.frame = CGRect(
-            x: self.view.bounds.midX - size.width/2,
-            y: self.view.safeAreaInsets.top + titleSpace,
-            width: size.width,
-            height: size.height)
-        
-        goalPicker.sizeToFit()
-        goalPicker.bounds.size.width = self.view.bounds.width
-        goalPicker.frame.origin = CGPoint(
-            x: 0, y: titleLabel.frame.maxY + 18)
+        else {
+            self.separator.frame = CGRect(x: 0, y: goalCell.frame.maxY, width: self.view.bounds.width, height: 1)
+        }
         
         goalCalendar.frame = CGRect(
             x: 0,
-            y: goalPicker.frame.maxY + 20,
+            y: separator.frame.maxY + 10,
             width: self.view.bounds.width,
-            height: totalHeight - (goalPicker.frame.maxY + 20))
+            height: totalHeight - (goalCell.frame.maxY + 20))
         
         if goalCalendar.bounds.height < 100 {
             goalCalendar.alpha = 0
@@ -255,40 +263,4 @@ class GoalDetailViewController: PopoverViewController, PickerViewDelegate {
         
     }
     
-}
-
-class PracticeGoalPickerView: OptionPickerView {
-    
-    public var goalButton: MinutePickerView? {
-        didSet {
-            guard let goalButton = goalButton else { return }
-            bgView.addSubview(goalButton)
-        }
-    }
-     
-    init() {
-        super.init("Goal")
-        self.selectHandler = {
-            [weak self] in
-            guard let self = self else { return }
-            self.goalButton?.button.action?()
-        }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        if let goalButton = self.goalButton {
-            goalButton.sizeToFit()
-            goalButton.frame.origin = CGPoint(
-                x: bgView.bounds.maxX - goalButton.bounds.width - 4,
-                y: bgView.bounds.midY - goalButton.bounds.height/2
-            )
-        }
-        
-    }
 }

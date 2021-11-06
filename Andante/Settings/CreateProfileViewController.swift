@@ -71,7 +71,7 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         ])
         textField.layer.borderColor = Colors.lightColor.cgColor
         textField.layer.borderWidth = 2
-        textField.roundCorners(12)
+        textField.roundCorners(14)
         textField.setPadding(Constants.margin)
         textField.returnKeyType = .done
         textField.addTarget(self, action: #selector(textDidUpdate), for: .editingChanged)
@@ -149,8 +149,8 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         iconView.roundCorners(prefersContinuous: false)
                 
         textField.frame = CGRect(
-            x: margin, y: iconView.frame.maxY + spacing,
-            width: self.view.bounds.width - margin*2,
+            x: margin + 6, y: iconView.frame.maxY + spacing,
+            width: self.view.bounds.width - margin*2 - 12,
             height: 52)
         
         let size = iconPicker.sizeThatFits(

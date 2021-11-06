@@ -7,47 +7,64 @@
 //
 
 import UIKit
+import Lottie
 
 // MARK: - Checkmark Cell
 
 class CheckmarkCellView: AndanteCellView {
     
-    private let checkmarkBG = UIView()
-    private var checkmarkImageView: UIImageView?
-    
     override var accessoryView: UIView? {
-        return self.checkmarkBG
+        return self.checkmarkView
     }
     
     private(set) var isChecked: Bool = false
     
-    public func setChecked(_ checked: Bool, animated: Bool = true) {
-        guard checked != self.isChecked else { return }
-        self.isChecked = checked
-        
+    private let checkmarkView = UIView()
+    
+    private let animationView = AnimationView(name: "checkmark")
+    
+    public func setChecked(_ checked: Bool, animated: Bool) {
         if checked {
-            let checkmarkImageView = UIImageView(image: UIImage(name: "checkmark", pointSize: 11, weight: .bold)?.withRenderingMode(.alwaysTemplate))
-            checkmarkImageView.sizeToFit()
-            checkmarkImageView.center = self.checkmarkBG.bounds.center
-            checkmarkImageView.tintColor = .white
-            self.checkmarkImageView = checkmarkImageView
-            self.checkmarkBG.addSubview(checkmarkImageView)
-            self.checkmarkBG.backgroundColor = Colors.orange
+            UIView.animate(withDuration: animated ? 0.2 : 1) {
+                self.checkmarkView.backgroundColor = Colors.orange
+            }
+            
+            if self.animationView.alpha != 1 {
+                if animated {
+                    self.animationView.currentTime = 0
+                    self.animationView.alpha = 1
+                    self.animationView.play()
+                }
+                else {
+                    self.animationView.currentTime = 1
+                    self.animationView.alpha = 1
+                }
+            }
+            
         }
         else {
-            self.checkmarkImageView?.removeFromSuperview()
-            self.checkmarkImageView = nil
-            self.checkmarkBG.backgroundColor = Colors.lightColor
+            self.checkmarkView.backgroundColor = Colors.lightColor
+            self.animationView.alpha = 0
         }
-        
     }
     
     override func sharedInit() {
         super.sharedInit()
         
-        self.checkmarkBG.backgroundColor = Colors.lightColor
-        self.checkmarkBG.bounds.size = CGSize(24)
-        self.checkmarkBG.roundCorners(12, prefersContinuous: false)
+        self.animationView.setValueProvider(
+            ColorValueProvider(Color(r: 1, g: 1, b: 1, a: 1)),
+            keypath: AnimationKeypath(keypath: "**.Stroke 1.Color"))
+        self.animationView.setValueProvider(
+            FloatValueProvider(50),
+            keypath: AnimationKeypath(keypath: "**.Stroke 1.Stroke Width"))
+        self.animationView.animationSpeed = 5
+        self.animationView.alpha = 0
+        
+        self.checkmarkView.bounds.size = CGSize(24)
+        self.checkmarkView.roundCorners(12, prefersContinuous: false)
+        
+        self.checkmarkView.addSubview(self.animationView)
+        self.animationView.frame = self.checkmarkView.bounds.offsetBy(dx: -1, dy: 0)
         
     }
     

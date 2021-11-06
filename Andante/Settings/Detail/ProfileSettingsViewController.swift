@@ -175,7 +175,10 @@ class ProfileSettingsViewController: SettingsDetailViewController {
                     var profiles = CDProfile.getAllProfiles()
                     if let index = profiles.firstIndex(of: self.profile) {
                         profiles.remove(at: index)
-                        parent.changeProfile(to: profiles[0])
+                        
+                        if User.getActiveProfile() == self.profile {
+                            parent.changeProfile(to: profiles[0])
+                        }
                         
                         self.cancellables.removeAll()
                         
@@ -183,6 +186,10 @@ class ProfileSettingsViewController: SettingsDetailViewController {
                         if let profile = try? context.existingObject(with: self.profile.objectID) {
                             context.delete(profile)
                             try? context.save()
+                        }
+                        
+                        if User.getActiveProfile() == nil {
+                            parent.changeProfile(to: nil)
                         }
                         
                         self.close()

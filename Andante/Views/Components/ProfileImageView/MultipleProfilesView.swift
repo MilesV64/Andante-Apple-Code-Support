@@ -82,7 +82,7 @@ class MultipleProfilesView: PushButton {
         let itemSize: CGFloat = self.bounds.height
         let spacing: CGFloat = floor(itemSize * Self.spacingRatio)
         
-        let count = CGFloat(min(3, self.profileViews.count))
+        let count: CGFloat = CGFloat(self.profileViews.count) + CGFloat((self.moreProfilesView == nil) ? 0 : 1)
         
         return (itemSize * count) - (spacing * (count - 1))
     }
@@ -149,10 +149,15 @@ fileprivate class MoreProfilesView: UIView {
             self.setNeedsLayout()
         }
     }
-    
-    public var count = 0
+        
+    public var count = 0 {
+        didSet {
+            self.label.text = "+\(count)"
+        }
+    }
     
     private let fgView = UIView()
+    private let label = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -162,12 +167,33 @@ fileprivate class MoreProfilesView: UIView {
         fgView.backgroundColor = Colors.lightColor
         self.addSubview(fgView)
         
+        let fontSize: CGFloat = 40
+        let systemFont = UIFont.systemFont(ofSize: fontSize, weight: .semibold)
+        let roundedFont: UIFont
+        if let descriptor = systemFont.fontDescriptor.withDesign(.rounded) {
+            roundedFont = UIFont(descriptor: descriptor, size: fontSize)
+        } else {
+            roundedFont = systemFont
+        }
+
+        self.label.font = roundedFont
+        self.label.textColor = Colors.lightText
+        self.label.textAlignment = .center
+        self.label.adjustsFontSizeToFitWidth = true
+        self.label.minimumScaleFactor = 0.1
+        self.fgView.addSubview(self.label)
+        
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         self.fgView.frame = self.bounds.insetBy(dx: inset, dy: inset)
+        self.fgView.roundCorners(self.fgView.bounds.height / 2, prefersContinuous: false)
         self.roundCorners(self.bounds.height / 2, prefersContinuous: false)
+        
+        let labelSize: CGFloat = self.bounds.width * 0.5
+        self.label.bounds.size = CGSize(labelSize)
+        self.label.center = self.fgView.bounds.center.offset(dx: ceil(-labelSize*0.05), dy: 0)
     }
     
     required init?(coder: NSCoder) {

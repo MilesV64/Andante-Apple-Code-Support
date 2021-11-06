@@ -45,7 +45,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
             
             cell.checkmarkCellView.margin = 24
             cell.checkmarkCellView.profile = profile
-            cell.checkmarkCellView.setChecked(profile == self.selectedProfile)
+            cell.checkmarkCellView.setChecked(profile == self.selectedProfile, animated: false)
             
             return cell
             
@@ -63,11 +63,10 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         contentView.addSubview(tableView)
         
         if self.allowsAllProfiles {
-            self.allProfilesCellView.setChecked(self.selectedProfile == nil)
+            self.allProfilesCellView.setChecked(self.selectedProfile == nil, animated: false)
             self.allProfilesCellView.margin = 24
             self.allProfilesCellView.action = { [weak self] in
-                self?.action?(nil)
-                self?.close()
+                self?.selectProfile(nil)
             }
             tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: AndanteCellView.height))
             tableView.tableHeaderView?.addSubview(self.allProfilesCellView)
@@ -141,9 +140,26 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let profile = fetchController?.controller.object(at: indexPath) {
-            action?(profile)
+            self.selectProfile(profile)
+        }
+    }
+    
+    private func selectProfile(_ profile: CDProfile?) {
+        self.view.isUserInteractionEnabled = false
+        
+        for indexPath in tableView.indexPathsForVisibleRows ?? [] {
+            if let cell = tableView.cellForRow(at: indexPath) as? CheckmarkTableViewCell {
+                cell.checkmarkCellView.setChecked(cell.checkmarkCellView.profile == profile, animated: true)
+            }
+        }
+        self.allProfilesCellView.setChecked(profile == nil, animated: true)
+        
+        action?(profile)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             self.close()
         }
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -153,7 +169,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         
         let buttonHeight = newProfileButton == nil ? 0 : BottomActionButton.height
         
-        preferredContentHeight = tableHeight + buttonHeight
+        preferredContentHeight = min(self.view.bounds.height*0.8, tableHeight + buttonHeight)
 
         super.viewDidLayoutSubviews()
         

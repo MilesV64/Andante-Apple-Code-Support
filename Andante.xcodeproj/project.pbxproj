@@ -214,6 +214,7 @@
 		02C9B90426F2FB2F00379A31 /* AndanteCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C9B90326F2FB2F00379A31 /* AndanteCellView.swift */; };
 		02CA947924B6F4A800566274 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02CA947824B6F4A800566274 /* SettingsViewController.swift */; };
 		02D52A05250C39C3005504EA /* SessionShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D52A04250C39C3005504EA /* SessionShareView.swift */; };
+		02D6ABFF273642DE0073D187 /* checkmark.json in Resources */ = {isa = PBXBuildFile; fileRef = 02D6ABFE273642DE0073D187 /* checkmark.json */; };
 		02D9D12824C28B810019D36C /* JournalFolderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9D12724C28B810019D36C /* JournalFolderCell.swift */; };
 		02D9D12D24C3D6750019D36C /* BottomActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9D12C24C3D6750019D36C /* BottomActionButton.swift */; };
 		02D9D12F24C3DD090019D36C /* NewFolderCenterAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9D12E24C3DD090019D36C /* NewFolderCenterAlertController.swift */; };
@@ -512,6 +513,7 @@
 		02C9B90326F2FB2F00379A31 /* AndanteCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndanteCellView.swift; sourceTree = "<group>"; };
 		02CA947824B6F4A800566274 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		02D52A04250C39C3005504EA /* SessionShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionShareView.swift; sourceTree = "<group>"; };
+		02D6ABFE273642DE0073D187 /* checkmark.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = checkmark.json; sourceTree = "<group>"; };
 		02D9D12724C28B810019D36C /* JournalFolderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalFolderCell.swift; sourceTree = "<group>"; };
 		02D9D12C24C3D6750019D36C /* BottomActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomActionButton.swift; sourceTree = "<group>"; };
 		02D9D12E24C3DD090019D36C /* NewFolderCenterAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFolderCenterAlertController.swift; sourceTree = "<group>"; };
@@ -806,6 +808,7 @@
 			children = (
 				026476C922DBF0CD002EA732 /* Assets.xcassets */,
 				029C5FF626FD2548000D9936 /* flame.json */,
+				02D6ABFE273642DE0073D187 /* checkmark.json */,
 				026476E822DBF5EA002EA732 /* Colors.swift */,
 				026476EA22DBF713002EA732 /* Fonts.swift */,
 				0264770822DC1AE7002EA732 /* Constants.swift */,
@@ -1441,6 +1444,7 @@
 				026476CD22DBF0CD002EA732 /* LaunchScreen.storyboard in Resources */,
 				024A917E2565D72F003A44B2 /* F#.mp3 in Resources */,
 				024A91762565D72F003A44B2 /* D.mp3 in Resources */,
+				02D6ABFF273642DE0073D187 /* checkmark.json in Resources */,
 				024A91752565D72F003A44B2 /* Ab.mp3 in Resources */,
 				02401BE524EF44D900608B20 /* recording.end.wav in Resources */,
 				02A2DB4C24CFAF88002E0760 /* metronome.click.wav in Resources */,

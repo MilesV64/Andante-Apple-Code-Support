@@ -90,7 +90,7 @@ class ActionTrayPopupViewController: PopupViewController {
         let textHeight = textView.sizeThatFits(CGSize(width: contentWidth, height: CGFloat.infinity)).height
         
         let totalTextHeight: CGFloat = titleHeight + textHeight
-        let totalButtonHeight: CGFloat = buttonHeight*2
+        let totalButtonHeight: CGFloat = buttonHeight * (actionButton == nil ? 1 : 2)
         
         self.preferredContentHeight = totalTextHeight + totalButtonHeight + 20 + 20
         

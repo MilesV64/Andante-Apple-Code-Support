@@ -869,6 +869,7 @@ class SessionProfileCell: UIView {
             }.store(in: &cancellables)
             
             self.iconView.profile = self.profile
+            
         }
     }
     
@@ -897,12 +898,13 @@ class SessionProfileCell: UIView {
             x: 0,
             y: self.bounds.midY - 18,
             width: 38,
-            height: 38).integral
+            height: 38
+        ).integral
         
-        titleLabel.sizeToFit()
-        titleLabel.frame = CGRect(x: iconView.frame.maxX + 16, y: 0,
-                                  width: titleLabel.bounds.width,
-                                  height: self.bounds.height)
+        titleLabel.frame = CGRect(
+            from: CGPoint(x: iconView.frame.maxX + 16, y: 0),
+            to: CGPoint(x: bounds.maxX - 16, y: self.bounds.height)
+        )
     }
 }
 

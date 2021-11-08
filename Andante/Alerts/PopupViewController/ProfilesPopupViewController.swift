@@ -156,7 +156,7 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         
         action?(profile)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.close()
         }
         
@@ -181,110 +181,12 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
         allProfilesCellView.frame = CGRect(
             x: 0, y: 0, width: tableView.bounds.width, height: AndanteCellView.height)
         
+        let bottomSafeArea: CGFloat = (self.layout == .compact) ? view.safeAreaInsets.bottom : 0
+        
         newProfileButton?.frame = CGRect(
-            x: 0, y: contentView.bounds.maxY - buttonHeight,
+            x: 0, y: contentView.bounds.maxY - buttonHeight - bottomSafeArea,
             width: contentView.bounds.width, height: buttonHeight)
         
     }
     
-}
-
-
-class SelectProfileCell: UITableViewCell {
-    
-    private let profileView = ProfileImageView()
-    private let label = UILabel()
-    
-    private var cancellables = Set<AnyCancellable>()
-        
-    public var profile: CDProfile? = nil {
-        didSet {
-            cancellables.removeAll()
-            
-            guard let profile = profile else { return }
-            
-            profile.publisher(for: \.name).sink {
-                [weak self] name in
-                guard let self = self else { return }
-                self.label.text = name
-            }.store(in: &cancellables)
-            
-            profileView.profile = profile
-            
-        }
-    }
-    
-    private var checkView: UIImageView?
-    
-    public var useCheckmark = false {
-        didSet {
-            if useCheckmark {
-                label.textColor = Colors.orange
-                checkView = UIImageView()
-                checkView?.image = UIImage(name: "checkmark.circle.fill", pointSize: 20, weight: .semibold)
-                checkView?.tintColor = Colors.orange.withAlphaComponent(0.9)
-                self.addSubview(checkView!)
-                setNeedsLayout()
-            }
-            else {
-                label.textColor = Colors.text
-                checkView?.removeFromSuperview()
-                checkView = nil
-                setNeedsLayout()
-            }
-        }
-    }
-    
-    private let button = UIButton(type: .system)
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        self.selectionStyle = .none
-        self.backgroundColor = .clear
-        
-        profileView.backgroundColor = Colors.lightColor
-        self.addSubview(profileView)
-        
-        label.textColor = Colors.text
-        label.font = Fonts.medium.withSize(16)
-
-        self.addSubview(label)
-        
-    }
-    
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        if highlighted {
-            self.backgroundColor = Colors.cellHighlightColor
-        }
-        else {
-            UIView.animate(withDuration: 0.2) {
-                self.backgroundColor = .clear
-            }
-        }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        profileView.frame = CGRect(x: Constants.smallMargin, y: self.bounds.midY - 24,
-                                   width: 48, height: 48)
-        
-        if let checkView = checkView {
-            checkView.sizeToFit()
-            checkView.frame.origin = CGPoint(
-                x: self.bounds.maxX - Constants.margin - checkView.bounds.width,
-                y: self.bounds.midY - checkView.bounds.height/2)
-        }
-        
-        label.frame = CGRect(
-            from: CGPoint(x: profileView.frame.maxX + 12, y: 0),
-            to: CGPoint(x: (checkView?.frame.minX ?? self.bounds.maxX) - Constants.smallMargin, y: self.bounds.maxY))
-        
-        
-    }
 }

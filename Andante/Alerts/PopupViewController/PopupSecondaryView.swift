@@ -58,6 +58,8 @@ class PopupSecondaryViewHeader: Separator {
     private var label = UILabel()
     private var cancelButton = Button()
         
+    public var cancelButtonOffset: CGFloat = 0
+    
     init(title: String) {
         super.init(frame: .zero)
         
@@ -77,7 +79,7 @@ class PopupSecondaryViewHeader: Separator {
                 superview.popupViewController?.popSecondaryView()
             }
         }
-        cancelButton.setImage(UIImage(name: "xmark.circle.fill", pointSize: 20, weight: .medium), for: .normal)
+        cancelButton.setImage(UIImage(name: "xmark.circle.fill", pointSize: 20, weight: .bold), for: .normal)
         cancelButton.contentHorizontalAlignment = .right
         cancelButton.contentEdgeInsets.right = Constants.margin
         cancelButton.contentEdgeInsets.top = 6
@@ -89,13 +91,13 @@ class PopupSecondaryViewHeader: Separator {
         super.layoutSubviews()
         
         label.frame = self.bounds.inset(
-            by: UIEdgeInsets(top: 6, left: Constants.margin, bottom: 8, right: Constants.margin))
+            by: UIEdgeInsets(top: 6, left: self.inset.left, bottom: 8, right: self.inset.right))
         
         cancelButton.frame = CGRect(
             x: bounds.maxX - 70,
             y: 0,
             width: 70,
-            height: bounds.height - 8)
+            height: bounds.height - 8 - self.cancelButtonOffset)
         
     }
     

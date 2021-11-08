@@ -42,8 +42,13 @@ class MoveSessionPopupView: PopupContentView, FetchedObjectControllerDelegate, U
             [weak self] (tableView, indexPath, profile) in
             guard let self = self else { return UITableViewCell() }
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MoveSessionCell
-            cell.setProfile(profile, isEnabled: profile == self.currentProfile)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CheckmarkTableViewCell
+            
+            cell.checkmarkCellView.margin = 24
+            cell.checkmarkCellView.profile = profile
+            cell.checkmarkCellView.setChecked(profile == self.currentProfile, animated: false)
+            cell.isUserInteractionEnabled = profile != self.currentProfile
+            
             return cell
             
         }
@@ -52,22 +57,24 @@ class MoveSessionPopupView: PopupContentView, FetchedObjectControllerDelegate, U
         
         self.currentProfile = session.profile
         
-        fetchedObjectController.performFetch()
-        initialCount = fetchedObjectController.controller.fetchedObjects?.count ?? 0
-        
+        headerView.cancelButtonOffset = 3
+        headerView.inset = UIEdgeInsets(24)
         addSubview(headerView)
         
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 8))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 2))
         tableView.alwaysBounceVertical = false
         tableView.backgroundColor = .clear
-        tableView.register(MoveSessionCell.self, forCellReuseIdentifier: "cell")
-        tableView.rowHeight = 66
+        tableView.register(CheckmarkTableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.rowHeight = CheckmarkCellView.height
         tableView.separatorInset = .zero
         tableView.separatorColor = .clear
         tableView.delegate = self
         
         addSubview(tableView)
+        
+        fetchedObjectController.performFetch()
+        initialCount = fetchedObjectController.controller.fetchedObjects?.count ?? 0
         
     }
     
@@ -109,6 +116,21 @@ class MoveSessionPopupView: PopupContentView, FetchedObjectControllerDelegate, U
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let profile = fetchedObjectController.controller.object(at: indexPath)
+        self.currentProfile = profile
+        
+        self.isUserInteractionEnabled = false
+        
+        for visibleIndexPath in tableView.indexPathsForVisibleRows ?? [] {
+            if let cell = tableView.cellForRow(at: visibleIndexPath) as? CheckmarkTableViewCell {
+                print(indexPath, indexPath == visibleIndexPath)
+                cell.checkmarkCellView.setChecked(indexPath == visibleIndexPath, animated: true)
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.popupViewController?.close()
+        }
+        
         moveAction?(profile)
     }
     

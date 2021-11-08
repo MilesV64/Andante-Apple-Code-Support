@@ -168,6 +168,7 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
         
     }
     
+    
     public func layoutBGView(animateContent: Bool = true) {
         
         if layout == .compact {
@@ -515,11 +516,11 @@ extension PopupViewController {
         willClose()
         
         if layout == .compact {
-            let bottomSpace: CGFloat = max(10, self.view.safeAreaInsets.bottom) + 6
+            
             UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut], animations: {
                 self.bgView.transform = CGAffineTransform(
                     translationX: 0,
-                    y: self.bgView.bounds.height + bottomSpace)
+                    y: self.contentView.bounds.height + 50)
                 self.dimView.alpha = 0
             }) { (complete) in
                 self.dismiss(animated: false, completion: {

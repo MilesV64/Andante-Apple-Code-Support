@@ -89,8 +89,6 @@ class SessionOptionsPopupController: TransitionPopupViewController {
             moveView.moveAction = {
                 [weak self] profile in
                 guard let self = self else { return }
-                self.popSecondaryView()
-                self.close()
                 self.moveHandler?(profile)
             }
             self.push(moveView)

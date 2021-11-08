@@ -496,7 +496,7 @@ class ManualSessionViewController: UIViewController, UITextViewDelegate, Calenda
         let cellHeight: CGFloat = 70
         
         var cells: [Separator] = [timeCell, practicedCell, moodCell, focusCell]
-        if User.getActiveProfile() == nil {
+        if self.profileCell.superview == self {
             cells.insert(self.profileCell, at: 0)
         }
         

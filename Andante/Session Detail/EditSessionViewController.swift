@@ -45,6 +45,8 @@ class EditSessionViewController: ManualSessionViewController {
         focusCell.setInitialValue(session.focus)
         textView.text = session.notes ?? ""
         
+        self.profileCell.removeFromSuperview()
+        
     }
     
     override func setDidEdit() {
@@ -77,7 +79,6 @@ class EditSessionViewController: ManualSessionViewController {
         dateComponents.minute = Calendar.current.component(.minute, from: timePickerDate)
         
         let start = dateComponents.date ?? Date()
-        let end = start.addingTimeInterval(TimeInterval(practicePicker.value * 60))
         
         let edits = SessionEdits(
             title: title,

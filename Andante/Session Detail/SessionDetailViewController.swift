@@ -355,7 +355,14 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
             
             DataManager.saveContext()
             
-            self.close()
+            if User.getActiveProfile() == nil {
+                // Don't close, just reload profile cell
+                self.profileCell.profile = profile
+            }
+            else {
+                // Close, FRC will remove the session from the sessions colelction view
+                self.close()
+            }
         }
         
         optionsVC.shareHandler = {

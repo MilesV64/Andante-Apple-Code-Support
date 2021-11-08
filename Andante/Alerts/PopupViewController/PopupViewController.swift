@@ -38,10 +38,10 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     public var contentWidth: CGFloat {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return view.bounds.width - 20
+        if layout == .compact {
+            return view.bounds.width
         } else {
-            return min(375, view.bounds.width - 20)
+            return min(375, view.bounds.width)
         }
         
     }
@@ -181,20 +181,20 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
             
             if keyboardFrame != .zero {
                 height = contentHeight + handleSpace
-                maxY = keyboardFrame.minY - 10
+                maxY = keyboardFrame.minY
             } else {
-                height = contentHeight + handleSpace
-                maxY = view.bounds.maxY - max(view.safeAreaInsets.bottom, 10)
+                height = contentHeight + handleSpace + view.safeAreaInsets.bottom
+                maxY = view.bounds.maxY
             }
             
             bgView.contextualFrame = CGRect(
                 x: view.bounds.midX - contentWidth/2,
                 y: maxY - height,
                 width: contentWidth,
-                height: height
+                height: height + 500
             )
             
-            containerView.contextualFrame = bgView.bounds
+            containerView.contextualFrame = bgView.bounds.inset(by: UIEdgeInsets(t: 0, l: 0, b: 500, r: 0))
             
             handleView?.frame = CGRect(x: 0, y: 0, width: bgView.bounds.width, height: handleSpace)
             
@@ -366,7 +366,7 @@ private extension PopupViewController {
             gestureDidBegin(sender)
         }
         else if sender.state == .changed {
-            gestureDidChange(sender)
+            gestureDidUpdate(sender)
         }
         else {
             if shouldDisableClose {
@@ -381,87 +381,97 @@ private extension PopupViewController {
         willDrag()
     }
     
-    func gestureDidEnd(_ gesture: UIPanGestureRecognizer) {
-
-        let height = bgView.bounds.height
+    func gestureDidUpdate(_ gesture: UIPanGestureRecognizer) {
+        guard let view = gesture.view else { return }
         
-        if gesture.translation(in: bgView).y > height*0.6 ||
-            (gesture.velocity(in: bgView).y > 40 && gesture.translation(in: bgView).y >= 0) {
+        let translation = gesture.translation(in: view).y
+        let interactionDistance = self.interactionDistance()
+        
+        var progress = interactionDistance == 0 ? 0 : (translation / interactionDistance)
+        if progress < 0 { progress /= (1.0 + abs(progress * 15)) }
+        print(progress, interactionDistance, translation)
+        bgView.transform = CGAffineTransform(translationX: 0, y: progress*interactionDistance)
+        self.dimView.alpha = 1 - progress
+    }
+    
+    func gestureDidEnd(_ gesture: UIPanGestureRecognizer) {
+        guard let view = gesture.view else { return }
+        
+        let translation = gesture.translation(in: view).y
+        let velocity = gesture.velocity(in: view).y
+        
+        let interactionDistance = self.interactionDistance()
+       
+        if velocity > 300 || (translation > (interactionDistance / 2) && velocity > -300) {
             
-            let originalVelocity = gesture.velocity(in: self.view).x
-            let progress = getGesturePhase(gesture)
-            var velocity: CGFloat = 0
-            if originalVelocity > 0 {
-                velocity = originalVelocity / ((1-progress)*bgView.bounds.height)
-            }
-            else if originalVelocity < 0 {
-                velocity = originalVelocity / ((progress)*bgView.bounds.height)
-            }
+            // Dismiss
             
-            if velocity > 2 {
-                UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: velocity*2, options: .curveLinear, animations: {
-                    self.bgView.transform = CGAffineTransform(translationX: 0, y: height + 50)
-                    self.dimView.alpha = 0
-                }, completion: { complete in
-                    self.dismiss(animated: false, completion: {
-                        self.closeCompletion?()
-                    })
-                })
-                
-            }
-            else {
-                UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
-                    self.bgView.transform = CGAffineTransform(translationX: 0, y: height + 50)
-                    self.dimView.alpha = 0
-                    
-                }) { (complete) in
-                    self.dismiss(animated: false, completion: {
-                        self.closeCompletion?()
-                    })
-                }
-            }
-                
+            let initialSpringVelocity = self.springVelocity(
+                distanceToTravel: (interactionDistance - translation),
+                gestureVelocity: velocity
+            )
             
+            self.commitDismissalInteraction(velocity: initialSpringVelocity, interactionDistance: interactionDistance)
+
         }
         else {
-            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.84, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
-                
-                self.dimView.alpha = 1
-                self.bgView.transform = .identity
-                
-            }, completion: nil)
+            
+            // Reset
+            
+            let initialSpringVelocity = self.springVelocity(
+                distanceToTravel: abs(translation),
+                gestureVelocity: velocity
+            )
+            
+            self.cancelDismissalInteraction(velocity: initialSpringVelocity)
+            
         }
-        
     }
     
-    func gestureDidChange(_ gesture: UIPanGestureRecognizer) {
-        var translation = gesture.translation(in: bgView).y
-        let height = bgView.bounds.height
+    func commitDismissalInteraction(velocity: CGFloat, interactionDistance: CGFloat) {
+        let timingParameters = UISpringTimingParameters(
+            dampingRatio: 0.8,
+            initialVelocity: CGVector(dx: 0, dy: velocity)
+        )
         
-        if translation < 0 {
-            let t = -translation
-            
-            let alpha: CGFloat = 0.015
-            translation = -(1 - exp(-alpha*t))/alpha
+        let animator = UIViewPropertyAnimator(duration: 0.4, timingParameters: timingParameters)
+        
+        animator.addAnimations {
+            self.bgView.transform = CGAffineTransform(translationX: 0, y: interactionDistance)
+            self.dimView.alpha = 0
         }
         
-        bgView.transform = CGAffineTransform(translationX: 0, y: translation)
+        animator.addCompletion { _ in
+            self.dismiss(animated: false, completion: {
+                self.closeCompletion?()
+            })
+        }
         
-        let minY = (bgView.center.y - bgView.bounds.height/2) + bgView.transform.ty
-        let visibleHeight = self.view.bounds.maxY - minY
-        
-        let phase = visibleHeight / height
-        self.dimView.alpha = phase
-            
+        animator.startAnimation()
     }
     
-    private func getGesturePhase(_ gesture: UIPanGestureRecognizer) -> CGFloat {
-        let height = bgView.bounds.height
+    func cancelDismissalInteraction(velocity: CGFloat) {
+        let timingParameters = UISpringTimingParameters(
+            dampingRatio: 0.8,
+            initialVelocity: CGVector(dx: 0, dy: velocity)
+        )
         
-        let minY = (bgView.center.y - bgView.bounds.height/2) + bgView.transform.ty
-        let visibleHeight = self.view.bounds.maxY - minY
+        let animator = UIViewPropertyAnimator(duration: 0.4, timingParameters: timingParameters)
         
-        return visibleHeight / height
+        animator.addAnimations {
+            self.bgView.transform = .identity
+            self.dimView.alpha = 1
+        }
+        
+        animator.startAnimation()
+    }
+    
+    private func interactionDistance() -> CGFloat {
+        return containerView.bounds.height + 50
+    }
+    
+    func springVelocity(distanceToTravel: CGFloat, gestureVelocity: CGFloat) -> CGFloat {
+        return distanceToTravel == 0 ? 0 : gestureVelocity / distanceToTravel
     }
     
 }

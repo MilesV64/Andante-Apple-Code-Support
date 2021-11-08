@@ -45,8 +45,6 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         
         panGesture.delegate = self
         
-        self.useSafeArea = false
-        
         if let sessions = PracticeDatabase.shared.sessions(for: day) {
             self.sessions = sessions.compactMap { $0.session }
         }

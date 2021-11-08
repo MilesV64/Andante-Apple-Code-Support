@@ -25,7 +25,7 @@ class PickerAlertController: UIViewController, UIGestureRecognizerDelegate, UIPo
     public let contentView = UIView()
 
     /*
-    Visibile background, rounded corners, has componentView in it
+    Visibile background, rounded corners, has contentView in it
      */
     private let popupView = UIView()
     
@@ -43,11 +43,6 @@ class PickerAlertController: UIViewController, UIGestureRecognizerDelegate, UIPo
         
     public var closeCompletion: (()->Void)?
     
-    /**
-        If false, extends component view beyond safe area margins.
-     */
-    public var useSafeArea = true
-    
     public var showHandle: Bool {
         get {
             return handleView.isHidden == false
@@ -60,9 +55,6 @@ class PickerAlertController: UIViewController, UIGestureRecognizerDelegate, UIPo
     public var contentHeight: CGFloat = 300
     public var contentWidth: CGFloat = 375
     public var contentOffset: CGFloat = 20
-    
-    public var isFullscreenEnabled = false
-    private var isFullscreen = false
     
     /*
     The visible height of the popupView in sheet form, never fullscreen
@@ -84,8 +76,6 @@ class PickerAlertController: UIViewController, UIGestureRecognizerDelegate, UIPo
         
         layoutContentView()
         
-        layoutComponentView()
-                
     }
     
     
@@ -135,112 +125,6 @@ class PickerAlertController: UIViewController, UIGestureRecognizerDelegate, UIPo
     public func disablePanWithoutClosing() {
         shouldDisableClose = true
         panGesture.isEnabled = false
-    }
-    
-    func gestureDidBegin(_ gesture: UIPanGestureRecognizer) {
-        
-    }
-    
-    func gestureDidEnd(_ gesture: UIPanGestureRecognizer) {
-        if shouldDisableClose {
-            shouldDisableClose = false
-            return
-        }
-        
-        var shouldOpen = false
-        
-        if !isFullscreenEnabled || isFullscreen == false {
-            if gesture.translation(in: popupView).y > visibleHeight*0.6 ||
-                (gesture.velocity(in: popupView).y > 40 && gesture.translation(in: popupView).y >= 0) {
-                
-                self.didExitWithoutConfirming()
-                
-                UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
-                    self.popupView.transform = CGAffineTransform(translationX: 0, y: self.visibleHeight + 50)
-                    self.dimView.alpha = 0
-                    
-                }) { (complete) in
-                    self.dismiss(animated: false, completion: {
-                        self.closeCompletion?()
-                    })
-                }
-                
-            }
-            else if isFullscreenEnabled && (gesture.translation(in: popupView).y < -30 ||
-                (gesture.velocity(in: popupView).y < -40 && gesture.translation(in: popupView).y <= 0)) {
-                
-                let newMinY = self.view.safeAreaInsets.top
-                let currentMinY = (self.view.bounds.maxY - visibleHeight) + popupView.transform.ty
-                
-                popupView.transform = CGAffineTransform(translationX: 0, y: currentMinY - newMinY)
-                
-                self.isFullscreen = true
-                
-                shouldOpen = true
-            }
-            else {
-                shouldOpen = true
-            }
-        }
-        else if isFullscreenEnabled && isFullscreen {
-            let sheetMinY = self.view.bounds.maxY - visibleHeight
-            let currentMinY = self.view.safeAreaInsets.top + popupView.transform.ty
-            
-            if currentMinY > self.view.bounds.maxY - visibleHeight*0.6 {
-                UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
-                    self.popupView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height)
-                    self.dimView.alpha = 0
-                    
-                }) { (complete) in
-                    self.dismiss(animated: false, completion: {
-                        self.closeCompletion?()
-                    })
-                }
-            }
-            else if currentMinY > sheetMinY*0.6 {
-                isFullscreen = false
-                popupView.transform = CGAffineTransform(translationX: 0, y: currentMinY - sheetMinY - 20)
-                
-                shouldOpen = true
-            }
-            else {
-                shouldOpen = true
-            }
-        }
-        
-        if shouldOpen {
-            willOpen()
-            UIView.animate(withDuration: 0.55, delay: 0, usingSpringWithDamping: 0.84, initialSpringVelocity: 0, options: [.curveEaseOut], animations: {
-                
-                self.dimView.alpha = 1
-                self.popupView.transform = .identity
-                
-                
-            }, completion: nil)
-        }
-        
-    }
-    
-    func gestureDidChange(_ gesture: UIPanGestureRecognizer) {
-        var translation = gesture.translation(in: popupView).y
-        
-        if translation < 0 {
-            let t = -translation
-            
-            let alpha: CGFloat = 0.015
-            translation = -(1 - exp(-alpha*t))/alpha
-        }
-        
-        let sheetMinY = self.view.bounds.height - visibleHeight
-        let actualMinY = (isFullscreen ? self.view.safeAreaInsets.top : sheetMinY) + popupView.transform.ty
-        let actualVisibleHeight = self.view.bounds.maxY - actualMinY
-        
-        let phase = actualVisibleHeight / visibleHeight
-        self.dimView.alpha = phase
-        popupView.transform = CGAffineTransform(translationX: 0, y: translation)
-            
-        didDrag(translation)
-            
     }
     
     public func convertViewFrame(_ view: UIView) -> CGRect {
@@ -298,46 +182,41 @@ private extension PickerAlertController {
                 height: contentHeight + 10)
             
             popupView.frame = self.view.bounds
+            
             contentView.frame = popupView.bounds.inset(by: self.view.safeAreaInsets).inset(by: UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0))
+            contentView.roundCorners(0)
             
             return
         }
         
-        let maxY = UIScreen.main.bounds.maxY
+        let maxY = view.bounds.maxY
         
         let contentHeight = self.contentHeight + contentOffset
-        let minY = isFullscreen ? self.view.safeAreaInsets.top : (maxY - contentHeight - self.view.safeAreaInsets.bottom)
+        let minY = maxY - contentHeight - self.view.safeAreaInsets.bottom
         let rect = CGRect(
-            x: 10,
-            y: max(self.view.safeAreaInsets.top, minY),
-            width: self.view.bounds.width - 20,
-            height: contentHeight
+            x: 0,
+            y: minY,
+            width: self.view.bounds.width,
+            height: contentHeight + 500
         )
         
         self.visibleHeight = contentHeight
         
         popupView.center = CGPoint(x: rect.midX, y: rect.midY)
         popupView.bounds.size = rect.size
+        
+        contentView.frame = CGRect(
+            origin: CGPoint(x: 0, y: contentOffset),
+            size: CGSize(
+                width: popupView.bounds.width,
+                height: self.contentHeight)
+        )
+        
         popupView.roundCorners(25)
+        contentView.roundCorners(25)
         
         handleView.frame = CGRect(x: 0, y: 0, width: popupView.bounds.width, height: 20)
         
-    }
-    
-    func layoutComponentView() {
-        if isPopover {
-            contentView.roundCorners(0, prefersContinuous: true)
-            return
-        }
-        
-        let minY = contentOffset
-        contentView.roundCorners(25, prefersContinuous: true)
-        contentView.clipsToBounds = true
-        contentView.frame = CGRect(
-            origin: CGPoint(x: 0, y: minY),
-            size: CGSize(
-                width: popupView.bounds.width,
-                height: self.contentHeight))
     }
     
 }
@@ -348,10 +227,10 @@ private extension PickerAlertController {
     @objc func didPanContentView(_ sender: UIPanGestureRecognizer) {
         
         if sender.state == .began {
-            gestureDidBegin(sender)
+            self.willClose()
         }
         else if sender.state == .changed {
-            gestureDidChange(sender)
+            gestureDidUpdate(sender)
         }
         else {
             gestureDidEnd(sender)
@@ -361,7 +240,10 @@ private extension PickerAlertController {
     func presentView() {
         
         if !isPopover {
-            self.viewDidLayoutSubviews()
+            
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+            
             popupView.transform = CGAffineTransform(translationX: 0, y: visibleHeight)
             
             UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
@@ -373,12 +255,100 @@ private extension PickerAlertController {
                 
             }, completion: nil)
         }
-        
-        
     }
 
+    func gestureDidUpdate(_ gesture: UIPanGestureRecognizer) {
+        guard let view = gesture.view else { return }
+        
+        let translation = gesture.translation(in: view).y
+        let interactionDistance = self.interactionDistance()
+        
+        var progress = interactionDistance == 0 ? 0 : (translation / interactionDistance)
+        if progress < 0 { progress /= (1.0 + abs(progress * 15)) }
+        
+        popupView.transform = CGAffineTransform(translationX: 0, y: progress*interactionDistance)
+        self.dimView.alpha = 1 - progress
+    }
     
+    func gestureDidEnd(_ gesture: UIPanGestureRecognizer) {
+        guard let view = gesture.view else { return }
+        
+        let translation = gesture.translation(in: view).y
+        let velocity = gesture.velocity(in: view).y
+        
+        let interactionDistance = self.interactionDistance()
+       
+        if velocity > 300 || (translation > (interactionDistance / 2) && velocity > -300) {
+            
+            // Dismiss
+            
+            let initialSpringVelocity = self.springVelocity(
+                distanceToTravel: (interactionDistance - translation),
+                gestureVelocity: velocity
+            )
+            
+            self.commitDismissalInteraction(velocity: initialSpringVelocity, interactionDistance: interactionDistance)
+
+        }
+        else {
+            
+            // Reset
+            
+            let initialSpringVelocity = self.springVelocity(
+                distanceToTravel: translation,
+                gestureVelocity: velocity
+            )
+            
+            self.cancelDismissalInteraction(velocity: initialSpringVelocity)
+            
+        }
+    }
     
+    func commitDismissalInteraction(velocity: CGFloat, interactionDistance: CGFloat) {
+        let timingParameters = UISpringTimingParameters(
+            dampingRatio: 0.8,
+            initialVelocity: CGVector(dx: 0, dy: velocity)
+        )
+        
+        let animator = UIViewPropertyAnimator(duration: 0.4, timingParameters: timingParameters)
+        
+        animator.addAnimations {
+            self.popupView.transform = CGAffineTransform(translationX: 0, y: interactionDistance)
+            self.dimView.alpha = 0
+        }
+        
+        animator.addCompletion { _ in
+            self.dismiss(animated: false, completion: {
+                self.closeCompletion?()
+            })
+        }
+        
+        animator.startAnimation()
+    }
+    
+    func cancelDismissalInteraction(velocity: CGFloat) {
+        let timingParameters = UISpringTimingParameters(
+            dampingRatio: 0.8,
+            initialVelocity: CGVector(dx: 0, dy: velocity)
+        )
+        
+        let animator = UIViewPropertyAnimator(duration: 0.4, timingParameters: timingParameters)
+        
+        animator.addAnimations {
+            self.popupView.transform = .identity
+            self.dimView.alpha = 1
+        }
+        
+        animator.startAnimation()
+    }
+    
+    private func interactionDistance() -> CGFloat {
+        return contentView.bounds.height + 50
+    }
+    
+    func springVelocity(distanceToTravel: CGFloat, gestureVelocity: CGFloat) -> CGFloat {
+        return distanceToTravel == 0 ? 0 : gestureVelocity / distanceToTravel
+    }
     
 }
 

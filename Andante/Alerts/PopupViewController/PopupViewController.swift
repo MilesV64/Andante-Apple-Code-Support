@@ -389,7 +389,7 @@ private extension PopupViewController {
         
         var progress = interactionDistance == 0 ? 0 : (translation / interactionDistance)
         if progress < 0 { progress /= (1.0 + abs(progress * 15)) }
-        print(progress, interactionDistance, translation)
+        
         bgView.transform = CGAffineTransform(translationX: 0, y: progress*interactionDistance)
         self.dimView.alpha = 1 - progress
     }
@@ -419,7 +419,7 @@ private extension PopupViewController {
             // Reset
             
             let initialSpringVelocity = self.springVelocity(
-                distanceToTravel: abs(translation),
+                distanceToTravel: translation,
                 gestureVelocity: velocity
             )
             

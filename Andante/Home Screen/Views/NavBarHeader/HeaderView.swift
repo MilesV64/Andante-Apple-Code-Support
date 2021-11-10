@@ -9,6 +9,7 @@
 import UIKit
 import Lottie
 
+
 class HeaderView: UIView, PracticeDatabaseObserver {
     
     static var accessoryHeight: CGFloat = 72
@@ -24,10 +25,7 @@ class HeaderView: UIView, PracticeDatabaseObserver {
     
     private let sep = Separator(position: .bottom)
         
-    private let streakView = CustomButton()
-    
-    private let streakAnimation = AnimationView(name: "flame")
-    private let streakLabel = UILabel()
+    private let streakView = StreakView()
     
     public let profilesView = MultipleProfilesView()
     private let label = UILabel()
@@ -64,56 +62,14 @@ class HeaderView: UIView, PracticeDatabaseObserver {
         }
     }
     
-    private func setFlameColor(_ color: UIColor) {
-        self.streakAnimation.setValueProvider(
-            ColorValueProvider(color.lottieColorValue),
-            keypath: AnimationKeypath(keypath: "fire.Shape 1.Fill 1.Color"))
-        
-        self.streakAnimation.setValueProvider(
-            ColorValueProvider(Colors.foregroundColor.lottieColorValue),
-            keypath: AnimationKeypath(keypath: "cutout.Group 1.Fill 1.Color"))
-    }
-    
-    private var lastStreak: Int = 0
-    
     @objc func reloadStreak() {
-        let streak = PracticeDatabase.shared.streak(for: User.getActiveProfile())
-        self.lastStreak = streak
-        streakLabel.text = "\(streak)"
-        streakLabel.textColor = streak == 0 ? Colors.extraLightText : Colors.text
-        
-        if streak > 0 {
-            setFlameColor(Colors.orange)
-            if streakAnimation.isAnimationPlaying == false {
-                streakAnimation.play()
-            }
-        } else {
-            setFlameColor(Colors.extraLightText)
-            streakAnimation.stop()
-        }
-        
+        self.streakView.streak = PracticeDatabase.shared.streak(for: User.getActiveProfile())
         setNeedsLayout()
     }
     
     public var streakAnimationFrame: AnimationFrameTime {
-        get { return self.streakAnimation.currentFrame }
-        set {
-            self.streakAnimation.currentFrame = newValue
-            if lastStreak > 0 {
-                self.streakAnimation.play()
-            }
-        }
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle {
-            if lastStreak > 0 {
-                setFlameColor(Colors.orange)
-            } else {
-                setFlameColor(Colors.extraLightText)
-            }
-        }
+        get { return self.streakView.animationFrame }
+        set { self.streakView.animationFrame = newValue }
     }
     
     init() {
@@ -125,26 +81,6 @@ class HeaderView: UIView, PracticeDatabaseObserver {
         
         addSubview(topView)
         
-        self.streakAnimation.loopMode = .loop
-        self.streakAnimation.backgroundBehavior = .pauseAndRestore
-        self.streakView.addSubview(self.streakAnimation)
-        
-        self.streakLabel.font = Fonts.semibold.withSize(17)
-        self.streakView.addSubview(self.streakLabel)
-        
-        streakView.titleLabel?.font = Fonts.semibold.withSize(17)
-        streakView.addTarget(self, action: #selector(didTapStreakView), for: .touchUpInside)
-        streakView.highlightAction = { highlighted in
-            if highlighted {
-                self.streakView.alpha = 0.2
-            }
-            else {
-                UIView.animate(withDuration: 0.2) {
-                    self.streakView.alpha = 1
-                }
-            }
-        }
-        streakView.isUserInteractionEnabled = false
         topView.addSubview(streakView)
         
         self.reloadStreak()
@@ -173,14 +109,12 @@ class HeaderView: UIView, PracticeDatabaseObserver {
     func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeTotalStreak streak: Int) {
         if self.profile == nil {
             self.reloadStreak()
-            print("reloading profile nil")
         }
     }
     
     func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int) {
         if profile == self.profile {
             self.reloadStreak()
-            print("reloading profile not nil")
         }
     }
     
@@ -200,7 +134,7 @@ class HeaderView: UIView, PracticeDatabaseObserver {
             minHeight = 52
         }
         else {
-            profilesView.isHidden = false
+            profilesView.isHidden = true
             streakView.isHidden = true
             label.font = Fonts.bold.withSize(20)
             
@@ -243,21 +177,10 @@ class HeaderView: UIView, PracticeDatabaseObserver {
                 width: width, height: height).integral
         }
                 
-        streakLabel.sizeToFit()
-        let labelWidth = streakLabel.bounds.width
-        let flameWidth: CGFloat = 30
-        let totalStreakWidth = labelWidth + flameWidth + 2
+        streakView.sizeToFit()
         streakView.frame = CGRect(
-            x: self.bounds.maxX - totalStreakWidth - Constants.margin, y: 4,
-            width: totalStreakWidth, height: 42)
-        
-        streakAnimation.frame = CGRect(
-            x: 0, y: self.streakView.bounds.midY - flameWidth / 2,
-            width: flameWidth, height: flameWidth).insetBy(dx: -8, dy: -8)
-        
-        streakLabel.frame.origin = CGPoint(
-            x: self.streakView.bounds.maxX - streakLabel.bounds.width,
-            y: self.streakView.bounds.midY - streakLabel.bounds.height / 2)
+            x: self.bounds.maxX - streakView.bounds.width - Constants.margin, y: 4,
+            width: streakView.bounds.width, height: streakView.bounds.height)
         
         if !isSidebarLayout {
             label.sizeToFit()

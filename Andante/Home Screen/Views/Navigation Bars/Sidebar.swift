@@ -19,8 +19,10 @@ class Sidebar: NavigationComponent, SidebarFoldersDelegate, PracticeDatabaseObse
     
     private var foldersView = SidebarFoldersView()
     
-    private let streakView = CustomButton()
-    private let profileView = ProfileImagePushButton()
+    private let streakView = StreakView()
+    private let profileView = MultipleProfilesView()
+    
+    private var profile: CDProfile?
     
     func presentationViewController() -> UIViewController? {
         return delegate?.presentingViewController()
@@ -50,13 +52,9 @@ class Sidebar: NavigationComponent, SidebarFoldersDelegate, PracticeDatabaseObse
         separator.backgroundColor = Colors.separatorColor
         self.addSubview(separator)
         
-        streakView.setTitle("🔥 0", for: .normal)
-        streakView.setTitleColor(Colors.text, for: .normal)
-        streakView.titleLabel?.font = Fonts.semibold.withSize(17)
-        streakView.contentHorizontalAlignment = .right
-        streakView.titleEdgeInsets.right = Constants.margin
         scrollView.addSubview(streakView)
         
+        profileView.containerBackgroundColor = Colors.foregroundColor
         profileView.action = {
             [weak self] in
             guard let self = self else { return }
@@ -94,25 +92,37 @@ class Sidebar: NavigationComponent, SidebarFoldersDelegate, PracticeDatabaseObse
     
     func practiceDatabaseDidUpdate(_ practiceDatabase: PracticeDatabase) {}
     func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeFor profile: CDProfile) {}
-    func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int) {}
     
     func practiceDatabase(_ practiceDatabase: PracticeDatabase, didChangeTotalStreak streak: Int) {
-        self.reloadStreak()
+        if self.profile == nil {
+            self.reloadStreak()
+        }
+    }
+    
+    func practiceDatabase(_ practiceDatabase: PracticeDatabase, streakDidChangeFor profile: CDProfile, streak: Int) {
+        if profile == self.profile {
+            self.reloadStreak()
+        }
     }
     
     @objc func reloadStreak() {
-        let streak = PracticeDatabase.shared.streak(for: User.getActiveProfile())
-        streakView.setTitle("🔥 \(streak)", for: .normal)
-        streakView.setTitleColor(streak == 0 ? Colors.lightText : Colors.text, for: .normal)
+        self.streakView.streak = PracticeDatabase.shared.streak(for: User.getActiveProfile())
+        self.setNeedsLayout()
     }
     
     public func reloadData() {
-        guard let profile = User.getActiveProfile() else { return }
+        self.profile = User.getActiveProfile()
         
-        profileView.profileImg.profile = profile
+        if let profile = profile {
+            profileView.setProfiles([profile])
+        } else {
+            profileView.setProfiles(CDProfile.getAllProfiles())
+        }
+        
         reloadStreak()
         
         setFolders()
+        
     }
     
     private func setFolders() {
@@ -196,14 +206,17 @@ class Sidebar: NavigationComponent, SidebarFoldersDelegate, PracticeDatabaseObse
         
         scrollView.frame = self.bounds.inset(by: UIEdgeInsets(top: insets.top, left: 0, bottom: 0, right: 0))
                 
-        let profileSize: CGFloat = 44
+        let profileSize: CGFloat = 46
+        profileView.bounds.size.height = profileSize
+        let profileWidth = profileView.calculateWidth()
         profileView.frame = CGRect(x: Constants.smallMargin, y: 30 - profileSize/2,
-            width: profileSize, height: profileSize).integral
+            width: profileWidth, height: profileSize).integral
         
-        let width = streakView.titleLabel!.sizeThatFits(self.bounds.size).width + Constants.margin + 10
+        self.streakView.sizeToFit()
         streakView.frame = CGRect(
-            x: self.bounds.maxX - width, y: 30 - profileSize/2,
-            width: width, height: profileSize)
+            x: self.bounds.maxX - self.streakView.bounds.width - Constants.smallMargin,
+            y: 30 - self.streakView.bounds.height/2,
+            width: self.streakView.bounds.width, height: self.streakView.bounds.height)
         
         let tabWidth: CGFloat = bounds.width - Constants.smallMargin*2
         let tabHeight: CGFloat = 48

@@ -177,6 +177,7 @@
 		029C0163272D1D5000943E5B /* SessionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C0162272D1D5000943E5B /* SessionDetailViewController.swift */; };
 		029C5FF726FD2548000D9936 /* flame.json in Resources */ = {isa = PBXBuildFile; fileRef = 029C5FF626FD2548000D9936 /* flame.json */; };
 		029E3579273B920200FFEA1B /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029E3578273B920200FFEA1B /* GradientView.swift */; };
+		029E357B273BADF900FFEA1B /* StreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029E357A273BADF900FFEA1B /* StreakView.swift */; };
 		029EA97624B5430500C37072 /* TimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029EA97524B5430500C37072 /* TimePickerView.swift */; };
 		029F3285244D651300060F33 /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029F3284244D651300060F33 /* PracticeViewController.swift */; };
 		02A2DB1C24C98743002E0760 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A2DB1B24C98743002E0760 /* ContainerViewController.swift */; };
@@ -475,6 +476,7 @@
 		029C0162272D1D5000943E5B /* SessionDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDetailViewController.swift; sourceTree = "<group>"; };
 		029C5FF626FD2548000D9936 /* flame.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = flame.json; sourceTree = "<group>"; };
 		029E3578273B920200FFEA1B /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		029E357A273BADF900FFEA1B /* StreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakView.swift; sourceTree = "<group>"; };
 		029EA97524B5430500C37072 /* TimePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerView.swift; sourceTree = "<group>"; };
 		029F3284244D651300060F33 /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
 		02A2DB1B24C98743002E0760 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -941,6 +943,7 @@
 			isa = PBXGroup;
 			children = (
 				0222F17324C90D680070E638 /* SessionSaveNotification.swift */,
+				029E357A273BADF900FFEA1B /* StreakView.swift */,
 				0270BBA424A03CBE003AC91F /* NavBarHeader */,
 				02C083CF254FF15F006D9DA0 /* Navigation Bars */,
 			);
@@ -1659,6 +1662,7 @@
 				02FA154922FB6C6A00641F6A /* Settings.swift in Sources */,
 				021C98EA24848F650044947A /* GoalDetailViewController.swift in Sources */,
 				021826D52625137A008CB7C4 /* CDTextEditorBlock+CoreDataClass.swift in Sources */,
+				029E357B273BADF900FFEA1B /* StreakView.swift in Sources */,
 				02AA3F9C250A01CA00EF19EA /* MoveSessionViewController.swift in Sources */,
 				0287616D24E0F13B00F568CA /* StatIconView.swift in Sources */,
 				02015BB62702C1A0003B2450 /* PulltoSettingsView.swift in Sources */,

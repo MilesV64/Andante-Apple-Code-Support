@@ -392,7 +392,7 @@ class MainViewController: UIViewController, UIGestureRecognizerDelegate, Animato
                 shouldScrollToTop = true
             }
         }
-                
+        
         UIView.animateWithCurve(duration: 0.3, curve: UIView.CustomAnimationCurve.cubic.easeOut) {
             self.updateHeaderView()
             if shouldScrollToTop, let scrollView = self.scrollView {

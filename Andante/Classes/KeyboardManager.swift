@@ -27,7 +27,17 @@ class KeyboardManager: NSObject {
     
     static let shared = KeyboardManager()
     
-    private(set) var keyboardHeight: CGFloat = 0
+    private(set) var keyboardFrame: CGRect = .zero
+    
+    public var keyboardHeight: CGFloat {
+        return self.keyboardFrame.height
+    }
+    
+    public func keyboardHeight(in view: UIView) -> CGFloat {
+        if self.keyboardHeight == 0 { return 0 }
+        return view.bounds.height - view.convert(self.keyboardFrame, from: nil).minY
+    }
+
     
     fileprivate class WeakObserver {
         private(set) weak var value: KeyboardObserver?
@@ -81,7 +91,7 @@ class KeyboardManager: NSObject {
     @objc internal func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
-            self.keyboardHeight = keyboardRectangle.height
+            self.keyboardFrame = keyboardRectangle
         }
         
         self.observers.compactMap({ $0.value }).forEach { $0.keyboardWillUpdate(self, update: .show) }
@@ -93,7 +103,7 @@ class KeyboardManager: NSObject {
         let currentHeight = self.keyboardHeight
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
-            self.keyboardHeight = keyboardRectangle.height
+            self.keyboardFrame = keyboardRectangle
         }
         
         if
@@ -106,7 +116,7 @@ class KeyboardManager: NSObject {
     }
     
     @objc internal func keyboardWillHide(_ notification: Notification) {
-        self.keyboardHeight = 0
+        self.keyboardFrame = .zero
         
         self.observers.compactMap({ $0.value }).forEach { $0.keyboardWillUpdate(self, update: .hide) }
         

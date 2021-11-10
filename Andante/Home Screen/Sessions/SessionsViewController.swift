@@ -15,7 +15,7 @@ struct PracticeDay {
     var sessions: [CDSession] = []
 }
 
-class SessionsViewController: MainViewController, SessionsSearchBarDelegate, CalendarScrollViewDelegate, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, FetchedObjectControllerDelegate {
+class SessionsViewController: MainViewController, SessionsSearchBarDelegate, CalendarScrollViewDelegate, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, FetchedObjectControllerDelegate, KeyboardObserver {
     
     var layout: UICollectionViewFlowLayout!
     var collectionView: UICollectionView!
@@ -40,7 +40,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             
     private let visibleDateView = VisibleDateView()
         
-    private var emptyStateView: SessionsEmptyStateView?
+    private var emptyStateView = SessionsEmptyStateView()
     
     public var fetchedObjectController: FetchedObjectCollectionViewController<CDSession>!
     
@@ -50,6 +50,8 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         super.viewDidLoad()
         
         self.title = "Andante"
+        
+        KeyboardManager.shared.addObserver(self)
         
         view.backgroundColor = Colors.backgroundColor
         
@@ -110,6 +112,10 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         }
         
         self.sessionCalendarView.setProfile(User.getActiveProfile())
+        
+        self.emptyStateView.isHidden = true
+        self.emptyStateView.alpha = 0
+        self.view.insertSubview(self.emptyStateView, at: 0)
         
     }
     
@@ -214,53 +220,39 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
     }
     
     func fetchedObjectControllerDidUpdate(isEmpty: Bool, firstUpdate: Bool) {
-        //shouldDisplaySessionCalendarView = isEmpty == false
                 
+        let isFiltering = filters.count > 0 || searchQuery.isEmpty == false
+        
         if isEmpty {
-            let isFiltering = filters.count > 0 || searchQuery.isEmpty == false
-
-            if let emptyStateView = emptyStateView {
-                if isFiltering {
-                    emptyStateView.setNoFilteredSessionsText()
-                }
-                else {
-                    emptyStateView.setNoSessionsText()
-                }
-                
-                emptyStateView.alpha = 1
-                setCalendarHidden(true)
+            
+            if isFiltering {
+                emptyStateView.setNoFilteredSessionsText()
+            } else {
+                emptyStateView.setNoSessionsText()
             }
-            else {
-                emptyStateView = SessionsEmptyStateView()
-                emptyStateView?.alpha = 0
-                view.insertSubview(emptyStateView!, at: 0)
+            
+            if self.emptyStateView.isHidden {
+                self.emptyStateView.alpha = 0
+                self.emptyStateView.isHidden = false
                 
-                if isFiltering {
-                    emptyStateView?.setNoFilteredSessionsText()
-                }
-                else {
-                    emptyStateView?.setNoSessionsText()
-                }
-                
-                UIView.animate(withDuration: 0.3) {
-                    self.emptyStateView?.alpha = 1
+                UIView.springAnimate(duration: 0.3) {
+                    self.emptyStateView.alpha = 1
                     self.setCalendarHidden(true)
                 }
                 
             }
-            
+            else {
+                self.emptyStateView.alpha = 1
+                self.setCalendarHidden(true)
+            }
+
             collectionView.isScrollEnabled = false
         }
         else {
-            self.emptyStateView?.alpha = 0
-            self.emptyStateView?.removeFromSuperview()
-            self.collectionView.backgroundView = nil
-            self.emptyStateView = nil
-            
+            self.emptyStateView.isHidden = true
             setCalendarHidden(false)
             
             collectionView.isScrollEnabled = true
-            
         }
     }
     
@@ -269,6 +261,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
     }
     
     func setCalendarHidden(_ hidden: Bool) {
+        
         if hidden {
             guard additionalTopInset != 0 || sessionCalendarView.alpha != 0 else { return }
             sessionCalendarView.alpha = 0
@@ -458,7 +451,32 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
             }, completion: nil)
         }
     }
-        
+    
+    
+    // MARK: Keyboard
+    
+    private var isAnimatingEmptyStateView = false
+    func keyboardWillUpdate(_ keyboardManager: KeyboardManager, update: KeyboardManager.KeyboardUpdate) {
+        self.isAnimatingEmptyStateView = true
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: []) {
+            self.layoutEmptyStateView()
+            self.emptyStateView.setNeedsLayout()
+            self.emptyStateView.layoutSubviews()
+        } completion: { _ in
+            self.isAnimatingEmptyStateView = false
+        }
+    }
+    
+    
+    // MARK: - Layout
+    
+    private func layoutEmptyStateView() {
+        print("layout empty")
+        self.emptyStateView.frame = CGRect(
+            x: 0, y: 0, width: self.view.bounds.width,
+            height: self.view.bounds.height - KeyboardManager.shared.keyboardHeight(in: self.view))
+    }
+            
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -470,7 +488,10 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         }
         
         collectionView.frame = view.bounds
-        emptyStateView?.frame = view.bounds
+        
+        if !self.isAnimatingEmptyStateView {
+            self.layoutEmptyStateView()
+        }
         
         sessionCalendarView.frame = CGRect(
             x: -collectionView.contentInset.left,

@@ -37,13 +37,13 @@ class Button: CustomButton {
             if isHighlighted {
                 UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseOut], animations: {
                     self.imageView?.transform = CGAffineTransform(scaleX: 0.92, y: 0.92)
-                    self.alpha = 0.65
+                    self.imageView?.alpha = 0.65
                 }, completion: nil)
             }
             else {
                 UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
                     self.imageView?.transform = .identity
-                    self.alpha = 1
+                    self.imageView?.alpha = 1
                 }, completion: nil)
             }
             

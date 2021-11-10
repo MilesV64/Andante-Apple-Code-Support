@@ -30,7 +30,7 @@ class OnboardingViewController: UIViewController {
     private var iconName = ""
     private var didEditIcon = false
     
-    private let button = PushButton()
+    private let buttonView = OnboardingActionButtonView()
     private var keyboardHeight: CGFloat = 0
 
     private var phase = 0
@@ -39,6 +39,9 @@ class OnboardingViewController: UIViewController {
     
     /// If true, does not save the newly created profile
     public var isForTesting: Bool = false
+    
+    
+    // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,32 +61,25 @@ class OnboardingViewController: UIViewController {
             
             self.didEditIcon = true
             
-            self.button.isUserInteractionEnabled = true
-            UIView.animate(withDuration: 0.25) {
-                self.button.backgroundColor = Colors.orange
-            }
+            self.buttonView.button.setEnabled(true)
             
             self.iconName = iconName
             
         }
         self.view.addSubview(iconView)
-        
-        button.setTitle("Get Started", color: Colors.white, font: Fonts.medium.withSize(17))
-        button.cornerRadius = 14
-        button.backgroundColor = Colors.orange
-        button.buttonView.setButtonShadow()
-        button.alpha = 0
-        button.transform = CGAffineTransform(translationX: 0, y: 20)
-        button.action = {
+
+        buttonView.button.alpha = 0
+        buttonView.button.transform = CGAffineTransform(translationX: 0, y: 20)
+        buttonView.button.action = {
             [weak self] in
             guard let self = self else { return }
             self.didTapButton()
         }
-        self.view.addSubview(button)
+        self.view.addSubview(buttonView)
         
         backButton.alpha = 0
         backButton.contentHorizontalAlignment = .left
-        backButton.contentEdgeInsets.left = Constants.smallMargin
+        backButton.contentEdgeInsets.left = 24 + 4
         backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
         self.view.addSubview(backButton)
         
@@ -99,95 +95,61 @@ class OnboardingViewController: UIViewController {
         initialView.animate()
         
         UIView.animateWithCurve(duration: 1, delay: 1.6,
-                   curve: UIView.CustomAnimationCurve.exponential.easeOut,
-                   animation: {
-                   self.button.alpha = 1
-                   self.button.transform = .identity
-               }, completion: nil)
+           curve: UIView.CustomAnimationCurve.exponential.easeOut,
+           animation: {
+            self.buttonView.button.alpha = 1
+            self.buttonView.button.transform = .identity
+       }, completion: nil)
         
     }
     
+    
+    // MARK: Back button
+    
     @objc func didTapBack() {
-        self.button.isUserInteractionEnabled = false
+        self.buttonView.button.setEnabled(self.nameView.name.isEmpty == false)
+        self.buttonView.button.animateTitle(to: "Continue")
         
-        UIView.animate(withDuration: 0.35) {
+        self.nameView.becomeFirstResponder()
+        self.phase = 1
+        
+        let animator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.86) {
             self.iconView.alpha = 0
             self.iconView.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
             self.nameView.alpha = 1
             self.nameView.transform = .identity
             self.backButton.alpha = 0
         }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            [weak self] in
-            guard let self = self else { return }
-            self.phase = 1
-
-            self.nameView.becomeFirstResponder()
-        }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            [weak self] in
-            guard let self = self else { return }
-            
-            UIView.transition(with: self.button, duration: 0.15, options: [.transitionCrossDissolve], animations: {
-                if self.nameView.name == "" {
-                    self.button.backgroundColor = Colors.lightText
-                }
-                else {
-                    self.button.backgroundColor = Colors.orange
-                    self.button.isUserInteractionEnabled = true
-                }
-                self.button.setTitle("Continue", for: .normal)
-            }, completion: nil)
-            
-        }
-        
+        animator.startAnimation()
     }
+    
+    
+    // MARK: Action button
     
     private func didTapButton() {
         
         if phase == 0 {
-            button.isUserInteractionEnabled = false
-            
             phase = 1
             
             nameView.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
+            nameView.becomeFirstResponder()
             
-            UIView.animateWithCurve(duration: 0.7, delay: 0,
-                curve: UIView.CustomAnimationCurve.cubic.easeInOut,
-                animation: {
-                    self.nameView.alpha = 1
-                    self.nameView.transform = .identity
-                    self.initialView.alpha = 0
-                    self.initialView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
-            }, completion: nil)
+            buttonView.button.setEnabled(false)
+            buttonView.button.animateTitle(to: "Continue")
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                [weak self] in
-                guard let self = self else { return }
-                
-                UIView.transition(with: self.button, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-                    if self.nameView.name == "" {
-                        self.button.backgroundColor = Colors.lightText
-                    }
-                    else {
-                        self.button.isUserInteractionEnabled = true
-                    }
-                    self.button.setTitle("Continue", for: .normal)
-                }, completion: nil)
-                
+            let animator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.86) {
+                self.nameView.alpha = 1
+                self.nameView.transform = .identity
+                self.initialView.alpha = 0
+                self.initialView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
             }
-               
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                [weak self] in
-                guard let self = self else { return }
-                self.nameView.becomeFirstResponder()
-            }
+            
+            animator.startAnimation()
+    
             
         }
         else if phase == 1 {
-            self.button.isUserInteractionEnabled = false
             phase = 2
             
             nameView.resignFirstResponder()
@@ -197,35 +159,24 @@ class OnboardingViewController: UIViewController {
                 iconView.initialIcon = iconName
             }
             
+            buttonView.button.setEnabled(self.iconName != "")
+            buttonView.button.animateTitle(to: "Done")
+            
             iconView.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
             
-            UIView.animateWithCurve(duration: 0.7, delay: 0,
-                curve: UIView.CustomAnimationCurve.cubic.easeInOut,
-                animation: {
-                    self.iconView.alpha = 1
-                    self.iconView.transform = .identity
-                    self.nameView.alpha = 0
-                    self.nameView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
-                    self.backButton.alpha = 1
-                    self.viewDidLayoutSubviews()
-            }, completion: nil)
-            
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                [weak self] in
-                guard let self = self else { return }
+            let animator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.86) {
+                self.iconView.alpha = 1
+                self.iconView.transform = .identity
+                self.nameView.alpha = 0
+                self.nameView.transform = CGAffineTransform(translationX: -self.view.bounds.width, y: 0)
                 
-                UIView.transition(with: self.button, duration: 0.25, options: [.transitionCrossDissolve], animations: {
-                    if self.iconName == "" {
-                        self.button.backgroundColor = Colors.lightText
-                    }
-                    else {
-                        self.button.isUserInteractionEnabled = true
-                    }
-                    self.button.setTitle("Done", for: .normal)
-                }, completion: nil)
+                self.backButton.alpha = 1
+                
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
             }
             
+            animator.startAnimation()
             
         }
         else if phase == 2 {
@@ -262,6 +213,9 @@ class OnboardingViewController: UIViewController {
         }
     }
     
+    
+    // MARK: - dismiss
+    
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         if flag {
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
@@ -275,6 +229,9 @@ class OnboardingViewController: UIViewController {
             super.dismiss(animated: false, completion: nil)
         }
     }
+    
+    
+    // MARK: - Keyboard handling
     
     @objc func adjustForKeyboard(notification: Notification) {
         guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
@@ -297,52 +254,66 @@ class OnboardingViewController: UIViewController {
 
     }
     
+    
+    // MARK: - Layout
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let width = min(self.view.bounds.width, 400)
-        let margin = Constants.margin + (self.view.bounds.width - width)/2
+        let width: CGFloat
+        if self.traitCollection.horizontalSizeClass == .compact {
+            width = self.view.bounds.width
+        } else {
+            width = 400
+        }
         
-        let frame = self.view.bounds.inset(by: self.view.safeAreaInsets).inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0))
+        let margin: CGFloat = 24
+        let actionButtonHeight = OnboardingActionButtonView.height
         
-        let buttonSize = CGSize(width: self.view.bounds.width - margin*2, height: 50)
-        button.cornerRadius = 25
+        let frame = CGRect(x: self.view.bounds.midX - (width/2), y: 0, width: width, height: self.view.bounds.height)
+            .inset(by: self.view.safeAreaInsets)
+            .inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
         
+        let contentFrame = frame
+            .inset(by: UIEdgeInsets(
+                top: 0,
+                left: 0,
+                bottom: actionButtonHeight - OnboardingActionButtonView.gradientHeight,
+                right: 0))
+                
         backButton.frame = CGRect(
             x: 0, y: self.view.safeAreaInsets.top,
             width: 60, height: 48)
         
-        initialView.contextualFrame = frame
+        initialView.contextualFrame = contentFrame
         initialView.margin = margin
         
+        nameView.contextualFrame = contentFrame
         nameView.margin = margin
         nameView.keyboardHeight = keyboardHeight
-        nameView.contextualFrame = frame
         
-        var bottomOffset: CGFloat = 16
-        if frame.height > 820 {
-            bottomOffset = frame.height*0.04
-        }
+//        var bottomOffset: CGFloat = 16
+//        if frame.height > 820 {
+//            bottomOffset = frame.height*0.04
+//        }
         
-        iconView.contextualFrame = CGRect(
-            from: CGPoint(x: 0, y: self.view.safeAreaInsets.top),
-            to: CGPoint(x: self.view.bounds.maxX, y: self.view.bounds.maxY - self.view.safeAreaInsets.bottom - 16 - buttonSize.height - bottomOffset))
+        iconView.contextualFrame = contentFrame
         
         iconView.margin = margin
                 
         if keyboardHeight == 0 {
-            button.contextualFrame = CGRect(
-                x: frame.midX - buttonSize.width/2,
-                y: self.view.bounds.maxY - self.view.safeAreaInsets.bottom - buttonSize.height - bottomOffset,
-                width: buttonSize.width,
-                height: buttonSize.height)
+            buttonView.contextualFrame = CGRect(
+                x: 0,
+                y: frame.maxY - actionButtonHeight,
+                width: width,
+                height: actionButtonHeight)
         }
         else {
-            button.contextualFrame = CGRect(
-                x: frame.midX - buttonSize.width/2,
-                y: self.view.bounds.maxY - keyboardHeight - buttonSize.height - 16,
-                width: buttonSize.width,
-                height: buttonSize.height)
+            buttonView.contextualFrame = CGRect(
+                x: 0,
+                y: self.view.bounds.maxY - keyboardHeight - actionButtonHeight,
+                width: frame.width,
+                height: actionButtonHeight)
         }
         
         
@@ -406,26 +377,23 @@ class OnboardingViewController: UIViewController {
     
 }
 
+
+// MARK: - ProfileNameViewDelegate
+
 extension OnboardingViewController: ProfileNameViewDelegate {
     
     func nameDidBecomeValid() {
-        
-        button.isUserInteractionEnabled = true
-        UIView.animate(withDuration: 0.25) {
-            self.button.backgroundColor = Colors.orange
-        }
-            
+        self.buttonView.button.setEnabled(true)
     }
     
     func nameDidBecomeInvalid() {
-        
-        button.isUserInteractionEnabled = false
-        self.button.backgroundColor = Colors.lightText
-        
+        self.buttonView.button.setEnabled(false, duration: 0)
     }
     
 }
 
+
+// MARK: InitialView
 
 class InitialView: UIView {
     
@@ -533,6 +501,9 @@ class InitialView: UIView {
     }
 }
 
+
+// MARK: - ProfileNameView
+
 protocol ProfileNameViewDelegate: AnyObject {
     func nameDidBecomeValid()
     func nameDidBecomeInvalid()
@@ -587,10 +558,7 @@ class ProfileNameView: UIView, UITextFieldDelegate {
         textField.attributedPlaceholder = NSAttributedString(string: "e.g. Piano, Guitar", attributes: [
             .foregroundColor : Colors.extraLightText
         ])
-//        textField.layer.borderColor = Colors.lightColor.cgColor
-//        textField.layer.borderWidth = 2
-//        textField.roundCorners(12)
-        textField.setPadding(Constants.margin)
+
         textField.returnKeyType = .done
         textField.addTarget(self, action: #selector(textDidUpdate), for: .editingChanged)
         textField.delegate = self
@@ -662,7 +630,12 @@ class ProfileNameView: UIView, UITextFieldDelegate {
     }
 }
 
-class ProfileIconView: CancelTouchScrollView {
+
+// MARK: - ProfileIconView
+
+class ProfileIconView: UIView {
+    
+    private let scrollView = CancelTouchScrollView()
     
     private let titleLabel = UILabel()
     
@@ -682,20 +655,23 @@ class ProfileIconView: CancelTouchScrollView {
         }
     }
     
+    private let gradientView = GradientView()
+        
     init() {
         super.init(frame: .zero)
         
-        self.showsVerticalScrollIndicator = false
+        self.addSubview(self.scrollView)
+        self.scrollView.showsVerticalScrollIndicator = false
         
         let attStr = NSMutableAttributedString(string: "Choose an\n", font: Fonts.bold.withSize(38), color: Colors.text)
         attStr.append(NSAttributedString(string: "icon", font: Fonts.heavy.withSize(38), color: Colors.orange))
         titleLabel.attributedText = attStr
         titleLabel.numberOfLines = 2
         titleLabel.textAlignment = .center
-        self.addSubview(titleLabel)
+        self.scrollView.addSubview(titleLabel)
         
         iconView.backgroundColor = Colors.lightColor
-        self.addSubview(iconView)
+        self.scrollView.addSubview(iconView)
         
         iconPicker.selectionAction = {
             [weak self] iconName in
@@ -703,7 +679,14 @@ class ProfileIconView: CancelTouchScrollView {
             self.iconView.icon = UIImage(named: iconName)
             self.action?(iconName)
         }
-        self.addSubview(iconPicker)
+        self.scrollView.addSubview(iconPicker)
+        
+        self.gradientView.direction = .bottomToTop
+        self.gradientView.colors = [
+            Colors.foregroundColor.withAlphaComponent(0),
+            Colors.foregroundColor.withAlphaComponent(1)
+        ]
+        self.addSubview(self.gradientView)
         
     }
     
@@ -713,6 +696,8 @@ class ProfileIconView: CancelTouchScrollView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        self.scrollView.frame = self.bounds
         
         let frame = self.bounds.insetBy(dx: margin, dy: 0)
         
@@ -733,16 +718,163 @@ class ProfileIconView: CancelTouchScrollView {
         
         iconView.iconInsets = UIEdgeInsets(floor(iconBGSize*0.16))
         iconView.roundCorners(prefersContinuous: false)
-             
         
         let height = iconPicker.sizeThatFits(frame.size).height
         iconPicker.frame = CGRect(
             x: frame.minX, y: iconView.frame.maxY + 32,
             width: frame.width, height: height)
         
-        self.contentSize.height = iconPicker.frame.maxY
-        self.contentInset.bottom = 16
+        self.scrollView.contentSize.height = iconPicker.frame.maxY
+        self.scrollView.contentInset.bottom = 32
                 
+        self.gradientView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 20)
         
     }
+}
+
+
+// MARK: - OnboardingActionButton
+
+fileprivate class OnboardingActionButtonView: UIView {
+    
+    // 0pt - gradient start
+    // 40pt - gradient end
+    // 46pt - button start
+    // 96pt - button end
+    // 112pt - padding end
+    public static var height: CGFloat = 116
+    public static var gradientHeight: CGFloat = 40
+    
+    private let gradientView = GradientView()
+    private let bgView = UIView()
+    public let button = OnboardingActionButton()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+                
+        self.gradientView.direction = .topToBottom
+        self.gradientView.colors = [
+            Colors.foregroundColor.withAlphaComponent(0),
+            Colors.foregroundColor.withAlphaComponent(1)
+        ]
+        self.addSubview(self.gradientView)
+        
+        self.bgView.backgroundColor = Colors.foregroundColor
+        self.addSubview(self.bgView)
+        
+        self.addSubview(self.button)
+        
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.gradientView.frame = CGRect(
+            x: 0, y: 0,
+            width: self.bounds.width,
+            height: Self.gradientHeight
+        )
+        
+        self.bgView.frame = CGRect(
+            x: 0, y: Self.gradientHeight,
+            width: self.bounds.width,
+            height: self.bounds.height - Self.gradientHeight)
+        
+        self.button.bounds.size = CGSize(width: self.bounds.width - 48, height: 50)
+        self.button.center = CGPoint(x: self.bounds.midX, y: self.gradientView.frame.maxY + 6 + 25)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+fileprivate class OnboardingActionButton: PushButton {
+    
+    private let label = UILabel()
+    
+    private var title: String = "Get Started"
+    
+    override init() {
+        super.init()
+        
+        self.cornerRadius = 25
+        
+        self.label.text = self.title
+        self.label.font = Fonts.semibold.withSize(17)
+        self.label.textColor = .white
+        
+        self.addSubview(self.label)
+        
+        self.backgroundColor = Colors.orange
+    }
+    
+    override var isEnabled: Bool {
+        didSet {
+            if self.isEnabled {
+                self.backgroundColor = Colors.orange
+            } else {
+                self.backgroundColor = Colors.extraLightText
+            }
+        }
+    }
+    
+    public func setEnabled(_ enabled: Bool, duration: TimeInterval = 0) {
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: []) {
+            self.isEnabled = enabled
+        } completion: { _ in
+            //
+        }
+
+    }
+        
+    public func animateTitle(to title: String, duration: TimeInterval = 0.4) {
+        self.title = title
+        
+        UIView.animate(
+            withDuration: duration * 0.2,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0,
+            options: []
+        ) {
+            
+            self.label.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            self.label.alpha = 0
+            
+        } completion: { _ in
+            self.label.text = self.title
+            self.label.sizeToFit()
+            
+            UIView.animate(
+                withDuration: duration * 0.8,
+                delay: 0,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 0,
+                options: [.curveEaseOut]
+            ) {
+                
+                self.label.transform = .identity
+                self.label.alpha = 1
+                
+            } completion: { _ in
+                //
+            }
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.label.sizeToFit()
+        self.label.center = self.bounds.center
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }

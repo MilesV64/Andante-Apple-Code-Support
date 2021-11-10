@@ -326,18 +326,10 @@ extension CGSize {
     }
 }
 
-func springAnimate(animations: @escaping (()->Void), completion: ((Bool)->Void)? = nil) {
-    UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.76, initialSpringVelocity: 0, options: [], animations: {
-        
-        animations()
-        
-        
-    }, completion: { complete in
-        
-        completion?(complete)
-        
-    })
-    
+extension UIView {
+    static func springAnimate(duration: TimeInterval, dampingRatio: CGFloat = 1, animations: @escaping (()->Void), completion: ((Bool) -> ())? = nil) {
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: dampingRatio, initialSpringVelocity: 0, options: [], animations: animations, completion: completion)
+    }
 }
 
 extension UIImageView {
@@ -618,3 +610,5 @@ extension UIEdgeInsets {
         self.init(top: t, left: l, bottom: b, right: r)
     }
 }
+
+

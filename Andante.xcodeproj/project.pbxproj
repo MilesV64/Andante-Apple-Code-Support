@@ -176,6 +176,7 @@
 		029C015F272CEAAB00943E5B /* TimerPopupStackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C015E272CEAAB00943E5B /* TimerPopupStackContentView.swift */; };
 		029C0163272D1D5000943E5B /* SessionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029C0162272D1D5000943E5B /* SessionDetailViewController.swift */; };
 		029C5FF726FD2548000D9936 /* flame.json in Resources */ = {isa = PBXBuildFile; fileRef = 029C5FF626FD2548000D9936 /* flame.json */; };
+		029E3579273B920200FFEA1B /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029E3578273B920200FFEA1B /* GradientView.swift */; };
 		029EA97624B5430500C37072 /* TimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029EA97524B5430500C37072 /* TimePickerView.swift */; };
 		029F3285244D651300060F33 /* PracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029F3284244D651300060F33 /* PracticeViewController.swift */; };
 		02A2DB1C24C98743002E0760 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A2DB1B24C98743002E0760 /* ContainerViewController.swift */; };
@@ -219,7 +220,6 @@
 		02D9D12D24C3D6750019D36C /* BottomActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9D12C24C3D6750019D36C /* BottomActionButton.swift */; };
 		02D9D12F24C3DD090019D36C /* NewFolderCenterAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9D12E24C3DD090019D36C /* NewFolderCenterAlertController.swift */; };
 		02D9D13124C4F4E10019D36C /* AreYouSureAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9D13024C4F4E10019D36C /* AreYouSureAlert.swift */; };
-		02D9F21C23358B7D0047139C /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D9F21B23358B7D0047139C /* GradientImageView.swift */; };
 		02DA80F72561368B003A6AB6 /* UserVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DA80F62561368B003A6AB6 /* UserVersion.swift */; };
 		02DA80FD2561F51A003A6AB6 /* CenterLoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DA80FC2561F51A003A6AB6 /* CenterLoadingController.swift */; };
 		02DD115A24D01E6B009CB1DF /* SettingsDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DD115924D01E6B009CB1DF /* SettingsDetailViews.swift */; };
@@ -474,6 +474,7 @@
 		029C015E272CEAAB00943E5B /* TimerPopupStackContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPopupStackContentView.swift; sourceTree = "<group>"; };
 		029C0162272D1D5000943E5B /* SessionDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDetailViewController.swift; sourceTree = "<group>"; };
 		029C5FF626FD2548000D9936 /* flame.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = flame.json; sourceTree = "<group>"; };
+		029E3578273B920200FFEA1B /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		029EA97524B5430500C37072 /* TimePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerView.swift; sourceTree = "<group>"; };
 		029F3284244D651300060F33 /* PracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeViewController.swift; sourceTree = "<group>"; };
 		02A2DB1B24C98743002E0760 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -518,7 +519,6 @@
 		02D9D12C24C3D6750019D36C /* BottomActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomActionButton.swift; sourceTree = "<group>"; };
 		02D9D12E24C3DD090019D36C /* NewFolderCenterAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFolderCenterAlertController.swift; sourceTree = "<group>"; };
 		02D9D13024C4F4E10019D36C /* AreYouSureAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AreYouSureAlert.swift; sourceTree = "<group>"; };
-		02D9F21B23358B7D0047139C /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
 		02DA80F62561368B003A6AB6 /* UserVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVersion.swift; sourceTree = "<group>"; };
 		02DA80FC2561F51A003A6AB6 /* CenterLoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterLoadingController.swift; sourceTree = "<group>"; };
 		02DD115924D01E6B009CB1DF /* SettingsDetailViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDetailViews.swift; sourceTree = "<group>"; };
@@ -787,6 +787,7 @@
 				02A2D7FA24C137BC005AAD90 /* Components */,
 				02A2D7FB24C137EF005AAD90 /* Toolbars */,
 				02B2E29B25DF4F03006CBBD5 /* PopupOptionsView.swift */,
+				029E3578273B920200FFEA1B /* GradientView.swift */,
 				02FA153C22F50EFD00641F6A /* RecordingPlayerView.swift */,
 				023BEEB225379FB7008A3371 /* ProgressRing.swift */,
 			);
@@ -1100,7 +1101,6 @@
 				027F351624B3DA94002674EC /* HandleView.swift */,
 				0264770F22DCEAC1002EA732 /* AndanteImageView.swift */,
 				02DD92C3272651EF006BB32E /* ProfileImageView */,
-				02D9F21B23358B7D0047139C /* GradientImageView.swift */,
 				029A70E92338197B00C698BC /* ModalViewHeader.swift */,
 				0287616A24DDF6F800F568CA /* BlurView.swift */,
 				027387C325200EEE00365285 /* OptionPickerView.swift */,
@@ -1598,7 +1598,6 @@
 				029EA97624B5430500C37072 /* TimePickerView.swift in Sources */,
 				02DE16122369195600CE7843 /* MainViewController.swift in Sources */,
 				02401BDD24EDE14700608B20 /* TimerCompleteAlertController.swift in Sources */,
-				02D9F21C23358B7D0047139C /* GradientImageView.swift in Sources */,
 				0210A7A0250D86690048FBF9 /* ExportDataViewController.swift in Sources */,
 				0242664E26DB183A00041583 /* CDAskForRatingTracker+CoreDataProperties.swift in Sources */,
 				02F71F992511A67E004F69F6 /* TransitionManager.swift in Sources */,
@@ -1695,6 +1694,7 @@
 				026476C322DBF0CB002EA732 /* AppDelegate.swift in Sources */,
 				02800EA426DB579D00B45268 /* CDOngoingSession+CoreDataProperties.swift in Sources */,
 				029C015D272CD6D100943E5B /* SessionOptionsPopupStackView.swift in Sources */,
+				029E3579273B920200FFEA1B /* GradientView.swift in Sources */,
 				0270BBA624A03CD6003AC91F /* HeaderView.swift in Sources */,
 				02D52A05250C39C3005504EA /* SessionShareView.swift in Sources */,
 			);

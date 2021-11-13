@@ -23,6 +23,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
     
     private let titleLabel = UILabel()
     private let titleSep = Separator()
+    private let statsContainerView = UIView()
     private let sessionsLabel = StatIconLabelGroup()
     private let practicedLabel = StatIconLabelGroup()
     private let moodLabel = StatIconLabelGroup()
@@ -45,7 +46,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         
         panGesture.delegate = self
         
-        if let sessions = PracticeDatabase.shared.sessions(for: day) {
+        if let sessions = PracticeDatabase.shared.sessions(for: day, profile: profile) {
             self.sessions = sessions.compactMap { $0.session }
         }
           
@@ -57,10 +58,11 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         tableView.backgroundColor = .clear
         tableView.separatorColor = .clear
         tableView.register(PracticeSessionCalendarCell.self, forCellReuseIdentifier: "cell")
-        tableView.rowHeight = 80
+        tableView.rowHeight = 70
+        tableView.delaysContentTouches = false
         
         let headerSep = Separator()
-        headerSep.color = Colors.separatorColor
+        headerSep.color = .clear
         headerSep.position = .bottom
         headerSep.insetToMargins()
         headerSep.bounds.size.height = 128
@@ -81,25 +83,24 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
             avgMood = avgMood / Double(sessions.count)
             avgFocus = avgFocus / Double(sessions.count)
         }
-        
         sessionsLabel.stat = .sessions
         sessionsLabel.titleLabel.text = "\(sessions.count)"
         sessionsLabel.detailLabel.text = "Session\(sessions.count != 1 ? "s" : "")"
-        tableView.tableHeaderView?.addSubview(sessionsLabel)
+        self.tableView.tableHeaderView?.addSubview(sessionsLabel)
 
         practicedLabel.stat = .practice
         practicedLabel.titleLabel.text = "\(Formatter.formatMinutesShort(mins: sum))"
         practicedLabel.detailLabel.text = "Practiced"
-        tableView.tableHeaderView?.addSubview(practicedLabel)
+        self.tableView.tableHeaderView?.addSubview(practicedLabel)
         
         moodLabel.stat = .mood
         
         moodLabel.detailLabel.text = "Avg Mood"
-        tableView.tableHeaderView?.addSubview(moodLabel)
+        self.tableView.tableHeaderView?.addSubview(moodLabel)
         
         focusLabel.stat = .focus
         focusLabel.detailLabel.text = "Avg Focus"
-        tableView.tableHeaderView?.addSubview(focusLabel)
+        self.tableView.tableHeaderView?.addSubview(focusLabel)
         
         if sessions.count == 0 {
             moodLabel.value = 3
@@ -120,7 +121,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         titleLabel.textAlignment = .center
         titleSep.backgroundColor = .clear
         titleSep.addSubview(titleLabel)
-        titleSep.color = Colors.barSeparator
+        titleSep.color = .clear
         titleSep.insetToMargins()
         titleSep.position = .bottom
         titleSep.isUserInteractionEnabled = true
@@ -129,7 +130,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         if sessions.count == 0 {
             newSessionButton.color = .clear
         }
-        newSessionButton.insetToMargins()
+        newSessionButton.color = .clear
         newSessionButton.action = {
             [weak self] in
             guard let self = self else { return }
@@ -180,7 +181,15 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
     override func viewDidLayoutSubviews() {
         let fullHeight = (self.view.window?.bounds.height) ?? self.view.bounds.height
         let maxHeight = fullHeight * 0.8
-        self.contentHeight = min(maxHeight, (CGFloat(sessions.count) * 80) + 46 + 128 + BottomActionButton.height)
+        
+        let rowHeight: CGFloat = self.tableView.rowHeight
+        let headerHeight: CGFloat = self.tableView.tableHeaderView?.bounds.height ?? 0
+        let titleHeight: CGFloat = 38
+        
+        let preferredHeight = (CGFloat(sessions.count) * rowHeight) + titleHeight + headerHeight + BottomActionButton.height
+        
+        
+        self.contentHeight = min(maxHeight, preferredHeight)
         
         tableView.alwaysBounceVertical = popoverPresentationController?.arrowDirection != .unknown
         
@@ -188,8 +197,8 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
         
         scrollViewContainer.frame = contentView.bounds
         
-        titleSep.frame = CGRect(x: 0, y: 0, width: contentView.bounds.width, height: 46)
-        titleLabel.frame = CGRect(x: 0, y: 0, width: contentView.bounds.width, height: 36)
+        titleSep.frame = CGRect(x: 0, y: 0, width: contentView.bounds.width, height: titleHeight)
+        titleLabel.frame = CGRect(x: 0, y: titleHeight - 32, width: contentView.bounds.width, height: 32)
         
         sessionsLabel.frame = CGRect(x: 0, y: 0, width: contentView.bounds.width/4, height: tableView.tableHeaderView!.bounds.height)
         
@@ -218,15 +227,7 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PracticeSessionCalendarCell
-        
         cell.setSession(sessions[indexPath.row])
-        
-        if indexPath.row == sessions.count - 1 {
-            cell.separator.isHidden = true
-        } else {
-            cell.separator.isHidden = false
-        }
-        
         return cell
     }
     
@@ -238,7 +239,6 @@ class CalendarDetailAlertController: PickerAlertController, UITableViewDelegate,
 
 fileprivate class PracticeSessionCalendarCell: UITableViewCell {
     
-    public let separator = Separator(position: .bottom)
     private var sessionView = PracticeSessionView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -247,20 +247,13 @@ fileprivate class PracticeSessionCalendarCell: UITableViewCell {
         self.backgroundColor = .clear
         self.selectionStyle = .none
         
-        separator.insetToMargins()
-        self.addSubview(separator)
         self.addSubview(sessionView)
         
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        if highlighted {
-            self.backgroundColor = Colors.cellHighlightColor
-        }
-        else {
-            UIView.animate(withDuration: 0.2) {
-                self.backgroundColor = .clear
-            }
+        UIView.springAnimate(duration: 0.3, dampingRatio: 0.92) {
+            self.transform = highlighted ? CGAffineTransform(scaleX: 0.95, y: 0.95) : .identity
         }
     }
     
@@ -275,8 +268,8 @@ fileprivate class PracticeSessionCalendarCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        separator.frame = self.bounds
-        sessionView.frame = self.bounds
+        sessionView.bounds.size = self.bounds.size
+        sessionView.center = self.bounds.center
     }
 }
 
@@ -314,7 +307,7 @@ class StatIconLabelGroup: UIView {
         labelGroup.titleLabel.textColor = Colors.text
         labelGroup.titleLabel.font = Fonts.regular.withSize(22)
         labelGroup.detailLabel.textColor = Colors.lightText
-        labelGroup.detailLabel.font = Fonts.regular.withSize(14)
+        labelGroup.detailLabel.font = Fonts.regular.withSize(12)
         labelGroup.textAlignment = .center
         labelGroup.padding = 8
         self.addSubview(labelGroup)

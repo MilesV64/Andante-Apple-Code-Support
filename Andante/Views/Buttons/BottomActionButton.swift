@@ -83,12 +83,12 @@ class BottomActionButton: Separator {
     }
     
     public static var height: CGFloat {
-        return 50 + 40
+        return 48 + 32
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let buttonHeight: CGFloat = 50
-        let padding: CGFloat = 20 + 20
+        let buttonHeight: CGFloat = 48
+        let padding: CGFloat = 16 + 16
         let extraSpace = buttonHeight + padding
         let bottomSpace: CGFloat = superview?.safeAreaInsets.bottom ?? 0
         
@@ -102,10 +102,10 @@ class BottomActionButton: Separator {
         super.layoutSubviews()
         
         button.frame = CGRect(
-            x: self.margin, y: 20,
+            x: self.margin, y: 16,
             width: self.bounds.width - self.margin*2,
-            height: 50)
-        button.cornerRadius = 25
+            height: 48)
+        button.cornerRadius = 24
         
     }
 }

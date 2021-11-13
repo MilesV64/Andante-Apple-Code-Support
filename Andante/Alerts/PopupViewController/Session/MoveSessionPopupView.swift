@@ -116,21 +116,7 @@ class MoveSessionPopupView: PopupContentView, FetchedObjectControllerDelegate, U
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let profile = fetchedObjectController.controller.object(at: indexPath)
-        self.currentProfile = profile
-        
-        self.isUserInteractionEnabled = false
-        
-        for visibleIndexPath in tableView.indexPathsForVisibleRows ?? [] {
-            if let cell = tableView.cellForRow(at: visibleIndexPath) as? CheckmarkTableViewCell {
-                print(indexPath, indexPath == visibleIndexPath)
-                cell.checkmarkCellView.setChecked(indexPath == visibleIndexPath, animated: true)
-            }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.popupViewController?.close()
-        }
-        
+        self.popupViewController?.close()
         moveAction?(profile)
     }
     

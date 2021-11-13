@@ -254,9 +254,9 @@ class PopupMenuViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         bgView.alpha = 0
-        bgView.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+        bgView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
         
-        UIView.animate(withDuration: 0.42, delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0, options: [.curveEaseInOut, .allowUserInteraction], animations: {
+        UIView.animate(withDuration: 0.32, delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0, options: [.curveEaseInOut, .allowUserInteraction], animations: {
             if self.shouldDimBackground {
                 self.view.backgroundColor = Colors.dynamicColor(
                     light: UIColor.black.withAlphaComponent(0.03),
@@ -312,10 +312,10 @@ class PopupMenuViewController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
         
-        UIView.animate(withDuration: animated ? 0.25 : 0, delay: 0, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: animated ? 0.16 : 0, delay: 0, options: .curveEaseOut, animations: {
             self.view.backgroundColor = .clear
             self.bgView.alpha = 0
-            self.bgView.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+            self.bgView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
         }) {
             [weak self] _ in
             guard let self = self else { return }
@@ -343,7 +343,6 @@ class PopupMenuViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     deinit {
-        let x = 10
         print("deinit")
     }
     

@@ -146,20 +146,8 @@ class ProfilesPopupViewController: PopupViewController, UITableViewDelegate, Fet
     
     private func selectProfile(_ profile: CDProfile?) {
         self.view.isUserInteractionEnabled = false
-        
-        for indexPath in tableView.indexPathsForVisibleRows ?? [] {
-            if let cell = tableView.cellForRow(at: indexPath) as? CheckmarkTableViewCell {
-                cell.checkmarkCellView.setChecked(cell.checkmarkCellView.profile == profile, animated: true)
-            }
-        }
-        self.allProfilesCellView.setChecked(profile == nil, animated: true)
-        
         action?(profile)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.close()
-        }
-        
+        self.close()
     }
     
     override func viewDidLayoutSubviews() {

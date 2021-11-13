@@ -332,12 +332,12 @@ class SettingsViewController: UIViewController, UIScrollViewDelegate, ProfileObs
             width: scrollView.bounds.width,
             height: 220 - offset)
         
-        let buttonWidth = self.view.bounds.width - Constants.margin*2
+        let buttonWidth = min(390, self.view.bounds.width - Constants.margin*2)
         changeProfileButton.frame = CGRect(
             x: self.view.bounds.midX - buttonWidth/2,
             y: 220 - 70,
-            width: buttonWidth, height: 50)
-        changeProfileButton.cornerRadius = 25
+            width: buttonWidth, height: 48)
+        changeProfileButton.cornerRadius = 24
         
         let cellHeight: CGFloat = AndanteCellView.height
         let margin: CGFloat = 24

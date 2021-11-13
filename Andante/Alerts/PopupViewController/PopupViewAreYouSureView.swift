@@ -92,19 +92,19 @@ class PopupAreYouSureView: PopupContentView {
     }
     
     override func preferredHeight(for width: CGFloat) -> CGFloat {
-        let buttonHeight: CGFloat = 50
+        let buttonHeight: CGFloat = 48
         let buttonSpacing: CGFloat = 10
         let titleHeight = titleLabel.sizeThatFits(CGSize(width: width, height: .infinity)).height
         let textHeight = textView.sizeThatFits(CGSize(width: width, height: CGFloat.infinity)).height
         
-        return titleHeight + textHeight + buttonHeight*2 + 60 + buttonSpacing
+        return titleHeight + textHeight + buttonHeight*2 + 56 + buttonSpacing
         
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let buttonHeight: CGFloat = 50
+        let buttonHeight: CGFloat = 48
         let buttonSpacing: CGFloat = 10
         
         let titleHeight = titleLabel.sizeThatFits(CGSize(width: bounds.width, height: .infinity)).height

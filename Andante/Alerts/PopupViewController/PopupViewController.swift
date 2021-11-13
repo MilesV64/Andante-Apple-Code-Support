@@ -219,7 +219,7 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
             let space = (view.bounds.height - minY) - 100
             contentHeight = min(preferredContentHeight, space)
             
-            bgView.bounds.size = CGSize(width: contentWidth, height: contentHeight + 8)
+            bgView.bounds.size = CGSize(width: contentWidth, height: contentHeight + 10)
 
             let minX = minXConstraint ?? Constants.smallMargin/2
             let maxX = (maxXConstraint ?? self.view.bounds.maxX - Constants.smallMargin/2) - bgView.bounds.width
@@ -236,7 +236,7 @@ class PopupViewController: UIViewController, UIGestureRecognizerDelegate {
                 y: minY)
             
             containerView.contextualFrame = bgView.bounds
-            contentView.contextualFrame = containerView.bounds.inset(by: UIEdgeInsets(t: 8))
+            contentView.contextualFrame = containerView.bounds.inset(by: UIEdgeInsets(t: 10))
             
         }
         else {
@@ -496,10 +496,15 @@ extension PopupViewController {
             }, completion: nil)
         }
         else {
-            bgView.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
+            
+            if self.sourceView == nil {
+                bgView.transform = CGAffineTransform(scaleX: 0.75, y: 0.75).concatenating(CGAffineTransform(translationX: 0, y: 20))
+            } else {
+                bgView.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
+            }
             bgView.alpha = 0
             
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0, options: [.curveEaseInOut, .allowUserInteraction], animations: {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.88, initialSpringVelocity: 0, options: [.curveEaseInOut, .allowUserInteraction], animations: {
                 
                 self.dimView.alpha = 1
                 self.bgView.alpha = 1
@@ -532,7 +537,7 @@ extension PopupViewController {
             UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseOut], animations: {
                 if self.sourceView == nil {
                     self.bgView.transform = CGAffineTransform(
-                        scaleX: 0.86, y: 0.86)
+                        scaleX: 0.86, y: 0.86).concatenating(CGAffineTransform(translationX: 0, y: 20))
                 } else {
                     self.bgView.transform = CGAffineTransform(
                         scaleX: 0.7, y: 0.7)

@@ -175,6 +175,8 @@ class RemindersViewController: SettingsDetailViewController {
         super.viewDidLayoutSubviews()
         
         let buttonSize = newReminderButton.sizeThatFits(self.view.bounds.size)
+        
+        newReminderButton.maxButtonWidth = 390
         newReminderButton.frame = CGRect(
             x: 0, y: view.bounds.maxY - buttonSize.height,
             width: buttonSize.width, height: buttonSize.height)

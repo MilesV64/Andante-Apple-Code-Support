@@ -72,7 +72,7 @@ class ActionTrayPopupViewController: PopupViewController {
         textView.backgroundColor = .clear
         self.contentView.addSubview(textView)
         
-        cancelButton.setTitle(cancelText ?? "Cancel", color: Colors.lightText, font: Fonts.medium.withSize(17))
+        cancelButton.setTitle(cancelText ?? "Cancel", color: Colors.text, font: Fonts.medium.withSize(17))
         cancelButton.action = {
             [weak self] in
             guard let self = self else { return }
@@ -84,7 +84,7 @@ class ActionTrayPopupViewController: PopupViewController {
     
     override func viewDidLayoutSubviews() {
         
-        let buttonHeight: CGFloat = 50
+        let buttonHeight: CGFloat = 48
         let buttonSpacing: CGFloat = 10
         
         let titleHeight = titleLabel.sizeThatFits(CGSize(width: contentWidth, height: .infinity)).height

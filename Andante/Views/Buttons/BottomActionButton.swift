@@ -14,6 +14,12 @@ class BottomActionButton: Separator {
         case regular, floating
     }
     
+    public var maxButtonWidth: CGFloat? {
+        didSet {
+            self.setNeedsLayout()
+        }
+    }
+    
     public let button = PushButton()
     
     public var title: String? {
@@ -101,10 +107,18 @@ class BottomActionButton: Separator {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        let width: CGFloat
+        if let maxButtonWidth = maxButtonWidth {
+            width = min(maxButtonWidth, self.bounds.width - self.margin*2)
+        } else {
+            width = self.bounds.width - self.margin*2
+        }
+        
         button.frame = CGRect(
-            x: self.margin, y: 16,
-            width: self.bounds.width - self.margin*2,
+            x: self.bounds.midX - width/2, y: 16,
+            width: width,
             height: 48)
+        
         button.cornerRadius = 24
         
     }

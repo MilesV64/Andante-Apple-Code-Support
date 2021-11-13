@@ -109,7 +109,7 @@ class PopupSecondaryViewHeader: Separator {
 
 class PopupActionButtonView: Separator {
     
-    public static var height: CGFloat = 92
+    public static var height: CGFloat = 80
     
     private let button = PushButton()
     
@@ -137,7 +137,7 @@ class PopupActionButtonView: Separator {
         
         setButton()
         
-        button.cornerRadius = 12
+        button.cornerRadius = 24
         
         addSubview(button)
     }
@@ -164,9 +164,9 @@ class PopupActionButtonView: Separator {
         
         button.frame = CGRect(
             x: Constants.smallMargin,
-            y: 18,
+            y: 16,
             width: bounds.width - Constants.smallMargin*2,
-            height: 52)
+            height: 48)
     
     }
 }

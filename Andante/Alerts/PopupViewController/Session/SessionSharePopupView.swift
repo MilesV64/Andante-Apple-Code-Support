@@ -72,6 +72,7 @@ class SessionSharePopupView: PopupContentView {
         
         options.forEach { addSubview($0) }
         
+        actionButton.color = .clear
         actionButton.action = {
             [weak self] in
             guard let self = self else { return }
@@ -93,7 +94,7 @@ class SessionSharePopupView: PopupContentView {
         let headerHeight: CGFloat = PopupSecondaryViewHeader.height
         let optionHeight: CGFloat = 52
         let totalOptionHeight = optionHeight * CGFloat(options.count)
-        return headerHeight + 18 + totalOptionHeight + PopupActionButtonView.height
+        return headerHeight + 10 + totalOptionHeight + PopupActionButtonView.height
     }
     
     override func layoutSubviews() {
@@ -157,7 +158,7 @@ fileprivate class ShareOption: UIView {
         
         button.sizeToFit()
         button.center = CGPoint(
-            x: bounds.maxX - Constants.xsMargin - button.bounds.width/2,
+            x: bounds.maxX - Constants.smallMargin - button.bounds.width/2,
             y: bounds.midY)
         
         label.frame = CGRect(

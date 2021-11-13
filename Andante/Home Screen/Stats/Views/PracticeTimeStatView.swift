@@ -115,8 +115,7 @@ class PracticeTimeStatView: BaseStatView {
         default: break
         }
         
-        let extraOffset: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 34 : 0
-        let point = self.convert(CGPoint(x: self.bounds.maxX - 40, y: 60 + extraOffset), to: delegate.view.window)
+        let point = self.convert(CGPoint(x: self.bounds.maxX - 40, y: 60), to: delegate.view.window)
         menu.relativePoint = point
         menu.constrainToScreen = true
         menu.delayCompletion = false

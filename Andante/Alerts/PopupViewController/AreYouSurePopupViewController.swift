@@ -156,7 +156,7 @@ class ActionTrayPopupViewController: PopupViewController {
             super.init()
             
             self.cornerRadius = 14
-            self.backgroundColor = Colors.extraLightColor
+            self.backgroundColor = Colors.lightColor
         }
         
         override func layoutSubviews() {

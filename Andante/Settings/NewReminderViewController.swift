@@ -42,6 +42,9 @@ class NewReminderViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.modalPresentationStyle = .popover
+        if #available(iOS 15.0, *) {
+            self.popoverPresentationController?.adaptiveSheetPresentationController.preferredCornerRadius = 25
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -52,6 +55,10 @@ class NewReminderViewController: UIViewController {
         super.viewDidLoad()
         
         preferredContentSize = CGSize(width: 375, height: 550)
+        
+        if self.profile == nil {
+            self.profile = CDProfile.getAllProfiles().first
+        }
                 
         if let reminder = reminder {
             datePicker.date = reminder.date ?? Date()
@@ -126,6 +133,7 @@ class NewReminderViewController: UIViewController {
             
             let vc = ProfilesPopupViewController()
             vc.selectedProfile = self.profile
+            vc.allowsAllProfiles = false
             vc.useNewProfileButton = false
             vc.action = {
                 [weak self] profile in

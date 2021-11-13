@@ -796,10 +796,10 @@ fileprivate class JournalHeaderView: HeaderAccessoryView {
                                   height: max(0, self.bounds.height - 28))
             
             if bgView.bounds.height < height {
-                bgView.roundCorners(min(bgView.bounds.height/2, 12))
+                bgView.roundCorners(min(bgView.bounds.height/2, 14))
             }
             else {
-                bgView.roundCorners(12)
+                bgView.roundCorners(14)
             }
                     
             contentView.frame = bgView.bounds

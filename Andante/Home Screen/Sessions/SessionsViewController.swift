@@ -947,20 +947,20 @@ class SessionsSearchBar: HeaderAccessoryView, UITextFieldDelegate {
         
         
         if bgView.bounds.height < height {
-            bgView.roundCorners(min(bgView.bounds.height/2, 12))
+            bgView.roundCorners(min(bgView.bounds.height/2, 14))
         }
         else {
-            bgView.roundCorners(12)
+            bgView.roundCorners(14)
         }
                         
         contentView.frame = bgView.bounds
         
-        let frame = CGRect(x: 6, y: bgView.bounds.midY - height/2 - 1, width: height, height: height)
+        let frame = CGRect(x: 2, y: bgView.bounds.midY - height/2 - 0.5, width: height, height: height)
         searchIcon.bounds.size = frame.size
         searchIcon.center = frame.center
                 
         clearButton.frame = CGRect(
-            x: bgView.frame.minX + 6,
+            x: bgView.frame.minX + 2,
             y: bgView.frame.midY - bgView.bounds.height/2,
             width: 44,
             height: bgView.bounds.height)
@@ -972,9 +972,9 @@ class SessionsSearchBar: HeaderAccessoryView, UITextFieldDelegate {
             width: 44 + 12,
             height: bgView.bounds.height)
         
-        filterButton.cornerRadius = 8
+        filterButton.cornerRadius = 10
         
-        textField.frame = CGRect(from: CGPoint(x: searchIcon.center.x + height/2 + 2,
+        textField.frame = CGRect(from: CGPoint(x: searchIcon.center.x + height/2 - 4,
                                                y: 0),
                                  to: CGPoint(x: filterButton.frame.minX - 2,
                                              y: bgView.bounds.height))

@@ -68,12 +68,12 @@ class PopupAreYouSureView: PopupContentView {
         textView.backgroundColor = .clear
         self.addSubview(textView)
         
-        cancelButton.backgroundColor = Colors.extraLightColor
+        cancelButton.backgroundColor = Colors.lightColor
         cancelButton.cornerRadius = 14
         cancelButton.action = cancelAction
         self.addSubview(cancelButton)
         
-        let buttonColor = isDestructive ? Colors.extraLightColor : Colors.orange
+        let buttonColor = isDestructive ? Colors.lightColor : Colors.orange
         
         destructiveButton.action = {
             [weak self] in

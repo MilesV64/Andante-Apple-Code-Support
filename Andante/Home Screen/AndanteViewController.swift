@@ -12,7 +12,7 @@ import CoreData
 import AVFoundation
 import StoreKit
 
-class AndanteViewController: UIViewController, NavigationComponentDelegate, ProfileObserver {
+class AndanteViewController: NavigationViewController, NavigationComponentDelegate, ProfileObserver {
     
     //bc of the safe area insets changing for no reason when transformed 🙄
     public var contentView = TransformIgnoringSafeAreaInsetsView()
@@ -20,8 +20,13 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
     //MARK: - Navigation
 
     public var sessionsViewController = SessionsViewController()
+    private var sessionsTabPresentedVC: NavigatableViewController?
+    
     public var statsViewController = StatsViewController()
+    private var statsTabPresentedVC: NavigatableViewController?
+    
     public var journalViewController = JournalViewController()
+    private var journalTabPresentedVC: NavigatableViewController?
     
     private var activeViewController: MainViewController!
     private var activeIndex: Int = 0
@@ -50,10 +55,6 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
 
     private var currentDay: Day?
     
-    
-    //optional view for dimming during transitions
-    public var dimView: UIView?
-    
     private var profileCancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
@@ -63,12 +64,15 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
         view.addSubview(contentView)
 
         contentView.backgroundColor = Colors.backgroundColor
+        
+        contentView.addSubview(self.navigationContentView)
 
         viewControllers = [
             sessionsViewController,
             statsViewController,
             journalViewController
         ]
+        
         viewControllers.forEach { $0.containerViewController = self }
         
         selectViewController(0)
@@ -118,6 +122,36 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
         case 1: viewController = statsViewController
         default: viewController = journalViewController
         }
+        
+        
+        // - Pop navigated VC for old tab
+        if let presentedVC = self.navigatedViewController {
+//            if self.activeIndex == 0 {
+//                self.sessionsTabPresentedVC = presentedVC
+//            }
+//            else if self.activeIndex == 1 {
+//                self.statsTabPresentedVC = presentedVC
+//            }
+            self.pop(animated: false)
+        }
+        
+//        // - Present navigated VC for new tab
+//        switch index {
+//        case 0:
+//            if let presentedVC = self.sessionsTabPresentedVC {
+//                self.push(presentedVC, animated: false)
+//                self.sessionsTabPresentedVC = nil
+//            }
+//        case 1:
+//            if let presentedVC = self.statsTabPresentedVC {
+//                self.push(presentedVC, animated: false)
+//                self.statsTabPresentedVC = nil
+//            }
+//        default:
+//            // Push the
+//            break
+//        }
+        
                 
         if index >= 2 && activeIndex >= 2 {
             activeIndex = index
@@ -133,7 +167,7 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
             }
             
             addChild(viewController)
-            contentView.insertSubview(viewController.view, belowSubview: self.actionButtonView)
+            navigationContentView.insertSubview(viewController.view, belowSubview: self.actionButtonView)
             viewController.didMove(toParent: self)
             
             if self.activeViewController != nil {
@@ -192,9 +226,9 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
                 tabbar!.delegate = self
                 
                 if let collapsedView = self.collapsedSessionView {
-                    contentView.insertSubview(tabbar!, aboveSubview: collapsedView)
+                    navigationContentView.insertSubview(tabbar!, aboveSubview: collapsedView)
                 } else {
-                    contentView.insertSubview(tabbar!, aboveSubview: actionButtonView)
+                    navigationContentView.insertSubview(tabbar!, aboveSubview: actionButtonView)
                 }
             }
             sidebar?.removeFromSuperview()
@@ -240,8 +274,6 @@ class AndanteViewController: UIViewController, NavigationComponentDelegate, Prof
         layoutActionButton()
         
         layoutSaveNotification()
-        
-        self.dimView?.frame = self.view.bounds
 
     }
 
@@ -394,19 +426,21 @@ extension AndanteViewController {
         if !isSidebarEnabled {
             if let tabbar = self.tabbar {
                 
-                if tabbar.superview == contentView {
+                navigationContentView.contextualFrame = self.view.bounds
+                
+                if tabbar.superview == navigationContentView {
                     //dont edit frame if the tabbar is added to practice view controller for animation
                     tabbar.frame = CGRect(
-                        from: CGPoint(x: 0, y: self.view.bounds.maxY - self.view.safeAreaInsets.bottom - 49),
-                        to: CGPoint(x: view.bounds.maxX, y: view.bounds.maxY))
+                        from: CGPoint(x: 0, y: self.navigationContentView.bounds.maxY - self.view.safeAreaInsets.bottom - 49),
+                        to: CGPoint(x: navigationContentView.bounds.maxX, y: navigationContentView.bounds.maxY))
                 }
                 
                 var collapsedMinY: CGFloat?
                 if let collapsedSessionView = self.collapsedSessionView {
-                    if collapsedSessionView.superview == contentView {
+                    if collapsedSessionView.superview == navigationContentView {
                         collapsedSessionView.frame = CGRect(
                             x: 0,
-                            y: self.view.bounds.maxY - self.view.safeAreaInsets.bottom - 49 - 54,
+                            y: self.navigationContentView.bounds.maxY - self.view.safeAreaInsets.bottom - 49 - 54,
                             width: tabbar.bounds.width,
                             height: collapsedSessionView.bounds.height)
                         collapsedMinY = collapsedSessionView.frame.minY
@@ -415,7 +449,7 @@ extension AndanteViewController {
                 
                 contentFrame = CGRect(
                     from: CGPoint(x: 0, y: 0),
-                    to: CGPoint(x: view.bounds.width, y: collapsedMinY ?? tabbar.frame.minY))
+                    to: CGPoint(x: navigationContentView.bounds.width, y: collapsedMinY ?? tabbar.frame.minY))
             }
         }
         else {
@@ -425,15 +459,21 @@ extension AndanteViewController {
                     from: CGPoint(x: 0, y: 0),
                     to: CGPoint(x: width, y: view.bounds.maxY))
                 
-                collapsedSessionView?.frame = CGRect(
-                    x: sidebar.frame.maxX, y: view.bounds.maxY - view.safeAreaInsets.bottom - 54,
-                    width: view.bounds.width - sidebar.bounds.width, height: 54 + view.safeAreaInsets.bottom)
-
-                contentFrame = CGRect(
+                navigationContentView.contextualFrame = CGRect(
                     from: CGPoint(x: sidebar.frame.maxX, y: 0),
                     to: CGPoint(
                         x: view.bounds.maxX,
-                        y: collapsedSessionView?.frame.minY ?? view.bounds.maxY))
+                        y: view.bounds.maxY))
+                
+                collapsedSessionView?.frame = CGRect(
+                    x: 0, y: navigationContentView.bounds.maxY - view.safeAreaInsets.bottom - 54,
+                    width: navigationContentView.bounds.width, height: 54 + view.safeAreaInsets.bottom)
+                
+                contentFrame = CGRect(
+                    from: CGPoint(x: 0, y: 0),
+                    to: CGPoint(
+                        x: navigationContentView.bounds.maxX,
+                        y: collapsedSessionView?.frame.minY ?? navigationContentView.bounds.maxY))
             }
         }
         
@@ -796,7 +836,7 @@ extension AndanteViewController: CollapsedSessionViewDelegate {
     func showCollapsedSessionView(_ sessionView: CollapsedSessionView) {
         self.collapsedSessionView = sessionView
         sessionView.delegate = self
-        self.contentView.addSubview(sessionView)
+        self.navigationContentView.addSubview(sessionView)
         
         if activeIndex == 0 {
             hideactionButton()

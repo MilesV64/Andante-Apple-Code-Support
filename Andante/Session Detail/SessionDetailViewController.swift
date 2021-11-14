@@ -26,7 +26,7 @@ class CancelTouchScrollView: UIScrollView {
     }
 }
 
-class SessionDetailViewController: TransitionViewController, UITextViewDelegate {
+class SessionDetailViewController: NavigatableViewController, UITextViewDelegate {
     
     private let topView = Separator()
     private var backButton: Button!
@@ -105,7 +105,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
                 if let presented = self.presentedViewController {
                     presented.dismiss(animated: false, completion: nil)
                 }
-                self.close()
+                self.navigationViewController?.pop()
             }
             else {
                 self.updateAttributes()
@@ -170,7 +170,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
             [weak self] in
             guard let self = self else { return }
             self.textView.resignFirstResponder()
-            self.close()
+            self.navigationViewController?.pop()
         }
         headerView.addSubview(backButton)
         
@@ -361,7 +361,7 @@ class SessionDetailViewController: TransitionViewController, UITextViewDelegate 
             }
             else {
                 // Close, FRC will remove the session from the sessions colelction view
-                self.close()
+                self.navigationViewController?.pop()
             }
         }
         

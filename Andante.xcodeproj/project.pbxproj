@@ -19,6 +19,7 @@
 		02011FD4251F030E00565F75 /* WidgetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02011FC9251F01AC00565F75 /* WidgetFileManager.swift */; };
 		02015BB62702C1A0003B2450 /* PulltoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02015BB52702C1A0003B2450 /* PulltoSettingsView.swift */; };
 		0201AF98253E6D150015CA51 /* EditSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201AF97253E6D150015CA51 /* EditSessionViewController.swift */; };
+		020760B1274099CF001CA42A /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020760B0274099CF001CA42A /* NavigationViewController.swift */; };
 		02078AF925C4D8C4009C6117 /* Synth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02078AF825C4D8C4009C6117 /* Synth.swift */; };
 		020B163D24D0C7DA004070EE /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020B163C24D0C7DA004070EE /* ProfileSettingsViewController.swift */; };
 		021012B025FD87AA00C4F340 /* MergeProfilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021012AF25FD87A900C4F340 /* MergeProfilesViewController.swift */; };
@@ -313,6 +314,7 @@
 		02011FC9251F01AC00565F75 /* WidgetFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetFileManager.swift; sourceTree = "<group>"; };
 		02015BB52702C1A0003B2450 /* PulltoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulltoSettingsView.swift; sourceTree = "<group>"; };
 		0201AF97253E6D150015CA51 /* EditSessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSessionViewController.swift; sourceTree = "<group>"; };
+		020760B0274099CF001CA42A /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		02078AE225C4BF03009C6117 /* WidgetProfileIntentUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetProfileIntentUI.entitlements; sourceTree = "<group>"; };
 		02078AF825C4D8C4009C6117 /* Synth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synth.swift; sourceTree = "<group>"; };
 		020B163C24D0C7DA004070EE /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
@@ -997,6 +999,7 @@
 			isa = PBXGroup;
 			children = (
 				02B265F6254F813E00D74024 /* AndanteViewController.swift */,
+				020760B0274099CF001CA42A /* NavigationViewController.swift */,
 				02DE16112369195600CE7843 /* MainViewController.swift */,
 				0274ABD126DB777800221890 /* Sessions */,
 				0274ABD326DB778F00221890 /* Stats */,
@@ -1654,6 +1657,7 @@
 				0264772922DF9279002EA732 /* Formatter.swift in Sources */,
 				028FAAD625F4BECC000561DD /* CDReminder+CoreDataClass.swift in Sources */,
 				02C083E9254FFA14006D9DA0 /* Sidebar.swift in Sources */,
+				020760B1274099CF001CA42A /* NavigationViewController.swift in Sources */,
 				029C015A272CD3E400943E5B /* ActionTrayPopupStackContentView.swift in Sources */,
 				027011F2244E3DD9001B46FD /* RecordingAudioWaveView.swift in Sources */,
 				02E99DA1261E609A00EDCA52 /* TextEditorTextBlockView.swift in Sources */,

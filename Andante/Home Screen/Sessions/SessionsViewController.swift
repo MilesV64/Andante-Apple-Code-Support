@@ -373,7 +373,7 @@ class SessionsViewController: MainViewController, SessionsSearchBarDelegate, Cal
         
         popup.sessionHandler = { session in
             let detailVC = SessionDetailViewController(session: session, indexPath: nil)
-            self.present(detailVC, animated: false, completion: nil)
+            self.containerViewController.push(detailVC)
         }
         
         popup.newSessionHandler = {
@@ -729,7 +729,7 @@ extension SessionsViewController {
         
         if let session = fetchedObjectController.object(at: indexPath) {
             let vc = SessionDetailViewController(session: session, indexPath: indexPath)
-            self.present(vc, animated: false, completion: nil)
+            self.containerViewController.push(vc)
         }
         
     }

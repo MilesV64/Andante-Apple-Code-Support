@@ -12,6 +12,25 @@ import CoreData
 import AVFoundation
 import StoreKit
 
+extension UIView {
+    enum NavigationStyle {
+        case tabbar, sidebar
+    }
+    
+    var globalNavigationStyle: NavigationStyle {
+        if let window = UIApplication.shared.windows.first {
+            return window.bounds.width > Constants.sidebarBreakpoint ? .sidebar : .tabbar
+        } else {
+            return .tabbar
+        }
+    }
+    
+    func headerHeight(matching navigationStyle: NavigationStyle) -> CGFloat {
+        return navigationStyle == .tabbar ? 44 : 60
+    }
+    
+}
+
 class AndanteViewController: NavigationViewController, NavigationComponentDelegate, ProfileObserver {
     
     //bc of the safe area insets changing for no reason when transformed 🙄
@@ -213,7 +232,7 @@ class AndanteViewController: NavigationViewController, NavigationComponentDelega
             if sidebar == nil {
                 sidebar = Sidebar(self.activeIndex)
                 sidebar!.delegate = self
-                contentView.insertSubview(sidebar!, belowSubview: actionButtonView)
+                contentView.addSubview(sidebar!)
             }
             tabbar?.removeFromSuperview()
             tabbar = nil
@@ -492,7 +511,7 @@ extension AndanteViewController {
         }
         else {
             let space: CGFloat = max(view.safeAreaInsets.bottom, 20)
-            let rect = CGRect(x: view.bounds.maxX - 14 - 62,
+            let rect = CGRect(x: contentFrame.maxX - 14 - 62,
                               y: contentFrame.maxY - space - 62,
                               width: 62, height: 62)
             
@@ -550,7 +569,7 @@ extension AndanteViewController {
 extension AndanteViewController {
 
     func setupActionButton() {
-        self.contentView.addSubview(actionButtonView)
+        self.navigationContentView.addSubview(actionButtonView)
         actionButtonView.backgroundColor = .clear
         actionButtonView.addSubview(actionButton)
         actionButton.backgroundColor = Colors.orange

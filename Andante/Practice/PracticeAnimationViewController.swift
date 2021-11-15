@@ -354,7 +354,7 @@ class PracticeAnimationViewController: UIViewController, UIGestureRecognizerDele
             tabbar.layer.shadowOpacity = 0.16
             if let collapsedSessionView = presentingVC.collapsedSessionView {
                 collapsedSessionView.bounds.size.height = 54
-                presentingVC.contentView.insertSubview(tabbar, belowSubview: collapsedSessionView)
+                presentingVC.navigationContentView.insertSubview(tabbar, belowSubview: collapsedSessionView)
                 presentingVC.view.setNeedsLayout()
             }
             
@@ -492,7 +492,7 @@ fileprivate class PresentationAnimation: NSObject, UIViewControllerAnimatedTrans
             transitionContext.completeTransition(true)
             view.layer.cornerRadius = 0
             if let tabbar = tabbarView {
-                presentingVC.contentView.addSubview(tabbar)
+                presentingVC.navigationContentView.addSubview(tabbar)
             }
             collapsedView?.removeFromSuperview()
             collapsedView?.practiceViewController = nil

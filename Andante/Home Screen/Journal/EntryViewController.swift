@@ -9,60 +9,8 @@
 import UIKit
 import Combine
 
-extension UIImage {
-    func resized(toWidth width: CGFloat) -> UIImage? {
-        let height = CGFloat(ceil(width / size.width * size.height))
-        let canvasSize = CGSize(width: width, height: height)
-        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(origin: .zero, size: canvasSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-    
-    func rounded(_ size: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: size.width, height: size.height), false, scale)
-        defer { UIGraphicsEndImageContext() }
-        
-        let imageFrame = CGRect(
-            origin: CGPoint(x: 0, y: 10),
-            size: CGSize(width: size.width, height: size.height-20))
-        
-        
-        
-        let path = UIBezierPath(roundedRect: imageFrame.insetBy(dx: 30, dy: 20), cornerRadius: 6)
-        path.addClip()
-        draw(in: imageFrame)
-        
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-}
 
-class A: NSTextAttachment {
-    
-    let aspect: CGFloat = 2
-    
-    override func image(forBounds imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
-        return self.image?.rounded(imageBounds.size)
-    }
-    
-    override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
-        
-        if let width = textContainer?.size.width {
-            let w = width - 10
-            return CGRect(x: 0, y: 0, width: w, height: w * aspect + 20)
-        }
-        else if let width = textContainer?.size.width, let image = self.image {
-            let aspect = image.size.height / image.size.width
-            let w = width - 10
-            return CGRect(x: 0, y: 0, width: w, height: w * aspect + 20)
-        }
-        else {
-            return super.attachmentBounds(for: textContainer, proposedLineFragment: lineFrag, glyphPosition: position, characterIndex: charIndex)
-        }
-    }
-}
-
-@objc protocol EntryViewControllerDelegate: class {
+@objc protocol EntryViewControllerDelegate: AnyObject {
     @objc func entryViewControllerDidDissapear(_ viewController: EntryViewController, entry: CDJournalEntry?, hasText: Bool)
     @objc func entryViewControllerWillDissapear(_ viewController: EntryViewController, entry: CDJournalEntry?, attributedText: NSAttributedString)
     func entryViewControllerDidSelectDelete(entry: CDJournalEntry?)
@@ -70,7 +18,7 @@ class A: NSTextAttachment {
     func entryViewControllerDidAddFolder()
 }
 
-class EntryViewController: TransitionViewController {
+class EntryViewController: NavigatableViewController {
     
     private let interactionHaptic = UIImpactFeedbackGenerator(style: .light)
     
@@ -129,7 +77,7 @@ class EntryViewController: TransitionViewController {
                 self.presentedViewController?.dismiss(animated: false, completion: nil)
                 self.styleMenu?.hide(animated: false, ignoreSelectedItem: true)
                 
-                self.close()
+                self.navigationViewController?.pop()
             } else {
                 if let text = self.entry?.attributedText() {
                     self.textView.attributedText = text
@@ -353,18 +301,19 @@ class EntryViewController: TransitionViewController {
         
         DataManager.saveContext()
         
-        self.close()
+        self.navigationViewController?.pop()
         
     }
     
     @objc func didTapBack() {
         textView.resignFirstResponder()
         delegate?.entryViewControllerWillDissapear(self, entry: entry, attributedText: textView.textStorage)
-        self.close()
+        self.navigationViewController?.pop()
     }
     
     public var firstOpen = true
-    override func didAppear() {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         if firstOpen && shouldOpenKeyboard {
             textView.becomeFirstResponder()
@@ -375,7 +324,8 @@ class EntryViewController: TransitionViewController {
         interactionHaptic.prepare()
     }
     
-    override func willAppear() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if isKeyboardOpen {
             textView.becomeFirstResponder()
         }

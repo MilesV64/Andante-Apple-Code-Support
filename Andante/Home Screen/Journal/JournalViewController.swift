@@ -221,7 +221,7 @@ class JournalViewController: MainViewController, JournalHeaderDelegate, UICollec
         let vc = EntryViewController(entry: entry)
         vc.delegate = self
         vc.shouldOpenKeyboard = openKeyboard
-        self.present(vc, animated: false, completion: nil)
+        self.containerViewController.push(vc)
         
     }
     

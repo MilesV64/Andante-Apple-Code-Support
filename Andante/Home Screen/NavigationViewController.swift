@@ -26,17 +26,77 @@ class NavigationViewController: UIViewController, NavigationInteractionControlle
     public let navigationContentView = UIView()
         
     /// The navigated view controller, if available
-    public var navigatedViewController: NavigatableViewController?
+    public var navigatedViewController: NavigatableViewController? {
+        return self.containerView?.viewController
+    }
     
     public let dimView = UIView()
     
     private let interactionController = NavigationInteractionController()
+    
+    private(set) var containerView: ContainerView?
+    
+    class ContainerView: UIView {
+        
+        private let contentView = UIView()
+        
+        let viewController: NavigatableViewController
+        
+        init(viewController: NavigatableViewController, frame: CGRect) {
+            self.viewController = viewController
+            super.init(frame: frame)
+            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                let cornerRadius = UIDevice.current.deviceCornerRadius()
+                self.roundCorners(cornerRadius)
+                self.contentView.clipsToBounds = true
+                self.contentView.roundCorners(cornerRadius)
+            }
+//
+//            self.layer.shadowOpacity = 0.06
+//            self.layer.shadowRadius = 20
+//            self.layer.shadowColor = UIColor.black.cgColor
+//
+            self.contentView.frame = frame
+            self.contentView.addSubview(viewController.view)
+            self.addSubview(self.contentView)
+            
+            self.contentView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                contentView.widthAnchor.constraint(equalTo: self.widthAnchor),
+                contentView.heightAnchor.constraint(equalTo: self.heightAnchor),
+                contentView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+                contentView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            ])
+            
+            viewController.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                viewController.view.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+                viewController.view.heightAnchor.constraint(equalTo: contentView.heightAnchor),
+                viewController.view.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                viewController.view.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            ])
+            
+        }
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            //self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: self.layer.cornerRadius).cgPath
+           
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.interactionController.delegate = self
         
+        self.navigationContentView.clipsToBounds = true
         self.view.addSubview(self.navigationContentView)
         
         self.dimView.translatesAutoresizingMaskIntoConstraints = false
@@ -53,24 +113,23 @@ class NavigationViewController: UIViewController, NavigationInteractionControlle
     public func push(_ viewController: NavigatableViewController, animated: Bool = true) {
         viewController.navigationViewController = self
         
-        viewController.willMove(toParent: self)
-        self.view.addSubview(viewController.view)
-        self.addChild(viewController)
+        let containerView = ContainerView(viewController: viewController, frame: self.navigationContentView.bounds)
         
-        viewController.view.bounds.size = self.navigationContentView.bounds.size
-        viewController.view.center = self.navigationContentView.center
+        viewController.willMove(toParent: self)
+        self.view.addSubview(containerView)
+        self.addChild(viewController)
         
         viewController.view.addGestureRecognizer(self.interactionController.panGestureRecognizer)
                 
         self.navigationContentView.addSubview(self.dimView)
         
-        self.setNavigationConstraints(for: viewController)
+        self.setNavigationConstraints(for: containerView)
         
         if animated {
-            viewController.view.transform = CGAffineTransform(translationX: self.navigationContentView.bounds.width, y: 0)
+            containerView.transform = CGAffineTransform(translationX: self.navigationContentView.bounds.width, y: 0)
 
             UIView.animateWithCurve(duration: 0.4, x1: 0.2, y1: 1, x2: 0.36, y2: 1, animation: {
-                viewController.view.transform = .identity
+                containerView.transform = .identity
                 self.navigationContentView.transform = CGAffineTransform(translationX: -60, y: 0)
                 self.dimView.alpha = 1
             }, completion: {
@@ -83,46 +142,46 @@ class NavigationViewController: UIViewController, NavigationInteractionControlle
         }
         
         
-        self.navigatedViewController = viewController
+        self.containerView = containerView
         
     }
     
     public func pop(animated: Bool = true) {
-        guard let viewController = self.navigatedViewController else { return }
+        guard let containerView = self.containerView else { return }
 
-        viewController.willMove(toParent: nil)
+        containerView.viewController.willMove(toParent: nil)
         
         if animated {
             self.navigationContentView.transform = CGAffineTransform(translationX: -60, y: 0)
             self.dimView.alpha = 1
             UIView.springAnimate(duration: animated ? 0.4 : 0, animations: {
-                viewController.view.transform = CGAffineTransform(translationX: self.navigationContentView.bounds.width, y: 0)
+                containerView.transform = CGAffineTransform(translationX: self.navigationContentView.bounds.width, y: 0)
                 self.navigationContentView.transform = .identity
                 self.dimView.alpha = 0
             }, completion: { _ in
-                viewController.view.removeFromSuperview()
-                viewController.removeFromParent()
+                containerView.removeFromSuperview()
+                containerView.viewController.removeFromParent()
                 self.dimView.removeFromSuperview()
-                self.navigatedViewController = nil
+                self.containerView = nil
             })
         }
         else {
             self.navigationContentView.transform = .identity
-            viewController.view.removeFromSuperview()
-            viewController.removeFromParent()
+            containerView.viewController.removeFromParent()
+            containerView.removeFromSuperview()
             self.dimView.removeFromSuperview()
-            self.navigatedViewController = nil
+            self.containerView = nil
         }
         
     }
     
-    private func setNavigationConstraints(for viewController: NavigatableViewController) {
-        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+    private func setNavigationConstraints(for containerView: ContainerView) {
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            viewController.view.widthAnchor.constraint(equalTo: self.navigationContentView.widthAnchor),
-            viewController.view.heightAnchor.constraint(equalTo: self.navigationContentView.heightAnchor),
-            viewController.view.centerXAnchor.constraint(equalTo: self.navigationContentView.centerXAnchor),
-            viewController.view.centerYAnchor.constraint(equalTo: self.navigationContentView.centerYAnchor)
+            containerView.widthAnchor.constraint(equalTo: self.navigationContentView.widthAnchor),
+            containerView.heightAnchor.constraint(equalTo: self.navigationContentView.heightAnchor),
+            containerView.centerXAnchor.constraint(equalTo: self.navigationContentView.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: self.navigationContentView.centerYAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -143,10 +202,10 @@ class NavigationViewController: UIViewController, NavigationInteractionControlle
     }
     
     func interactionControllerDidCommitDismissal(_ controller: NavigationInteractionController) {
-        navigatedViewController?.view.removeFromSuperview()
         navigatedViewController?.removeFromParent()
+        containerView?.removeFromSuperview()
         self.dimView.removeFromSuperview()
-        self.navigatedViewController = nil
+        self.containerView = nil
     }
     
 }
@@ -203,7 +262,7 @@ class NavigationInteractionController: NSObject {
         let interactionDistance = self.interationDistance()
         
         var progress = interactionDistance == 0 ? 0 : (translation / interactionDistance)
-        if progress < 0 { progress /= (1.0 + abs(progress * 20)) }
+        if progress < 0 { progress = 0 }
         
         self.updateDismissalInteraction(progress: progress, interactionDistance: interactionDistance)
     }
@@ -245,17 +304,17 @@ class NavigationInteractionController: NSObject {
 
     func updateDismissalInteraction(progress: CGFloat, interactionDistance: CGFloat) {
         guard let navigationViewController = self.delegate,
-              let vc = navigationViewController.navigatedViewController else { return }
-        print(progress, interactionDistance)
-        vc.view.transform = CGAffineTransform(translationX: progress*interactionDistance, y: 0)
+              let containerView = navigationViewController.containerView else { return }
+        
+        containerView.transform = CGAffineTransform(translationX: progress*interactionDistance, y: 0)
         navigationViewController.navigationContentView.transform = CGAffineTransform(translationX: -60 + (progress*60), y: 0)
         navigationViewController.dimView.alpha = 1 - progress
-                
+        
     }
 
     func cancelDismissalInteraction(velocity: CGFloat) {
         guard let navigationViewController = self.delegate,
-              let vc = navigationViewController.navigatedViewController else { return }
+              let containerView = navigationViewController.containerView else { return }
         
         let timingParameters = UISpringTimingParameters(
             dampingRatio: 1,
@@ -265,7 +324,7 @@ class NavigationInteractionController: NSObject {
         let animator = UIViewPropertyAnimator(duration: 0.4, timingParameters: timingParameters)
         
         animator.addAnimations {
-            vc.view.transform = .identity
+            containerView.transform = .identity
             navigationViewController.navigationContentView.transform = CGAffineTransform(translationX: -60, y: 0)
             navigationViewController.dimView.alpha = 1
         }
@@ -275,19 +334,19 @@ class NavigationInteractionController: NSObject {
 
     func commitDismissalInteraction(velocity: CGFloat, interactionDistance: CGFloat) {
         guard let navigationViewController = self.delegate,
-              let vc = navigationViewController.navigatedViewController else { return }
+              let containerView = navigationViewController.containerView else { return }
         
         delegate?.interactionControllerWillCommitDismissal(self)
         
         let timingParameters = UISpringTimingParameters(
             dampingRatio: 1,
-            initialVelocity: CGVector(dx: 0, dy: min(10, velocity))
+            initialVelocity: CGVector(dx: 0, dy: velocity)
         )
         
         let animator = UIViewPropertyAnimator(duration: 0.4, timingParameters: timingParameters)
         
         animator.addAnimations {
-            vc.view.transform = CGAffineTransform(translationX: interactionDistance, y: 0)
+            containerView.transform = CGAffineTransform(translationX: interactionDistance, y: 0)
             navigationViewController.navigationContentView.transform = .identity
             navigationViewController.dimView.alpha = 0
         }

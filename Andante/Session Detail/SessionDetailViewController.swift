@@ -490,24 +490,26 @@ class SessionDetailViewController: NavigatableViewController, UITextViewDelegate
         let textWidth: CGFloat = min(view.bounds.width, 800)
         let textMargin = (view.bounds.width - textWidth)/2 + margin
         
+        let headerHeight = self.view.headerHeight(matching: view.globalNavigationStyle)
+        
         headerView.frame = CGRect(
             x: 0, y: view.safeAreaInsets.top,
-            width: view.bounds.width, height: 44)
+            width: view.bounds.width, height: headerHeight)
         
         topView.frame = CGRect(
             x: 0, y: 0,
             width: self.view.bounds.width,
-            height: 44 + self.view.safeAreaInsets.top)
+            height: headerHeight + self.view.safeAreaInsets.top)
         
         backButton.contentEdgeInsets.left = margin - 1
         backButton.frame = CGRect(
             x: 0, y: 0,
-            width: margin + 56, height: 44)
+            width: margin + 56, height: headerHeight)
         
         optionsButton.contentEdgeInsets.right = margin
         optionsButton.frame = CGRect(
             x: view.bounds.maxX - (margin+56), y: 0,
-            width: margin + 56, height: 44)
+            width: margin + 56, height: headerHeight)
         
         scrollView.frame = self.view.bounds.inset(by: UIEdgeInsets(t: headerView.frame.maxY))
         let bottomInset = scrollView.contentInset.bottom != 0 ? scrollView.contentInset.bottom : view.safeAreaInsets.bottom

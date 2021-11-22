@@ -682,7 +682,7 @@ extension AndanteViewController {
                 self.hideSessionSaveNotification()
             }
             
-            self.present(detailVC, animated: false, completion: nil)
+            self.push(detailVC)
         }
 
         self.contentView.addSubview(sessionSaveNotification!)
